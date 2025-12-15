@@ -2,7 +2,7 @@ ROOT_PROMPT = """
 # ROLE
 You are an agent whose job is to interpret user requests and decide whether the user is:
 1. Providing data to be processed (INPUT), or
-2. Requesting data to be returned (OUTPUT) or
+2. Requesting data to be returned and its visualisation format (OUTPUT)
 3. If not clear, ask for clarification and reiterate your ability. 
 
 # RESPONSIBILITIES
@@ -15,6 +15,7 @@ You are an agent whose job is to interpret user requests and decide whether the 
 - Do not invent missing data.
 - Follow the requested output format strictly.
 - If the request is ambiguous, choose the most conservative interpretation.
+- OUTPUT = saved the result of desired in in an artifact named 'vis':{artifact.vis}
 """
 
 
@@ -52,144 +53,86 @@ You are an agent tasked with retrieving data from a NoSQL database with the foll
 - If no results match, return an empty array.
 - Handle vague requests like "last month's food expenses" intelligently.
 """
-barGraphIntstruction = '''
 
-  Where data is: {
-    labels: string[]
-    values: {\\data: number[], label: string}[]
-  }
+VISUALIZER_PROMPT = """
+# ROLE
+You are a visualization assistant. Your task is to generate charts from expense data.
 
-// Examples of usage:
-Each label represents a column on the x axis.
-Each array in values represents a different entity. 
+# DATA STRUCTURE
+- amount: float
+- currency: string (USD, MYR, GBP, JPY, IDR)
+- datetime: string (YYYY-MM-DD)
+- category: string (food, rent, transport, utilities, entertainment, other)
+- payment_method: string (cash, debit_card, bank_transfer, e_wallet)
+- description: string (optional)
 
-Here we are looking at average income for each month.
-1. data = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  values: [{data:[21.5, 25.0, 47.5, 64.8, 105.5, 133.2], label: 'Income'}],
-}
+# CHART INSTRUCTIONS
+- For bar or line charts: group by 'category', 'payment_method', or 'datetime' as needed.
+- For pie charts: show proportion of amount per category or payment_method.
+- For scatter plots: x-axis and y-axis can be 'amount', 'datetime', or any numeric field.
+- Aggregate data (sum, average, count) when necessary.
+- Return chart data as JSON: chart_type, labels, values, series, title, etc.
 
-Here we are looking at the performance of american and european players for each series. Since there are two entities, we have two arrays in values.
-2. data = {
-  labels: ['series A', 'series B', 'series C'],
-  values: [{data:[10, 15, 20], label: 'American'}, {data:[20, 25, 30], label: 'European'}],
-}
-'''
+# EXAMPLES
+- Bar chart of total expenses by category.
+- Line chart of monthly expenses over time.
+- Pie chart showing proportion of payment methods.
+"""
 
-horizontalBarGraphIntstruction = '''
 
-  Where data is: {
-    labels: string[]
-    values: {\\data: number[], label: string}[]
-  }
 
-// Examples of usage:
-Each label represents a column on the x axis.
-Each array in values represents a different entity. 
-
-Here we are looking at average income for each month.
-1. data = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  values: [{data:[21.5, 25.0, 47.5, 64.8, 105.5, 133.2], label: 'Income'}],
-}
-
-Here we are looking at the performance of american and european players for each series. Since there are two entities, we have two arrays in values.
-2. data = {
-  labels: ['series A', 'series B', 'series C'],
-  values: [{data:[10, 15, 20], label: 'American'}, {data:[20, 25, 30], label: 'European'}],
-}
-
-'''
-
-lineGraphIntstruction = '''
-
-  Where data is: {
-  xValues: number[] | string[]
-  yValues: { data: number[]; label: string }[]
-}
-
-// Examples of usage:
-
-Here we are looking at the momentum of a body as a function of mass.
-1. data = {
-  xValues: ['2020', '2021', '2022', '2023', '2024'],
-  yValues: [
-    { data: [2, 5.5, 2, 8.5, 1.5]},
-  ],
-}
-
-Here we are looking at the performance of american and european players for each year. Since there are two entities, we have two arrays in yValues.
-2. data = {
-  xValues: ['2020', '2021', '2022', '2023', '2024'],
-  yValues: [
-    { data: [2, 5.5, 2, 8.5, 1.5], label: 'American' },
-    { data: [2, 5.5, 2, 8.5, 1.5], label: 'European' },
-  ],
-}
-'''
-
-pieChartIntstruction = '''
-
-  Where data is: {
-    labels: string
-    values: number
-  }[]
-
-// Example usage:
- data = [
-        { id: 0, value: 10, label: 'series A' },
-        { id: 1, value: 15, label: 'series B' },
-        { id: 2, value: 20, label: 'series C' },
-      ],
-'''
-
-scatterPlotIntstruction = '''
-Where data is: {
-  series: {
-    data: { x: number; y: number; id: number }[]
-    label: string
-  }[]
-}
-
-// Examples of usage:
-1. Here each data array represents the points for a different entity. 
-We are looking for correlation between amount spent and quantity bought for men and women.
-data = {
-  series: [
-    {
-      data: [
-        { x: 100, y: 200, id: 1 },
-        { x: 120, y: 100, id: 2 },
-        { x: 170, y: 300, id: 3 },
-      ],
-      label: 'Men',
+GRAPH_INSTRUCTIONS = {
+    "bar": {
+        "fields": {
+            "labels": "categories or dates (x-axis)",
+            "values": "{data: number[], label: string}[] (amount sums, one per entity)"
+        },
+        "description": "Vertical bar chart of aggregated expenses",
+        "examples": [
+            {
+                "labels": ['food', 'rent', 'transport'],
+                "values": [{"data":[250, 1200, 300], "label": "Total Expenses"}]
+            }
+        ]
     },
-    {
-      data: [
-        { x: 300, y: 300, id: 1 },
-        { x: 400, y: 500, id: 2 },
-        { x: 200, y: 700, id: 3 },
-      ],
-      label: 'Women',
+    "line": {
+        "fields": {
+            "xValues": "dates (YYYY-MM-DD) or months (x-axis)",
+            "yValues": "{data:number[], label:string}[] (aggregated amounts)"
+        },
+        "description": "Line chart showing trends of expenses over time",
+        "examples": [
+            {
+                "xValues": ['2025-01-01', '2025-02-01', '2025-03-01'],
+                "yValues": [{"data":[500, 700, 650], "label":"Total Expenses"}]
+            }
+        ]
+    },
+    "pie": {
+        "fields": {
+            "labels": "categories or payment methods",
+            "values": "corresponding amounts"
+        },
+        "description": "Pie chart showing proportion of total expenses",
+        "examples": [
+            {
+                "labels": ["food", "rent", "transport"],
+                "values": [250, 1200, 300]
+            }
+        ]
+    },
+    "scatter": {
+        "fields": {
+            "series": "{data:{x:number, y:number, id:number}[], label:string}[]"
+        },
+        "description": "Scatter plot for correlations, e.g., amount vs. day of month",
+        "examples": [
+            {
+                "series":[
+                    {"data":[{"x":1,"y":100,"id":1},{"x":2,"y":200,"id":2}], "label":"Food"},
+                    {"data":[{"x":1,"y":400,"id":1},{"x":2,"y":300,"id":2}], "label":"Rent"}
+                ]
+            }
+        ]
     }
-  ],
 }
-
-2. Here we are looking for correlation between the height and weight of players.
-data = {
-  series: [
-    {
-      data: [
-        { x: 180, y: 80, id: 1 },
-        { x: 170, y: 70, id: 2 },
-        { x: 160, y: 60, id: 3 },
-      ],
-      label: 'Players',
-    },
-  ],
-}
-
-// Note: Each object in the 'data' array represents a point on the scatter plot.
-// The 'x' and 'y' values determine the position of the point, and 'id' is a unique identifier.
-// Multiple series can be represented, each as an object in the outer array.
-'''

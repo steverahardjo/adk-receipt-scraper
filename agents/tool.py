@@ -61,3 +61,33 @@ class MongoTool:
         results = await query.to_list()
         
         return results
+    
+class ExpenseAggregator:
+    """
+    Tool to perform aggregation on expense data.
+    """
+    def __init__(self, expenses):
+        self.expenses = expenses
+
+    def aggregate_by(self, field: str, agg: str = "sum"):
+        """
+        Aggregate expenses by a given field (category, payment_method, currency, datetime, etc.)
+        agg: sum | average | count
+        """
+        from collections import defaultdict
+
+        result = defaultdict(list)
+        for e in self.expenses:
+            key = e.get(field)
+            result[key].append(e["amount"])
+
+        aggregated = {}
+        for k, values in result.items():
+            if agg == "sum":
+                aggregated[k] = sum(values)
+            elif agg == "average":
+                aggregated[k] = sum(values)/len(values)
+            elif agg == "count":
+                aggregated[k] = len(values)
+        return aggregated
+
