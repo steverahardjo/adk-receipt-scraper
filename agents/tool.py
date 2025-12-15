@@ -1,12 +1,12 @@
-from agents.types import ExpenseType, ExpenseSchema, Payment, Currency
+from agents.types import ExpenseType, ExpenseSchema
 
 import asyncio
-from typing import Optional
+import pandas as pd
 
 from pymongo import AsyncMongoClient
 from pydantic import BaseModel
 
-from beanie import Document, Indexed, init_beanie
+from beanie import init_beanie
 
 MONGO_ADDR = ""
 class MongoTool:
@@ -25,26 +25,39 @@ class MongoTool:
             )
             self.initialized = True
         
-async def insert_expense(self, data:dict):
-    client = AsyncMongoClient(MONGO_ADDR)
-    await init_beanie(database=client.db_name, document_models = [ExpenseSchema])
+    async def insert_expense(self, data:dict):
+        client = AsyncMongoClient(MONGO_ADDR)
+        await init_beanie(database=client.db_name, document_models = [ExpenseSchema])
 
-    if isinstance(data, dict):
-        expense = ExpenseSchema.model_validate_json(data)
-        await expense.insert()
-        return expense
-
-    elif isinstance(data, list):
-        inserted = []
-        for item in data:
-            expense = ExpenseSchema.parse_obj(item)
+        if isinstance(data, dict):
+            expense = ExpenseSchema.model_validate_json(data)
             await expense.insert()
-            inserted.append(expense)
-        return inserted
+            return expense
 
-    else:
-        raise ValueError("Data must be a dict or a list of dicts")
+        elif isinstance(data, list):
+            inserted = []
+            for item in data:
+                expense = ExpenseSchema.parse_obj(item)
+                await expense.insert()
+                inserted.append(expense)
+            return inserted
 
-async def 
-    
+        else:
+            raise ValueError("Data must be a dict or a list of dicts")
 
+    async def search_expenses(self, save_csv_path: str = "current_run.csv", **filters)->str:
+        """
+        Search for expenses using keyword filters.
+        Example: search_expenses(type="food", payment_method="cash", save_csv_path="output.csv")
+        """
+        await self.init()
+        query = ExpenseSchema.find({})
+        
+        # Apply filters
+        for field, value in filters.items():
+            query = query.find({field: value})
+        
+        # Execute query
+        results = await query.to_list()
+        
+        return results

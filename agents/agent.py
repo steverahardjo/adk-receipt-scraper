@@ -3,7 +3,7 @@ from agents.prompts import ROOT_PROMPT
 import logging
 import agents.types import ExpenseSchema
 
-from google.adk.agents import Agent
+from google.adk.agents import Agent, SequentialAgent
 
 MODEL_NAME = "gemini-2.5-flash"
 
@@ -14,6 +14,16 @@ saver_agent = Agent(
     name = "saver_agent",
     instruction = 
 )
+
+visualiser_agent = Agent(
+
+)
+
+retrieve_agent = Agent(
+
+)
+
+
 
 
 root_agent = Agent(
