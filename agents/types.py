@@ -2,7 +2,6 @@ from enum import Enum
 from pydantic import BaseModel, Field
 from datetime import date
 
-
 class ExpenseType(str, Enum):
     FOOD = "food"
     RENT = "rent"
@@ -41,3 +40,12 @@ class ExpenseSchema(BaseModel):
 
     class Config:
         use_enum_values = True
+
+class PayloadType(str, Enum):
+    TEXT = "text"
+    IMAGE = "image"
+
+
+class Payload(BaseModel):
+    type: PayloadType
+    content: str
