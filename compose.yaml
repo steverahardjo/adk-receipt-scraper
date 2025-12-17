@@ -1,0 +1,45 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - backend
+
+  exp_tracker:
+    image: exp-tracker:dev
+    container_name: exp-tracker
+    restart: always
+    command: uv run main
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: 
+      TELEGRAM_BOT_TOKEN: vwrvt4b
+      GOOGLE_API_KEY: 
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: pyproject.toml
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+

@@ -7,10 +7,9 @@ from google.adk.runners import Runner
 from google.adk.agents import Agent, SequentialAgent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.artifacts import InMemoryArtifactService
-from agents.tool import MongoTool, ExpenseAggregator
+from agents.tool import MongoTool
 from google.adk.tools import load_memory
 from google.adk.memory import InMemoryMemoryService
-from google.adk.agents.callback_context import CallbackContext
 
 
 """
@@ -22,7 +21,6 @@ List of features:
 - aggregation agent
 """
 mongodb = MongoTool("user_expense", "", "")
-aggregator = ExpenseAggregator()
 MODEL_NAME = "gemini-2.5-flash"
 logging.info(f"Using model: {MODEL_NAME}")
 
