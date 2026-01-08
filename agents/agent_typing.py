@@ -1,6 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel, Field
 from datetime import date
+from beanie import Document
 
 class ExpenseType(str, Enum):
     FOOD = "food"
@@ -39,13 +40,26 @@ class ExpenseSchema(BaseModel):
     )
 
     class Config:
+        extra = "forbid"
         use_enum_values = True
+    
+    class Settings:
+        name = "expenses"
+
+class Expense(Document):
+    amount: float = Field(..., gt=0)
+    currency: Currency
+    datetime: date
+    category: ExpenseType
+    payment_method: PaymentMethod
+    description: str | None = None
+
 
 class PayloadType(str, Enum):
     TEXT = "text"
     IMAGE = "image"
 
 
+
 class Payload(BaseModel):
-    type: PayloadType
     content: str

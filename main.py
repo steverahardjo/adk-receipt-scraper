@@ -1,51 +1,28 @@
 import asyncio
-import logging
-import sys
-from os import getenv
-
-from aiogram import Bot, Dispatcher, types, F
+from agents.tool import MongoTool
+from agents.agent import create_expense_tracker_runner
+USER_ID = "steve"
 from dotenv import load_dotenv
-from agents.types import Payload, PayloadType
 
 load_dotenv()
-
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-
-TELEGRAM_BOT_TOKEN = getenv("TELEGRAM_BOT_TOKEN")
-bot = Bot(token=TELEGRAM_BOT_TOKEN)
-dp = Dispatcher()
-
-async def get_agent_response(input_msg: Payload) -> Payload:
-
-    return Payload(
-        content="Yup it works",
-        type=PayloadType.TEXT
-    )
-
-@dp.message()
-async def agent_handler(message: types.Message):
-    input_message = Payload(type=PayloadType.TEXT, content=message.text or "")
-
-    if message.photo:
-        file_id = message.photo[-1].file_id
-        input_message = Payload(
-            type=PayloadType.IMAGE,
-            content=file_id
-        )
-
-    resp: Payload = await get_agent_response(input_message)
-    if resp.type == PayloadType.TEXT:
-        await message.answer(resp.content)
-    elif resp.type == PayloadType.IMAGE:
-        caption = getattr(resp, 'caption', "")
-        await message.answer_photo(photo=resp.content, caption=caption)
-
 async def main():
-    try:
-        print("Bot is polling...")
-        await dp.start_polling(bot)
-    finally:
-        await bot.session.close()
+    mongodb = MongoTool(db_name="user_expense")
+    session, runner = await create_expense_tracker_runner(
+        mongo_db_inst=mongodb,
+        model_name="gemini-3-flash-preview",
+        app_name="expense_tracker",
+        user_id="steve",
+        session_id="session_001"
+    )
+    print("Session and runner ready!")
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    content= "I bought chicken rice for 8 ringgit."
+    # Run the root agent
+    result = await runner.run_debug(
+        session_id = "debug_sesh",
+        user_messages=content,
+        user_id = USER_ID,
+    )
+    print(result)   
+
+asyncio.run(main())

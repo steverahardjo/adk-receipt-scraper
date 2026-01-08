@@ -1,66 +1,85 @@
-from agents.types import ExpenseType, ExpenseSchema
-
-import asyncio
-import pandas as pd
-
-from pymongo import AsyncMongoClient
-from pydantic import BaseModel
-
+from agents.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
+from typing import Optional, List
+from datetime import datetime, date
+import logging
 from beanie import init_beanie
+from motor.motor_asyncio import AsyncIOMotorClient
+from agents.agent_typing import ExpenseSchema
+import logging
 
-MONGO_ADDR = ""
+MONGO_ADDR = "mongodb://localhost:27017"
+DB_NAME = "user_expense"
+
 class MongoTool:
-    def __init__(self, db_name:str, addr:str, uri:str):
-        self.uri = uri
+    def __init__(self, db_name: str = DB_NAME, uri: str = MONGO_ADDR):
         self.db_name = db_name
-        self.client = None
-        self.inited = False
+        self.uri = uri
+        self.client: Optional[AsyncIOMotorClient] = None
+        self.inited: bool = False
 
     async def init(self):
-        if not self.initialized:
-            self.client = AsyncMongoClient(self.mongo_uri)
+        if not self.inited:
+            self.client = AsyncIOMotorClient(self.uri)
             await init_beanie(
                 database=self.client[self.db_name],
-                document_models=[ExpenseSchema]
+                document_models=[Expense]
             )
-            self.initialized = True
-        
-    async def insert_expense(self, data:dict):
-        client = AsyncMongoClient(MONGO_ADDR)
-        await init_beanie(database=client.db_name, document_models = [ExpenseSchema])
+            self.inited = True
+            logging.info("MongoTool initialized")
 
-        if isinstance(data, dict):
-            expense = ExpenseSchema.model_validate_json(data)
-            await expense.insert()
-            return expense
 
-        elif isinstance(data, list):
-            inserted = []
-            for item in data:
-                expense = ExpenseSchema.parse_obj(item)
-                await expense.insert()
-                inserted.append(expense)
-            return inserted
+    async def insert_expense(
+        self,
+        amount: float,
+        currency: Currency,
+        date_input: str | datetime | date,
+        category: ExpenseType,
+        payment_method: PaymentMethod,
+        description: str | None = None
+    ):
+        await self.init()
 
+        # Normalize date_input → date (ONCE, at the boundary)
+        if isinstance(date_input, date) and not isinstance(date_input, datetime):
+            d = date_input
+        elif isinstance(date_input, datetime):
+            d = date_input.date()
+        elif isinstance(date_input, str):
+            d = datetime.fromisoformat(date_input.replace("Z", "+00:00")).date()
         else:
-            raise ValueError("Data must be a dict or a list of dicts")
+            raise TypeError("date_input must be str, datetime, or date")
 
-    async def search_expenses(self, save_csv_path: str = "current_run.csv", **filters)->str:
-        """
-        Search for expenses using keyword filters.
-        Example: search_expenses(type="food", payment_method="cash", save_csv_path="output.csv")
-        """
+        expense = Expense(
+            amount=amount,
+            currency=currency,
+            datetime=d,
+            category=category,
+            payment_method=payment_method,
+            description=description
+        )
+        await expense.insert()
+        logging.info(f"Inserted expense: {expense}")
+        return expense
+    
+    async def search_expenses(self, **filters) -> List[ExpenseSchema]:
         await self.init()
         query = ExpenseSchema.find({})
-        
-        # Apply filters
         for field, value in filters.items():
             query = query.find({field: value})
-        
-        # Execute query
+
         results = await query.to_list()
-        
         return results
+    
+    async def clear_db(self):
+        await self.init()
+        await Expense.delete_all()
+        logging.info("Cleared all expenses from the database")
+    
+    async def test_result(self):
+        await self.init()
+        return await Expense.find().to_list()
+    
+
     
 class ExpenseAggregator:
     """

@@ -1,77 +1,86 @@
-import os
-from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
-from agents.types import ExpenseSchema, Payload, PayloadType
 import logging
+import asyncio
 from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from google.adk.agents import Agent, SequentialAgent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.artifacts import InMemoryArtifactService
-from agents.tool import MongoTool
 from google.adk.tools import load_memory
 from google.adk.memory import InMemoryMemoryService
+from agents.agent_typing import ExpenseSchema
+from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
 
+async def create_expense_tracker_runner(
+    mongo_db_inst,
+    model_name: str,
+    app_name: str,
+    user_id: str,
+    session_id: str
+):
+    """
+    Sets up all agents, memory, artifacts, session, and returns a runner and session.
 
-"""
-List of features:
-- Accepting picture of receipt
-- Root agent that can remember the current time, last upload
-- Saver agent
-- retrieve agent
-- aggregation agent
-"""
-mongodb = MongoTool("user_expense", "", "")
-MODEL_NAME = "gemini-2.5-flash"
-logging.info(f"Using model: {MODEL_NAME}")
+    Args:
+        mongo_db_inst: Instance of MongoTool with insert/search methods.
+        model_name: LLM model name to use for agents.
+        app_name: Name of the app.
+        user_id: User identifier.
+        session_id: Session identifier.
+    
+    Returns:
+        session, runner
+    """
+    # --- Agents ---
+    saver_agent = Agent(
+        model=model_name,
+        name="saver_agent",
+        instruction=SAVER_PROMPT,
+        tools=[mongo_db_inst.insert_expense]
+    )
 
-saver_agent = Agent(
-    model = MODEL_NAME,
-    name = "saver_agent",
-    instruction =  SAVER_PROMPT,
-    tool = mongodb.insert_expense,
-    output_schema= ExpenseSchema
-)
+    visualiser_agent = Agent(
+        model=model_name,
+        name="visualiser_agent",
+        instruction=VISUALIZER_PROMPT
+    )
 
-visualiser_agent = Agent(
-    model = MODEL_NAME,
-    name = "visualiser_agent",
-    instruction = VISUALIZER_PROMPT
-)
+    retrieve_agent = Agent(
+        model=model_name,
+        name="retrieve_agent",
+        instruction=SEARCH_PROMPT,
+        tools=[AgentTool(visualiser_agent), mongo_db_inst.search_expenses]
+    )
 
+    root_agent = Agent(
+        model=model_name,
+        name="root_agent",
+        instruction=ROOT_PROMPT,
+        output_key="root_vis",
+        tools=[
+            AgentTool(saver_agent),
+            AgentTool(retrieve_agent),
+            load_memory
+        ]
+    )
 
-retrieve_agent = Agent(
-    model = MODEL_NAME, 
-    name = "retrieve_agent",
-    instruction = SEARCH_PROMPT,
-    tools = [AgentTool(visualiser_agent), mongodb.search_expenses ]
-)
+    # --- Memory and artifacts ---
+    memory_service = InMemoryMemoryService()
+    artifact_service = InMemoryArtifactService()
 
-root_agent = Agent(
-    model = MODEL_NAME,
-    name = "root_agent",
-    instruction = ROOT_PROMPT,
-    output_key = "root_vis",
-    tools = [
-        AgentTool(saver_agent),
-        AgentTool(retrieve_agent),
-        load_memory
-    ]
-)
-
-APP_NAME = "expense_tracker"
-USER_ID = "steve"
-SESSION_ID = "session_001"
-
-memory_service = InMemoryMemoryService()
-artifact_service = InMemoryArtifactService()
-
-async def setup_session_and_runner():
+    # --- Session ---
     session_service = InMemorySessionService()
-    session = await session_service.create_session(app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID)
+    session = await session_service.create_session(
+        app_name=app_name,
+        user_id=user_id,
+        session_id=session_id
+    )
     runner = Runner(
-        agent=root_agent, 
-        app_name=APP_NAME, 
+        agent=root_agent,
+        app_name=app_name,
         session_service=session_service,
-        artifact_service = artifact_service,
-        )
+        artifact_service=artifact_service,
+    )
+
+    logging.info(f"Runner and session ready for user {user_id} in app {app_name}")
+
     return session, runner
