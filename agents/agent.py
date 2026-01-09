@@ -7,8 +7,9 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.tools import load_memory
 from google.adk.memory import InMemoryMemoryService
-from agents.agent_typing import ExpenseSchema
+from google.adk.tools import load_memory
 from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
+from google.adk.code_executors import BuiltInCodeExecutor
 
 async def create_expense_tracker_runner(
     mongo_db_inst,
@@ -35,19 +36,22 @@ async def create_expense_tracker_runner(
         model=model_name,
         name="saver_agent",
         instruction=SAVER_PROMPT,
-        tools=[mongo_db_inst.insert_expense]
+        tools=[mongo_db_inst.insert_expense, load_memory]
     )
 
     visualiser_agent = Agent(
         model=model_name,
         name="visualiser_agent",
-        instruction=VISUALIZER_PROMPT
+        instruction=VISUALIZER_PROMPT,
+        code_executor=BuiltInCodeExecutor(),
+        
     )
 
     retrieve_agent = Agent(
         model=model_name,
         name="retrieve_agent",
         instruction=SEARCH_PROMPT,
+
         tools=[AgentTool(visualiser_agent), mongo_db_inst.search_expenses]
     )
 
@@ -78,6 +82,7 @@ async def create_expense_tracker_runner(
         agent=root_agent,
         app_name=app_name,
         session_service=session_service,
+        memory_service=memory_service,
         artifact_service=artifact_service,
     )
 

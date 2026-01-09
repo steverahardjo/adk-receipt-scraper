@@ -11,12 +11,8 @@ You are an agent whose job is to interpret user requests and decide whether the 
 - If INPUT, extract and normalize the provided data.
 - If OUTPUT, format the response exactly as requested.
 
-# RULES
-- Do not invent missing data.
-- Follow the requested output format strictly.
-- If the request is ambiguous, choose the most conservative interpretation.
-- OUTPUT = saved the result of desired in in an artifact named 'vis':
 """
+
 
 
 SAVER_PROMPT = """
@@ -38,9 +34,10 @@ You are a Precision Data Entry Specialist for expense tracking.
 - **Scenario A (Missing Info):** Return a plain text response to the user. Do NOT output JSON.
 - **Scenario B (Complete Info):** Trigger the `save_expense` tool using the following schema:
   { "amount": float, "category": str, "date": str, "time": str, "description": str }
+  Date needs to follow datetime
 
 # Logic & Heuristics
-- "Just now" / "Today" -> Call `current_date` tool.
+- **Current Date/Time:** if date not provided, use today, if year is not provided, use 2026
 - "Morning" -> 09:00 AM | "Afternoon" -> 01:00 PM | "Evening" -> 07:00 PM.
 """
 

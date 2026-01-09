@@ -47,6 +47,8 @@ class ExpenseSchema(BaseModel):
         name = "expenses"
 
 class Expense(Document):
+    item:str | None = None
+    date_recorded: date
     amount: float = Field(..., gt=0)
     currency: Currency
     datetime: date

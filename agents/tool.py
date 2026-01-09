@@ -30,13 +30,26 @@ class MongoTool:
 
     async def insert_expense(
         self,
+        item:str, 
         amount: float,
         currency: Currency,
         date_input: str | datetime | date,
         category: ExpenseType,
         payment_method: PaymentMethod,
         description: str | None = None
-    ):
+    )->None:
+        """
+        Docstring for insert_expense
+        Input:
+        - item: str = name of the item purchased
+        - amount: str = expense amount
+        - currency: Currency = currency code
+        - date_input: str | datetime | date = date of expense
+        - category: ExpenseType = expense category
+        - payment_method: PaymentMethod = payment method used
+        - description: Optional[str] = short description
+        Output: None
+        """
         await self.init()
 
         # Normalize date_input → date (ONCE, at the boundary)
@@ -45,13 +58,18 @@ class MongoTool:
         elif isinstance(date_input, datetime):
             d = date_input.date()
         elif isinstance(date_input, str):
-            d = datetime.fromisoformat(date_input.replace("Z", "+00:00")).date()
+            if date == "today" and date == "now":
+                d = datetime.now().date()
+            else:
+                d = datetime.fromisoformat(date_input.replace("Z", "+00:00")).date()
         else:
             raise TypeError("date_input must be str, datetime, or date")
 
         expense = Expense(
             amount=amount,
             currency=currency,
+            item =item,
+            date_recorded=datetime.now().date(),
             datetime=d,
             category=category,
             payment_method=payment_method,
@@ -59,7 +77,7 @@ class MongoTool:
         )
         await expense.insert()
         logging.info(f"Inserted expense: {expense}")
-        return expense
+        return None
     
     async def search_expenses(self, **filters) -> List[ExpenseSchema]:
         await self.init()

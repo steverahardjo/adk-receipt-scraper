@@ -1,28 +1,57 @@
 import asyncio
+from dotenv import load_dotenv
 from agents.tool import MongoTool
 from agents.agent import create_expense_tracker_runner
-USER_ID = "steve"
-from dotenv import load_dotenv
 
 load_dotenv()
-async def main():
+
+USER_ID = "steve"
+APP_NAME = "expense_tracker"
+SESSION_ID = "cli_session"
+
+async def cli_chat():
     mongodb = MongoTool(db_name="user_expense")
+
     session, runner = await create_expense_tracker_runner(
         mongo_db_inst=mongodb,
         model_name="gemini-3-flash-preview",
-        app_name="expense_tracker",
-        user_id="steve",
-        session_id="session_001"
+        app_name=APP_NAME,
+        user_id=USER_ID,
+        session_id=SESSION_ID,
     )
-    print("Session and runner ready!")
 
-    content= "I bought chicken rice for 8 ringgit."
-    # Run the root agent
-    result = await runner.run_debug(
-        session_id = "debug_sesh",
-        user_messages=content,
-        user_id = USER_ID,
-    )
-    print(result)   
+    print("Expense Tracker CLI")
+    print("Type 'exit' or 'quit' to stop.\n")
 
-asyncio.run(main())
+    while True:
+        try:
+            user_input = input("> ").strip()
+            if not user_input:
+                continue
+            if user_input.lower() in {"exit", "quit"}:
+                print("Goodbye.")
+                break
+
+            # Run agent
+            result = await runner.run_debug(
+                session_id=SESSION_ID,
+                user_id=USER_ID,
+                user_messages=user_input,
+            )
+
+            # Print agent output cleanly
+            if isinstance(result, list):
+                for event in result:
+                    if event.is_final_response() and event.content:
+                        print(event.content.parts[0].text.strip())
+                        break
+            else:
+                print(result)
+
+        except KeyboardInterrupt:
+            print("\nInterrupted.")
+            break
+
+
+if __name__ == "__main__":
+    asyncio.run(cli_chat())
