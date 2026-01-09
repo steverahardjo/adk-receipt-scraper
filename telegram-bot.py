@@ -82,18 +82,22 @@ class TelegramAgentBot:
         uploaded_file = client.files.upload(file=str(local_file))
 
         prompt = "Transcribe the audio to plain text in English."
-
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[
-                genai_types.Content(
-                    parts=[
-                        genai_types.Part(file_data=uploaded_file),
-                        genai_types.Part(text=prompt),
-                    ]
-                )
-            ],
-        )
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=[
+                    genai_types.Content(
+                        parts=[
+                            genai_types.Part(file_data=uploaded_file),
+                            genai_types.Part(text=prompt),
+                        ]
+                    )
+                ],
+            )
+        finally:
+            # Clean up the downloaded file
+            if local_file.exists():
+                local_file.unlink()
 
         # Return the transcription as plain text
         return response.text
