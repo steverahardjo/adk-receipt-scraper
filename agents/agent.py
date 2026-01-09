@@ -10,6 +10,23 @@ from google.adk.memory import InMemoryMemoryService
 from google.adk.tools import load_memory
 from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
 from google.adk.code_executors import BuiltInCodeExecutor
+import os
+
+from google.adk.tools.mcp_tool.mcp_toolset import (
+    MCPToolset,
+    StdioConnectionParams,
+    StdioServerParameters,
+)
+
+chirp3_mcp_toolset = MCPToolset(
+    connection_params=StdioConnectionParams(),
+    server_params=StdioServerParameters(
+        command = "mcp-chirp3-go",
+        env=dict(os.environ, PROJECT_ID= os.getenv("GOOGLE_CLOUD_PROJECT_ID")
+    ),
+    timeout = 60
+)
+)
 
 async def create_expense_tracker_runner(
     mongo_db_inst,
@@ -63,7 +80,8 @@ async def create_expense_tracker_runner(
         tools=[
             AgentTool(saver_agent),
             AgentTool(retrieve_agent),
-            load_memory
+            load_memory,
+            chirp3_mcp_toolset
         ]
     )
 

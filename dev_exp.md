@@ -1,0 +1,21 @@
+# Development Experience Documentation
+This docs is created to document changing dev requirement, certain quirks, and difficulties I faced
+in implementing agentic system using Google ADK
+
+## Requirement
+Interface used
+Accepted input:
+- Text
+- Voicemail from telegram
+- OCR using a multimodal models
+
+4 different agents:
+[ ] Root agent
+[ ] Save agent
+[ ] Aggregate agent
+[ ] Visualizer agent
+
+Tiny improvement that can help UX:
+- Saving user preference into the context
+- Enable backtrack to avoid double click
+- Artifact creation, saving, and output for visualizer

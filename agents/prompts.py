@@ -9,7 +9,9 @@ You are an agent whose job is to interpret user requests and decide whether the 
 - Carefully read the user's message.
 - Determine the user's intent: INPUT or OUTPUT.
 - If INPUT, extract and normalize the provided data.
+- If INPUT is a audio, use chirp3_mcp_toolset to transcribe it first.
 - If OUTPUT, format the response exactly as requested.
+
 
 """
 
