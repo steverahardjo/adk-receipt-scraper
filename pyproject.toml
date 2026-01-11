@@ -6,10 +6,13 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "aiogram>=3.23.0",
+    "arize>=7.51.2",
+    "arize-otel>=0.11.0",
     "beanie>=2.0.1",
     "google>=3.0.0",
     "google-adk>=1.21.0",
     "motor>=3.7.1",
+    "openinference-instrumentation-google-adk>=0.1.8",
     "pandas>=2.3.3",
     "pymongo>=4.15.5",
     "python-telegram-bot>=22.5",

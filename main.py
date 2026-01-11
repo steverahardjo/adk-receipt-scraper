@@ -2,6 +2,9 @@ import asyncio
 from dotenv import load_dotenv
 from agents.tool import MongoTool
 from agents.agent import create_expense_tracker_runner
+from agents.tracing import instrument_adk_with_arize
+
+instrument_adk_with_arize()
 
 load_dotenv()
 

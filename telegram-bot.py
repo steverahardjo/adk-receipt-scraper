@@ -23,9 +23,7 @@ class TelegramAgentBot:
         self.bot = Bot(token=token)
         self.dp = Dispatcher()
         self.agent_func = agent_func
-        # This should be the model ID string used in the client calls
         self.model_id = "gemini-2.0-flash" 
-
         self.dp.message.register(self._handle_message)
 
     async def _handle_message(self, message: types.Message):
@@ -79,36 +77,27 @@ class TelegramAgentBot:
 
         # GenAI client
         client = genai.Client()
-        uploaded_file = client.files.upload(file=str(local_file))
+
 
         prompt = "Transcribe the audio to plain text in English."
         try:
+            client.files.upload(file=local_file)
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=[
-                    genai_types.Content(
-                        parts=[
-                            genai_types.Part(file_data=uploaded_file),
-                            genai_types.Part(text=prompt),
-                        ]
-                    )
-                ],
+                model = self.model_id,\
+                contents = [
+                    prompt
+                ]
             )
         finally:
-            # Clean up the downloaded file
             if local_file.exists():
                 local_file.unlink()
-
-        # Return the transcription as plain text
         return response.text
+
 
     async def run(self):
         logging.info("Bot polling started")
         await self.dp.start_polling(self.bot)
-
-# -------------------------
-# Example agent
-# -------------------------
+        
 async def simple_agent(input_msg: Payload) -> Payload:
     return Payload(
         type=PayloadType.TEXT,
