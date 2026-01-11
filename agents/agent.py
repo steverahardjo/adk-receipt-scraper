@@ -10,6 +10,9 @@ from google.adk.memory import InMemoryMemoryService
 from google.adk.tools import load_memory
 from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
 from google.adk.code_executors import BuiltInCodeExecutor
+from google.adk.artifacts import InMemoryArtifactService
+from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifactsPlugin
+from google.adk.tools import load_artifacts
 
 
 async def create_expense_tracker_runner(
@@ -32,6 +35,7 @@ async def create_expense_tracker_runner(
     Returns:
         session, runner
     """
+
     # --- Agents ---
     saver_agent = Agent(
         model=model_name,
@@ -52,7 +56,6 @@ async def create_expense_tracker_runner(
         model=model_name,
         name="retrieve_agent",
         instruction=SEARCH_PROMPT,
-
         tools=[AgentTool(visualiser_agent), mongo_db_inst.search_expenses]
     )
 
@@ -64,7 +67,8 @@ async def create_expense_tracker_runner(
         tools=[
             AgentTool(saver_agent),
             AgentTool(retrieve_agent),
-            load_memory
+            load_memory, 
+            load_artifacts
         ]
     )
 
@@ -79,12 +83,14 @@ async def create_expense_tracker_runner(
         user_id=user_id,
         session_id=session_id
     )
+
     runner = Runner(
         agent=root_agent,
         app_name=app_name,
         session_service=session_service,
         memory_service=memory_service,
         artifact_service=artifact_service,
+        plugins = [SaveFilesAsArtifactsPlugin("expense_tracker_files")],
     )
 
     logging.info(f"Runner and session ready for user {user_id} in app {app_name}")

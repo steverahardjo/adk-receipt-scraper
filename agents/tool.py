@@ -79,14 +79,21 @@ class MongoTool:
         logging.info(f"Inserted expense: {expense}")
         return None
     
-    async def search_expenses(self, **filters) -> List[ExpenseSchema]:
-        await self.init()
-        query = ExpenseSchema.find({})
-        for field, value in filters.items():
-            query = query.find({field: value})
-
-        results = await query.to_list()
-        return results
+    async def search_expenses(self, limit: int = 50, **filters) -> List[Expense]:
+            """
+            Accepts dynamic filters (item, category, currency, etc.)
+            Example: await tool.search_expenses(category="Food", amount=50.0)
+            """
+            await self.init()
+            
+            # We use Expense.find(filters) because Beanie automatically 
+            # maps dictionary keys to MongoDB field names.
+            query = Expense.find(filters)
+            
+            # Apply sorting (newest first) and limit
+            results = await query.sort("-datetime").limit(limit).to_list()
+            
+            return results
     
     async def clear_db(self):
         await self.init()

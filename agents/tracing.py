@@ -20,7 +20,7 @@ def instrument_adk_with_arize() -> trace.Tracer:
     tracer_provider = register(
         space_id = os.getenv("ARIZE_SPACE_ID"),
         api_key = os.getenv("ARIZE_API_KEY"),
-        project_name = os.getenv("ARIZE_PROJECT_NAME", "adk-travel-concierge"),
+        project_name = os.getenv("ARIZE_PROJECT_NAME", "adk-expense-tracker"),
     )
 
     GoogleADKInstrumentor().instrument(tracer_provider=tracer_provider)
