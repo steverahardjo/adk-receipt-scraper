@@ -1,3 +1,4 @@
+from fileinput import filename
 from agents.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
 from typing import Dict, Optional, List
 from datetime import datetime, date
@@ -6,6 +7,11 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from agents.agent_typing import ExpenseSchema
 import logging
+import json
+import io
+from google.adk.tools import ToolContext
+import google.genai.types as types
+
 
 MONGO_ADDR = "mongodb://localhost:27017"
 DB_NAME = "user_expense"
@@ -79,23 +85,19 @@ class MongoTool:
         logging.info(f"Inserted expense: {expense}")
         return None
     
-    async def search_expenses(self, limit: int = 50, **filters) -> List[Dict]:
-        """
-        Accepts dynamic filters (item, category, currency, etc.)
-        Example: await tool.search_expenses(category="Food", amount=50.0)
-        """
+    async def search_expenses(self, limit: int = 50, **filters):
         await self.init()
         
-        # Execute query with dynamic filters
         query = Expense.find(filters)
         results = await query.sort("-datetime").limit(limit).to_list()
         
-        json_results = []
-        for r in results:
-            r_dict = r.model_dump(mode="json")
-            json_results.append(r_dict)
-        
-        return json_results
+        json_results = [r.model_dump(mode="json") for r in results]
+
+        buffer = io.StringIO()
+        json.dump(json_results, buffer, indent=2)
+        buffer.seek(0)
+
+        return buffer.getvalue()
     
     async def clear_db(self):
         await self.init()
@@ -107,33 +109,25 @@ class MongoTool:
         return await Expense.find().to_list()
     
 
+async def save_generated_visual(context: ToolContext, image_data: bytes, filename:str="gen_visual.jpeg"):
+    """
+    Saves the generated visualization image to a file.
+    args:
+        context: ToolContext - The tool context to save the artifact.
+        image_data: bytes - The image data in bytes.
+        filename: str - The filename to save the image as, decided based on user request.
+    """
+    visual_artifact = types.Part.from_bytes(
+        data = image_data,
+        mime_type="image/jpeg",
+    )
+    try:
+        await context.save_artifact(
+            artifact = visual_artifact,
+            filename = f"temp/{filename}",
+        )
+        logging.info(f"Visualization image saved in temp as artifact '{filename}'")
+
+    except Exception as e:
+        logging.error(f"Failed to save visualization image: {e}")
     
-class ExpenseAggregator:
-    """
-    Tool to perform aggregation on expense data.
-    """
-    def __init__(self, expenses):
-        self.expenses = expenses
-
-    def aggregate_by(self, field: str, agg: str = "sum"):
-        """
-        Aggregate expenses by a given field (category, payment_method, currency, datetime, etc.)
-        agg: sum | average | count
-        """
-        from collections import defaultdict
-
-        result = defaultdict(list)
-        for e in self.expenses:
-            key = e.get(field)
-            result[key].append(e["amount"])
-
-        aggregated = {}
-        for k, values in result.items():
-            if agg == "sum":
-                aggregated[k] = sum(values)
-            elif agg == "average":
-                aggregated[k] = sum(values)/len(values)
-            elif agg == "count":
-                aggregated[k] = len(values)
-        return aggregated
-

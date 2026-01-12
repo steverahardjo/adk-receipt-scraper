@@ -47,7 +47,7 @@ async def cli_chat():
             if isinstance(result, list):
                 for event in result:
                     if event.is_final_response() and event.content:
-                        print(event.content.parts[0].text.strip())
+                        print(event.content)
                         break
             else:
                 print(result)

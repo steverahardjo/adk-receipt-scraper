@@ -10,9 +10,9 @@ Accepted input:
 - OCR using a multimodal models
 
 4 different agents:
-[ ] Root agent
-[ ] Save agent
-[ ] Aggregate agent
+[x] Root agent
+[x] Save agent
+[x] Aggregate agent
 [ ] Visualizer agent
 
 Tiny improvement that can help UX:
