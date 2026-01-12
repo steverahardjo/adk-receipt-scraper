@@ -19,3 +19,8 @@ Tiny improvement that can help UX:
 - Saving user preference into the context
 - Enable backtrack to avoid double click
 - Artifact creation, saving, and output for visualizer
+
+App Stack & feature change consideration:
+- Change third-party noSQLdb connection through beanie with sqlLite and ADk instance's `DatabaseSessionService`
+
+

@@ -13,6 +13,7 @@ def instrument_adk_with_arize() -> trace.Tracer:
     if os.getenv("ARIZE_SPACE_ID") is None:
         warnings.warn("ARIZE_SPACE_ID is not set")
         return None
+    
     if os.getenv("ARIZE_API_KEY") is None:
         warnings.warn("ARIZE_API_KEY is not set")
         return None
@@ -20,10 +21,9 @@ def instrument_adk_with_arize() -> trace.Tracer:
     tracer_provider = register(
         space_id = os.getenv("ARIZE_SPACE_ID"),
         api_key = os.getenv("ARIZE_API_KEY"),
-        project_name = os.getenv("ARIZE_PROJECT_NAME", "adk-expense-tracker"),
+        project_name = "adk-expense-tracker",
     )
 
     GoogleADKInstrumentor().instrument(tracer_provider=tracer_provider)
-
     return tracer_provider.get_tracer(__name__)
 

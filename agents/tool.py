@@ -1,5 +1,5 @@
 from agents.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
-from typing import Optional, List
+from typing import Dict, Optional, List
 from datetime import datetime, date
 import logging
 from beanie import init_beanie
@@ -79,21 +79,23 @@ class MongoTool:
         logging.info(f"Inserted expense: {expense}")
         return None
     
-    async def search_expenses(self, limit: int = 50, **filters) -> List[Expense]:
-            """
-            Accepts dynamic filters (item, category, currency, etc.)
-            Example: await tool.search_expenses(category="Food", amount=50.0)
-            """
-            await self.init()
-            
-            # We use Expense.find(filters) because Beanie automatically 
-            # maps dictionary keys to MongoDB field names.
-            query = Expense.find(filters)
-            
-            # Apply sorting (newest first) and limit
-            results = await query.sort("-datetime").limit(limit).to_list()
-            
-            return results
+    async def search_expenses(self, limit: int = 50, **filters) -> List[Dict]:
+        """
+        Accepts dynamic filters (item, category, currency, etc.)
+        Example: await tool.search_expenses(category="Food", amount=50.0)
+        """
+        await self.init()
+        
+        # Execute query with dynamic filters
+        query = Expense.find(filters)
+        results = await query.sort("-datetime").limit(limit).to_list()
+        
+        json_results = []
+        for r in results:
+            r_dict = r.model_dump(mode="json")
+            json_results.append(r_dict)
+        
+        return json_results
     
     async def clear_db(self):
         await self.init()

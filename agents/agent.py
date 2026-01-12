@@ -14,7 +14,6 @@ from google.adk.artifacts import InMemoryArtifactService
 from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifactsPlugin
 from google.adk.tools import load_artifacts
 
-
 async def create_expense_tracker_runner(
     mongo_db_inst,
     model_name: str,
@@ -81,18 +80,20 @@ async def create_expense_tracker_runner(
     session = await session_service.create_session(
         app_name=app_name,
         user_id=user_id,
-        session_id=session_id
+        session_id=session_id,
+        state = {
+            "current_date": asyncio.get_event_loop().time().__str__()
+        }
     )
-
     runner = Runner(
         agent=root_agent,
         app_name=app_name,
         session_service=session_service,
         memory_service=memory_service,
         artifact_service=artifact_service,
-        plugins = [SaveFilesAsArtifactsPlugin("expense_tracker_files")],
+        plugins = [SaveFilesAsArtifactsPlugin("expense_tracker_files")]
     )
 
     logging.info(f"Runner and session ready for user {user_id} in app {app_name}")
 
-    return session, runner
+    return runner
