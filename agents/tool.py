@@ -5,7 +5,6 @@ from datetime import datetime, date
 import logging
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
-from agents.agent_typing import ExpenseSchema
 import logging
 import json
 import io
@@ -90,15 +89,9 @@ class MongoTool:
         
         query = Expense.find(filters)
         results = await query.sort("-datetime").limit(limit).to_list()
-        
         json_results = [r.model_dump(mode="json") for r in results]
+        return json_results
 
-        buffer = io.StringIO()
-        json.dump(json_results, buffer, indent=2)
-        buffer.seek(0)
-
-        return buffer.getvalue()
-    
     async def clear_db(self):
         await self.init()
         await Expense.delete_all()
@@ -109,7 +102,7 @@ class MongoTool:
         return await Expense.find().to_list()
     
 
-async def save_generated_visual(context: ToolContext, image_data: bytes, filename:str="gen_visual.jpeg"):
+async def save_generated_visual(tool_context: ToolContext, image_data: bytes, filename:str="gen_visual.jpeg"):
     """
     Saves the generated visualization image to a file.
     args:
@@ -122,7 +115,7 @@ async def save_generated_visual(context: ToolContext, image_data: bytes, filenam
         mime_type="image/jpeg",
     )
     try:
-        await context.save_artifact(
+        await tool_context.save_artifact(
             artifact = visual_artifact,
             filename = f"temp/{filename}",
         )

@@ -9,10 +9,12 @@ from google.adk.tools import load_memory
 from google.adk.memory import InMemoryMemoryService
 from google.adk.tools import load_memory
 from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
-from google.adk.code_executors import BuiltInCodeExecutor
+from google.adk.code_executors import VertexAiCodeExecutor
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifactsPlugin
 from google.adk.tools import load_artifacts
+from .tool import save_generated_visual
+
 
 async def create_expense_tracker_runner(
     mongo_db_inst,
@@ -43,7 +45,6 @@ async def create_expense_tracker_runner(
         tools=[mongo_db_inst.insert_expense, load_memory]
     )
 
-
     retrieve_agent = Agent(
         model=model_name,
         name="retrieve_agent",
@@ -55,11 +56,14 @@ async def create_expense_tracker_runner(
         model=model_name,
         name="visualiser_agent",
         instruction=VISUALIZER_PROMPT,
-        code_executor=BuiltInCodeExecutor(),
+        code_executor=VertexAiCodeExecutor(
+        optimize_data_file=True,
+        stateful=True,
+    ),
         output_key = "visualisation_result",
+        tools = [AgentTool(retrieve_agent)]
         
     )
-
     root_agent = Agent(
         model=model_name,
         name="root_agent",
@@ -68,8 +72,8 @@ async def create_expense_tracker_runner(
         tools=[
             AgentTool(saver_agent),
             AgentTool(retrieve_agent),
-            load_memory, 
-            AgentTool(visualiser_agent)
+            AgentTool(visualiser_agent),
+            load_memory,
         ]
     )
 
