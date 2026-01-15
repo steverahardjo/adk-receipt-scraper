@@ -1,37 +1,23 @@
 import asyncio
-from agents.tool import MongoTool
-
+from expense_tracker_agent.tool import MongoTool
+from datetime import datetime, date
 mongo = MongoTool("user_expense")
 
 import pandas as pd
 
 async def main():
-    expenses = await mongo.search_expenses()
+    today = date.today()
 
+    # query MongoDB
+    start = datetime(2026, 1, 15, 0, 0, 0)
+    end = datetime(2026, 1, 16, 0, 0, 0)
+
+    results = await mongo.search_expenses(
+        limit=10
+    )
     # Convert to DataFrame
-    df = pd.DataFrame(expenses)
-
-    # Ensure datetime is datetime
-    df["datetime"] = pd.to_datetime(df["datetime"])
-
-    # Example 1: total amount by category
-    by_category = (
-        df.groupby("category", as_index=False)["amount"]
-          .sum()
-    )
-
-    print(by_category)
-    print("Number of data points: ", df.__len__())
-
-    # Example 2: monthly total expenses
-    df["month"] = df["datetime"].dt.to_period("M")
-
-    by_month = (
-        df.groupby("month", as_index=False)["amount"]
-          .sum()
-    )
-
-    print(by_month)
+    df = pd.DataFrame(results)
+    print(df)
 
 
 if __name__ == "__main__":

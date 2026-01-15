@@ -1,4 +1,4 @@
-from agents.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
+from expense_tracker_agent.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
 from typing import Dict, Optional, List
 from datetime import datetime, date
 import logging
@@ -7,6 +7,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from google.adk.tools import ToolContext
 from .subagent import visualiser_agent
 from google.adk.tools.agent_tool import AgentTool
+from typing import Any
+
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
@@ -81,14 +83,23 @@ class MongoTool:
         logging.info(f"Inserted expense: {expense}")
         return None
     
-    async def search_expenses(self, tool_context:ToolContext, limit: int = 50, **filters)->None:
+    async def search_expenses(
+        self,
+        limit: int = 50,
+        **filters: Any
+    ) -> list[dict]:
         await self.init()
-        
-        query = Expense.find(filters)
-        results = await query.sort("-datetime").limit(limit).to_list()
-        json_results = [r.model_dump(mode="json") for r in results]
-        tool_context.state["expense"] =json_results
-        return json_results
+
+        query = Expense.find(**filters)
+        results = (
+            await query
+            .sort(-Expense.datetime)
+            .limit(limit)
+            .to_list()
+        )
+
+        return [r.model_dump(mode="json") for r in results]
+
 
     async def clear_db(self):
         await self.init()
@@ -98,23 +109,6 @@ class MongoTool:
     async def test_result(self):
         await self.init()
         return await Expense.find().to_list()
-    
-
-async def list_user_files(tool_context: ToolContext, directory: str = "/home/holyknight101/Documents/Projects/Personal/adk-exp_tracker/viz/") -> List[str]:
-    """
-    List all user files in a directory.
-    Args:
-        tool_context: ToolContext provided by ADK
-        directory: Directory path to list files from
-    Returns:
-        List of file names in the directory
-    """
-    import os
-    try:
-        files = os.listdir(directory)
-        return files
-    except FileNotFoundError:
-        return []
 
 
 async def save_artifact(tool_context: ToolContext, file_path: str, artifact_name: str = None) -> str:

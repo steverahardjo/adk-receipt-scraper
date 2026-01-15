@@ -1,8 +1,8 @@
 import asyncio
 from dotenv import load_dotenv
-from agents.tool import MongoTool
-from agents.agent import create_expense_tracker_runner
-from agents.tracing import instrument_adk_with_arize
+from expense_tracker_agent.tool import MongoTool
+from expense_tracker_agent.agent import create_expense_tracker_runner
+from expense_tracker_agent.tracing import instrument_adk_with_arize
 
 # Instruct ADK to use Arize for tracing and monitoring
 

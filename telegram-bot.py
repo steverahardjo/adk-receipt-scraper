@@ -10,7 +10,7 @@ from google import genai
 from google.genai import types as genai_types
 
 # Assuming these are defined in your local project
-from agents.agent_typing import Payload, PayloadType
+from expense_tracker_agent.agent_typing import Payload, PayloadType
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
