@@ -1,15 +1,12 @@
-from fileinput import filename
 from agents.agent_typing import ExpenseSchema, Expense, PaymentMethod, Currency, ExpenseType
 from typing import Dict, Optional, List
 from datetime import datetime, date
 import logging
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
-import logging
-import json
-import io
 from google.adk.tools import ToolContext
-import google.genai.types as types
+from .subagent import visualiser_agent
+from google.adk.tools.agent_tool import AgentTool
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
@@ -84,12 +81,13 @@ class MongoTool:
         logging.info(f"Inserted expense: {expense}")
         return None
     
-    async def search_expenses(self, limit: int = 50, **filters):
+    async def search_expenses(self, tool_context:ToolContext, limit: int = 50, **filters)->None:
         await self.init()
         
         query = Expense.find(filters)
         results = await query.sort("-datetime").limit(limit).to_list()
         json_results = [r.model_dump(mode="json") for r in results]
+        tool_context.state["expense"] =json_results
         return json_results
 
     async def clear_db(self):
@@ -102,25 +100,92 @@ class MongoTool:
         return await Expense.find().to_list()
     
 
-async def save_generated_visual(tool_context: ToolContext, image_data: bytes, filename:str="gen_visual.jpeg"):
+async def list_user_files(tool_context: ToolContext, directory: str = "/home/holyknight101/Documents/Projects/Personal/adk-exp_tracker/viz/") -> List[str]:
     """
-    Saves the generated visualization image to a file.
-    args:
-        context: ToolContext - The tool context to save the artifact.
-        image_data: bytes - The image data in bytes.
-        filename: str - The filename to save the image as, decided based on user request.
+    List all user files in a directory.
+    Args:
+        tool_context: ToolContext provided by ADK
+        directory: Directory path to list files from
+    Returns:
+        List of file names in the directory
     """
-    visual_artifact = types.Part.from_bytes(
-        data = image_data,
-        mime_type="image/jpeg",
-    )
+    import os
     try:
-        await tool_context.save_artifact(
-            artifact = visual_artifact,
-            filename = f"temp/{filename}",
-        )
-        logging.info(f"Visualization image saved in temp as artifact '{filename}'")
+        files = os.listdir(directory)
+        return files
+    except FileNotFoundError:
+        return []
 
+
+async def save_artifact(tool_context: ToolContext, file_path: str, artifact_name: str = None) -> str:
+    """
+    Save a file as an artifact in the ADK system.
+    Args:
+        tool_context: ToolContext provided by ADK
+        file_path: Path to the file to save
+        artifact_name: Optional name for the artifact (defaults to filename)
+    Returns:
+        Artifact ID or path
+    """
+    import os
+    try:
+        # Handle empty or None paths
+        if not file_path or not isinstance(file_path, str):
+            error_msg = f"Invalid file path: {file_path}"
+            logging.error(error_msg)
+            return error_msg
+        
+        # Normalize the path
+        file_path = os.path.abspath(file_path)
+        
+        if not os.path.exists(file_path):
+            error_msg = f"Error: File not found at {file_path}"
+            logging.error(error_msg)
+            return error_msg
+        
+        filename = artifact_name or os.path.basename(file_path)
+        
+        # Check file size
+        file_size = os.path.getsize(file_path)
+        if file_size == 0:
+            error_msg = f"Error: File at {file_path} is empty"
+            logging.error(error_msg)
+            return error_msg
+        
+        # Store in tool_context state for artifact tracking
+        tool_context.state["saved_artifact"] = {
+            "path": file_path,
+            "name": filename,
+            "type": "image",
+            "size": file_size
+        }
+        logging.info(f"Artifact saved: {filename} ({file_size} bytes) at {file_path}")
+        return file_path
     except Exception as e:
-        logging.error(f"Failed to save visualization image: {e}")
-    
+        error_msg = f"Error saving artifact: {str(e)}"
+        logging.error(error_msg)
+        return error_msg
+
+
+async def generate_visual(tool_context: ToolContext, user_request: str, dataset: str):
+    """
+    This tool generate python code from user request for a visualization
+    Task it can do:
+    * Compiling and processing data using pandas
+    * Creating graph for data viz using matplotlib, seaborn
+    Args: 
+    user_request(str): Form of visualization and processing user desire
+    dataset(str): Data passed as a string in json format to processed
+    Returns:
+    Response from viz agent as a address of the file.
+    """
+    agent_tool = AgentTool(visualiser_agent)
+    output = await agent_tool.run_async(
+        args = {
+            "request": user_request,
+            "dataset": dataset
+        },
+        tool_context=tool_context
+    )
+    tool_context.state["viz_agent_output"] = output
+    return output

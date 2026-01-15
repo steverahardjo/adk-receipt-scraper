@@ -7,13 +7,40 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.tools import load_memory
 from google.adk.memory import InMemoryMemoryService
-from google.adk.tools import load_memory
-from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT, VISUALIZER_PROMPT
-from google.adk.code_executors import VertexAiCodeExecutor
-from google.adk.artifacts import InMemoryArtifactService
 from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifactsPlugin
-from google.adk.tools import load_artifacts
-from .tool import save_generated_visual
+from agents.prompts import ROOT_PROMPT, SAVER_PROMPT, SEARCH_PROMPT
+from .tool import generate_visual, list_user_files, MongoTool
+from .subagent import visualiser_agent
+
+mongodb = MongoTool(db_name="user_expense")
+
+# Create default agents for adk web
+saver_agent = Agent(
+    model="gemini-2.0-flash-exp",
+    name="saver_agent",
+    instruction=SAVER_PROMPT,
+    tools=[load_memory, mongodb.insert_expense]
+)
+
+retrieve_agent = Agent(
+    model="gemini-2.0-flash-exp",
+    name="retrieve_agent",
+    instruction=SEARCH_PROMPT,
+    tools=[generate_visual, mongodb.search_expenses]
+)
+
+root_agent = Agent(
+    model="gemini-2.0-flash-exp",
+    name="root_agent",
+    instruction=ROOT_PROMPT,
+    output_key="root_agent",
+    tools=[
+        AgentTool(saver_agent),
+        AgentTool(retrieve_agent),
+        load_memory,
+        generate_visual
+    ]
+)
 
 
 async def create_expense_tracker_runner(
@@ -49,31 +76,20 @@ async def create_expense_tracker_runner(
         model=model_name,
         name="retrieve_agent",
         instruction=SEARCH_PROMPT,
-        tools=[mongo_db_inst.search_expenses]
+        tools=[mongo_db_inst.search_expenses, generate_visual]
     )
 
-    visualiser_agent = Agent(
-        model=model_name,
-        name="visualiser_agent",
-        instruction=VISUALIZER_PROMPT,
-        code_executor=VertexAiCodeExecutor(
-        optimize_data_file=True,
-        stateful=True,
-    ),
-        output_key = "visualisation_result",
-        tools = [AgentTool(retrieve_agent)]
-        
-    )
     root_agent = Agent(
         model=model_name,
         name="root_agent",
         instruction=ROOT_PROMPT,
-        output_key="root_vis",
+        output_key="root_agent",
         tools=[
             AgentTool(saver_agent),
             AgentTool(retrieve_agent),
-            AgentTool(visualiser_agent),
             load_memory,
+            AgentTool(visualiser_agent),
+            list_user_files
         ]
     )
 

@@ -5,7 +5,7 @@ from agents.agent import create_expense_tracker_runner
 from agents.tracing import instrument_adk_with_arize
 
 # Instruct ADK to use Arize for tracing and monitoring
-print(instrument_adk_with_arize())
+
 
 load_dotenv()
 
@@ -42,15 +42,7 @@ async def cli_chat():
                 user_id=USER_ID,
                 user_messages=user_input,
             )
-
-            # Print agent output cleanly
-            if isinstance(result, list):
-                for event in result:
-                    if event.is_final_response() and event.content:
-                        print(event.content)
-                        break
-            else:
-                print(result)
+            print(result)
 
         except KeyboardInterrupt:
             print("\nInterrupted.")
