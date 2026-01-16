@@ -10,4 +10,6 @@ wheels/
 .venv
 .env
 agents/.adk/
+.ruff_cache
+/agentops.log
 

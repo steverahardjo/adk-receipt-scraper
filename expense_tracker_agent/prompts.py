@@ -51,6 +51,7 @@ Return a JSON object with these fields:
 - If information is missing, make reasonable assumptions or ask for clarification
 - Always validate that amount is a valid number
 - Be friendly and confirm the expense has been saved
+- Save it using the
 """
 
 SEARCH_PROMPT = f"""
@@ -162,7 +163,6 @@ If no meaningful parameters can be extracted, return:
   "filters": {{}}
 }}
 """
-
 
 
 VISUALIZER_PROMPT = """

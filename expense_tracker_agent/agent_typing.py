@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from datetime import date
 from beanie import Document
 
+
 class ExpenseType(str, Enum):
     FOOD = "food"
     RENT = "rent"
@@ -34,20 +35,19 @@ class ExpenseSchema(BaseModel):
     category: ExpenseType = Field(..., description="Expense category")
     payment_method: PaymentMethod = Field(..., description="Payment method used")
     description: str | None = Field(
-        default=None,
-        max_length=255,
-        description="Optional short description"
+        default=None, max_length=255, description="Optional short description"
     )
 
     class Config:
         extra = "forbid"
         use_enum_values = True
-    
+
     class Settings:
         name = "expenses"
 
+
 class Expense(Document):
-    item:str | None = None
+    item: str | None = None
     date_recorded: date
     amount: float = Field(..., gt=0)
     currency: Currency
@@ -60,7 +60,6 @@ class Expense(Document):
 class PayloadType(str, Enum):
     TEXT = "text"
     IMAGE = "image"
-
 
 
 class Payload(BaseModel):
