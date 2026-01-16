@@ -12,7 +12,19 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 set_observ()
 
-async def process_multimodal_request(message: Message, file_ext: str):
+def extract_text_from_result(result):
+    if not result or not isinstance(result, list):
+        return "No response generated."
+
+    # 1. Get the last event in the list
+    last_event = result[-1]
+    if hasattr(last_event, 'content') and last_event.content.parts:
+        return last_event.content.parts[0].text
+    if hasattr(last_event, 'actions') and last_event.actions.state_delta:
+        return last_event.actions.state_delta.get('root_agent', "")
+
+
+async def process_multimodal_request(message: Message, file_ext: str)->str:
     """Downloads the file and sends it to the ADK Runner."""
     session_id = f"tg_{message.chat.id}"
     user_id = str(message.from_user.id)
@@ -40,9 +52,7 @@ async def process_multimodal_request(message: Message, file_ext: str):
             user_messages=prompt,
             files=[local_filename],
         )
-
-        # 3. Reply to user
-        await message.answer(result)
+        return extract_text_from_result(result)
 
     except Exception as e:
         logging.error(f"Error processing agent: {e}")
@@ -86,7 +96,7 @@ async def handle_text(message: Message):
         user_id=str(message.from_user.id),
         user_messages=message.text,
     )
-    await message.answer(result)
+    await message.answer(extract_text_from_result(result))
 
 
 async def main():
