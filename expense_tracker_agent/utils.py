@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import telegramify_markdown
 from google.adk.runners import Runner
 import io
-load_dotenv()
-
+import hashlib
+from enum import Enum
 import google.genai.types as types
-
+load_dotenv()
 
 
 def set_observ():
@@ -39,18 +39,33 @@ def extract_text_from_result(result, main_agent_name:str):
     
     return telegramify_markdown.standardize(result)
     
-class InputType(enumerate):
-    PDF = "pdf"
-    IMG = "image"
-    AUDIO = "audio"
+import hashlib
+from enum import Enum
 
-def save_multimodal_artifact(file_id:str, type:InputType, runner:Runner, buffer:io.BytesIO):
+class InputType(Enum):
+    PDF = "application/pdf"
+    IMG = "image/jpeg"
+    AUDIO = "audio/mpeg"
+
+def get_hashed_id(file_id: str) -> str:
+    """Creates a deterministic SHA-256 hash of the file_id."""
+    return hashlib.sha256(file_id.encode('utf-8')).hexdigest()
+
+async def save_multimodal_artifact(file_id: str, t: InputType, runner: "Runner", buffer: io.BytesIO,session_id:str, user_id:str)->None:
     buffer.seek(0)
     file_bytes = buffer.read()
-    artifact = None
-    if type.IMG == InputType.IMG:
-        artifact = types.Part.from_bytes(
-            data = file_bytes,
-            mime_type = ""
-        )
+
+    artifact = types.Part.from_bytes(
+        data=file_bytes,
+        mime_type=t.value
+    )
+    await runner.artifact_service.save_artifact(
+        filename = f"{t}_{get_hashed_id(file_id)}",
+        artifact = artifact,
+        app_name = runner.app_name,
+        user_id = user_id,
+        session_id = session_id
+    )
+
+
 

@@ -11,3 +11,4 @@ class ExpenseTrackerConfig:
     root_agent_model: str = "gemini-2.5-flash"
     retriever_agent_model: str = "gemini-3-flash-preview"
     insert_agent_model: str = "gemini-3-flash-preview"
+

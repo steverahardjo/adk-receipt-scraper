@@ -32,7 +32,7 @@ retrieve_agent = Agent(
     model=config.retriever_agent_model,
     name="retrieve_agent",
     instruction=SEARCH_PROMPT,
-    tools=[mongodb.search_expenses, load_memory],
+    tools=[mongodb.search_expenses, load_memory, load_artifacts],
 )
 
 root_agent = Agent(
@@ -67,5 +67,3 @@ expense_runner = Runner(
     memory_service=memory_service,
     artifact_service=artifact_service,
 )
-
-expense_runner

@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from expense_tracker_agent.agent import expense_runner
-from expense_tracker_agent.utils import set_observ, extract_text_from_result
+from expense_tracker_agent.utils import InputType, set_observ, extract_text_from_result, save_multimodal_artifact
 import io
 
 
@@ -14,7 +14,8 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 set_observ()
-async def process_multimodal_request(message: Message, file_ext: str)->str:
+
+async def process_multimodal_request(message: Message)->str:
     """Downloads the file and sends it to the ADK Runner."""
     session_id = f"tg_{message.chat.id}"
     user_id = str(message.from_user.id)
@@ -30,14 +31,19 @@ async def process_multimodal_request(message: Message, file_ext: str)->str:
         file_id = (message.voice or message.audio).file_id
 
     file_info = await bot.get_file(file_id)
-    
     await bot.download_file(file_info.file_path, destination = buffer)
+    if message.photo:
+        await save_multimodal_artifact(file_info.file_path, InputType.IMG, expense_runner, buffer, session_id, user_id)
+    elif message.document:
+        await save_multimodal_artifact(file_info.file_path, InputType.PDF, expense_runner, buffer, session_id, user_id)
+    elif message.voice or message.audio:
+        await save_multimodal_artifact(file_info.file_path, InputType.AUDIO, expense_runner, buffer, session_id, user_id)
 
     try:
         result = await expense_runner.run_debug(
             session_id=session_id,
             user_id=user_id,
-            user_messages=prompt,
+            user_messages=prompt
         )
         return message.answer(
             extract_text_from_result(result, "root_agent"),
@@ -59,18 +65,18 @@ async def start_cmd(message: Message):
 
 @dp.message(F.photo)
 async def handle_photo(message: Message):
-    await process_multimodal_request(message, "jpg")
+    await process_multimodal_request(message)
 
 
 @dp.message(F.document.mime_type == "application/pdf")
 async def handle_pdf(message: Message):
-    await process_multimodal_request(message, "pdf")
+    await process_multimodal_request(message)
 
 
 @dp.message(F.voice | F.audio)
 async def handle_audio(message: Message):
     # Telegram voice is usually .ogg
-    await process_multimodal_request(message, "ogg")
+    await process_multimodal_request(message)
 
 
 @dp.message(F.text)
