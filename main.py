@@ -5,34 +5,22 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from expense_tracker_agent.agent import expense_runner
-from expense_tracker_agent.tracing import set_observ
+from expense_tracker_agent.utils import set_observ, extract_text_from_result
+import io
 
+
+buffer = io.BytesIO()
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 set_observ()
-
-def extract_text_from_result(result):
-    if not result or not isinstance(result, list):
-        return "No response generated."
-
-    # 1. Get the last event in the list
-    last_event = result[-1]
-    if hasattr(last_event, 'content') and last_event.content.parts:
-        return last_event.content.parts[0].text
-    if hasattr(last_event, 'actions') and last_event.actions.state_delta:
-        return last_event.actions.state_delta.get('root_agent', "")
-
-
 async def process_multimodal_request(message: Message, file_ext: str)->str:
     """Downloads the file and sends it to the ADK Runner."""
     session_id = f"tg_{message.chat.id}"
     user_id = str(message.from_user.id)
 
-    # Text context (caption if it's a photo, or general prompt)
     prompt = message.caption or message.text or "Extract expenses from this file."
 
-    # 1. Download the file from Telegram
     file_id = None
     if message.photo:
         file_id = message.photo[-1].file_id
@@ -42,26 +30,23 @@ async def process_multimodal_request(message: Message, file_ext: str)->str:
         file_id = (message.voice or message.audio).file_id
 
     file_info = await bot.get_file(file_id)
-    local_filename = f"input_{file_id}.{file_ext}"
-    await bot.download_file(file_info.file_path, local_filename)
+    
+    await bot.download_file(file_info.file_path, destination = buffer)
 
     try:
         result = await expense_runner.run_debug(
             session_id=session_id,
             user_id=user_id,
             user_messages=prompt,
-            files=[local_filename],
         )
-        return extract_text_from_result(result)
+        return message.answer(
+            extract_text_from_result(result, "root_agent"),
+            parse_mode = "MarkdownV2"
+        )
 
     except Exception as e:
         logging.error(f"Error processing agent: {e}")
         await message.answer("I couldn't process that file. Please try again.")
-
-    finally:
-        # 4. Cleanup local file
-        if os.path.exists(local_filename):
-            os.remove(local_filename)
 
 
 # --- HANDLERS ---
@@ -96,8 +81,10 @@ async def handle_text(message: Message):
         user_id=str(message.from_user.id),
         user_messages=message.text,
     )
-    await message.answer(extract_text_from_result(result))
-
+    await message.answer(
+        extract_text_from_result(result, "root_agent"),
+        parse_mode = "MarkdownV2"
+    )
 
 async def main():
     logging.basicConfig(level=logging.INFO)

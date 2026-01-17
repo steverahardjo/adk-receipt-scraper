@@ -51,7 +51,6 @@ root_agent = Agent(
 # --- Memory and artifacts ---
 memory_service = InMemoryMemoryService()
 artifact_service = InMemoryArtifactService()
-
 session_service = InMemorySessionService()
 
 logging.info("Expense tracker runner initialized for adk web")
@@ -68,3 +67,5 @@ expense_runner = Runner(
     memory_service=memory_service,
     artifact_service=artifact_service,
 )
+
+expense_runner
