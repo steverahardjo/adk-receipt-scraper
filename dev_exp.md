@@ -21,6 +21,10 @@ Tiny improvement that can help UX:
 - Artifact creation, saving, and output for visualizer
 
 App Stack & feature change consideration:
-- Change third-party noSQLdb connection through beanie with sqlLite and ADk instance's `DatabaseSessionService`
+- Change third-party noSQLdb connection through beanie with sqlLite and ADK instance's `DatabaseSessionService`
+- Load_artifacts are very prompt and command sensitive, accuracy is needed
+- Add a local blob storage for non-text file format
+- Add a typing toast for loading.
+- Decouple app logic with the agent logic. 
 
 

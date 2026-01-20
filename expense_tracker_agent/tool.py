@@ -1,11 +1,10 @@
 from expense_tracker_agent.agent_typing import (
-    ExpenseSchema,
     Expense,
     PaymentMethod,
     Currency,
-    ExpenseType,
+    ExpenseType
 )
-from typing import Dict, Optional, List
+from typing import Optional
 from datetime import datetime, date
 import logging
 from beanie import init_beanie
@@ -14,9 +13,12 @@ from google.adk.tools import ToolContext
 from .subagent import visualiser_agent
 from google.adk.tools.agent_tool import AgentTool
 from typing import Any
+from blob_storage import BlobService
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
+
+BlobService()
 
 
 
@@ -59,8 +61,7 @@ class MongoTool:
         Output: None
         """
         await self.init()
-
-        # Normalize date_input → date (ONCE, at the boundary)
+        
         if isinstance(date_input, date) and not isinstance(date_input, datetime):
             d = date_input
         elif isinstance(date_input, datetime):

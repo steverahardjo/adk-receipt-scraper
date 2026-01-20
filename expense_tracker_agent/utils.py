@@ -7,6 +7,8 @@ import io
 import hashlib
 from enum import Enum
 import google.genai.types as types
+import re
+
 load_dotenv()
 
 
@@ -43,33 +45,37 @@ import hashlib
 from enum import Enum
 
 class InputType(Enum):
-    PDF =  ["application/pdf", "pdf"]
-    IMG =  ["image/jpeg", "jpeg"]
-    AUDIO =["audio/mpeg", "mpeg"]
+    PDF = ("application/pdf", "pdf")
+    IMG = ("image/jpeg", "jpg")
+    AUDIO = ("audio/mpeg", "mp3")
 
 def get_hashed_id(file_id: str) -> str:
     """Creates a deterministic SHA-256 hash of the file_id."""
     return hashlib.sha256(file_id.encode('utf-8')).hexdigest()
 
-async def save_multimodal_artifact(file_id: str, t: InputType, runner: "Runner", buffer: io.BytesIO, session_id: str, user_id: str) -> str:
-    buffer.seek(0)
-    file_bytes = buffer.read()
-    filename = ""
+async def save_multimodal_artifact(
+    file_id: str, 
+    t: InputType, 
+    runner: "Runner", 
+    buffer: io.BytesIO, 
+    session_id: str, 
+    user_id: str
+) -> str:
+    """Saves artifact using raw ID to minimize token overhead."""
+    mime_type, extension = t.value
+    clean_id = file_id.split("/")[-1] 
+    filename = f"{clean_id}.{extension}"
 
-    artifact = types.Part.from_bytes(
-        data=file_bytes,
-        mime_type=t.value[0]
-    )
-    filename = f"{t.name}_{get_hashed_id(file_id)}.{t.value[1]}"
+    # 3. Save Artifact
+    buffer.seek(0)
     await runner.artifact_service.save_artifact(
-        filename = filename,
-        artifact = artifact,
-        app_name = runner.app_name,
-        user_id = user_id,
-        session_id = session_id
+        filename=filename,
+        artifact=types.Part.from_bytes(data=buffer.read(), mime_type=mime_type),
+        app_name=runner.app_name,
+        user_id=user_id,
+        session_id=session_id
     )
     return filename
-    
 
 
 

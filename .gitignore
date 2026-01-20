@@ -5,6 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
+/compose.yaml
 
 # Virtual environments
 .venv
@@ -12,4 +13,4 @@ wheels/
 agents/.adk/
 .ruff_cache
 /agentops.log
-
+compose.yaml

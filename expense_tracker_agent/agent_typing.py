@@ -28,24 +28,6 @@ class Currency(str, Enum):
     IDR = "IDR"
 
 
-class ExpenseSchema(BaseModel):
-    amount: float = Field(..., gt=0, description="Expense amount, must be positive")
-    currency: Currency = Field(..., description="Currency code")
-    datetime: date = Field(..., description="Date of expense (YYYY-MM-DD)")
-    category: ExpenseType = Field(..., description="Expense category")
-    payment_method: PaymentMethod = Field(..., description="Payment method used")
-    description: str | None = Field(
-        default=None, max_length=255, description="Optional short description"
-    )
-
-    class Config:
-        extra = "forbid"
-        use_enum_values = True
-
-    class Settings:
-        name = "expenses"
-
-
 class Expense(Document):
     item: str | None = None
     date_recorded: date
@@ -55,6 +37,7 @@ class Expense(Document):
     category: ExpenseType
     payment_method: PaymentMethod
     description: str | None = None
+    blob_filename: str |None = None
 
 
 class PayloadType(str, Enum):

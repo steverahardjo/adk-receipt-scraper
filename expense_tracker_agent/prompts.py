@@ -59,7 +59,7 @@ Return a JSON object with these fields:
 - Be friendly and confirm the expense has been saved
 
 # TOOLS
-**Loading on Demand**: The `laod_artifacts()` are loading available Artifacts in the session
+**Loading on Demand**: The `load_artifacts()` are loading available Artifacts in the session
 """
 
 SEARCH_PROMPT = f"""

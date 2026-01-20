@@ -22,6 +22,21 @@ services:
       TELEGRAM_BOT_TOKEN: vwrvt4b
     networks:
       - bridge_net
+  
+  blob_storage:
+    image: mcr.microsoft.com/azure-blob-storage:latest
+    container_name: exp_tracker_blob
+    environment:
+      - AZURE_STORAGE_ACCOUNT_NAME=${AZURE_STORAGE_ACCOUNT_NAME}
+      - AZURE_STORAGE_ACCOUNT_KEY=${AZURE_STORAGE_ACCOUNT_KEY}
+    restart: always
+    ports:
+    - "11002:11002"
+    volumes:
+    - blob_data:/workdir
+
+volumes:
+  blob_data:
 
 networks:
   bridge_net:

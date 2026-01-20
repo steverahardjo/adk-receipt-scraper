@@ -9,6 +9,7 @@ dependencies = [
     "aiogram>=3.23.0",
     "arize>=7.51.2",
     "arize-otel>=0.11.0",
+    "azure-storage-blob>=12.28.0",
     "beanie>=2.0.1",
     "google>=3.0.0",
     "google-adk>=1.21.0",
