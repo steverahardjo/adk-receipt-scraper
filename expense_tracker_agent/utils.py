@@ -43,29 +43,33 @@ import hashlib
 from enum import Enum
 
 class InputType(Enum):
-    PDF = "application/pdf"
-    IMG = "image/jpeg"
-    AUDIO = "audio/mpeg"
+    PDF =  ["application/pdf", "pdf"]
+    IMG =  ["image/jpeg", "jpeg"]
+    AUDIO =["audio/mpeg", "mpeg"]
 
 def get_hashed_id(file_id: str) -> str:
     """Creates a deterministic SHA-256 hash of the file_id."""
     return hashlib.sha256(file_id.encode('utf-8')).hexdigest()
 
-async def save_multimodal_artifact(file_id: str, t: InputType, runner: "Runner", buffer: io.BytesIO,session_id:str, user_id:str)->None:
+async def save_multimodal_artifact(file_id: str, t: InputType, runner: "Runner", buffer: io.BytesIO, session_id: str, user_id: str) -> str:
     buffer.seek(0)
     file_bytes = buffer.read()
+    filename = ""
 
     artifact = types.Part.from_bytes(
         data=file_bytes,
-        mime_type=t.value
+        mime_type=t.value[0]
     )
+    filename = f"{t.name}_{get_hashed_id(file_id)}.{t.value[1]}"
     await runner.artifact_service.save_artifact(
-        filename = f"{t}_{get_hashed_id(file_id)}",
+        filename = filename,
         artifact = artifact,
         app_name = runner.app_name,
         user_id = user_id,
         session_id = session_id
     )
+    return filename
+    
 
 
 

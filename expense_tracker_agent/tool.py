@@ -17,11 +17,11 @@ from typing import Any
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
-DB_NAME = "user_expense"
+
 
 
 class MongoTool:
-    def __init__(self, db_name: str = DB_NAME, uri: str = MONGO_ADDR):
+    def __init__(self, db_name: str, uri: str = MONGO_ADDR):
         self.db_name = db_name
         self.uri = uri
         self.client: Optional[AsyncIOMotorClient] = None
@@ -90,7 +90,7 @@ class MongoTool:
     async def search_expenses(self, limit: int = 50, **filters: Any) -> list[dict]:
         await self.init()
 
-        query = Expense.find(**filters)
+        query = Expense.find(filters)
         results = await query.sort(-Expense.datetime).limit(limit).to_list()
 
         return [r.model_dump(mode="json") for r in results]

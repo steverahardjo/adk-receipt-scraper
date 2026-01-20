@@ -15,7 +15,11 @@ from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
 from .config import ExpenseTrackerConfig
 
+
 config = ExpenseTrackerConfig()
+
+
+artifact_service = InMemoryArtifactService()
 
 load_dotenv()
 mongodb = MongoTool(db_name=config.mongodb_name)
@@ -41,7 +45,6 @@ root_agent = Agent(
     instruction=ROOT_PROMPT,
     output_key="root_agent",
     tools=[
-        mongodb.clear_db,
         AgentTool(saver_agent),
         AgentTool(retrieve_agent),
         AgentTool(visualiser_agent),
@@ -53,12 +56,11 @@ memory_service = InMemoryMemoryService()
 artifact_service = InMemoryArtifactService()
 session_service = InMemorySessionService()
 
-logging.info("Expense tracker runner initialized for adk web")
+logging.info("Expense tracker runner initialized for adk")
 
 x = App(
     name="expense_tracker_agent",
     root_agent=root_agent,
-    plugins=[SaveFilesAsArtifactsPlugin("expense_tracker_files")],
 )
 
 expense_runner = Runner(

@@ -9,7 +9,6 @@ from expense_tracker_agent.utils import InputType, set_observ, extract_text_from
 import io
 
 
-buffer = io.BytesIO()
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -20,7 +19,7 @@ async def process_multimodal_request(message: Message)->str:
     session_id = f"tg_{message.chat.id}"
     user_id = str(message.from_user.id)
 
-    prompt = message.caption or message.text or "Extract expenses from this file."
+    prompt = message.caption or message.text or "Extract expenses from this file in artifact: "
 
     file_id = None
     if message.photo:
@@ -30,14 +29,16 @@ async def process_multimodal_request(message: Message)->str:
     elif message.voice or message.audio:
         file_id = (message.voice or message.audio).file_id
 
+    buffer = io.BytesIO()
     file_info = await bot.get_file(file_id)
     await bot.download_file(file_info.file_path, destination = buffer)
+    buffer.seek(0)
     if message.photo:
-        await save_multimodal_artifact(file_info.file_path, InputType.IMG, expense_runner, buffer, session_id, user_id)
+        prompt += await save_multimodal_artifact(file_info.file_path, InputType.IMG, expense_runner, buffer, session_id=session_id, user_id = user_id)
     elif message.document:
-        await save_multimodal_artifact(file_info.file_path, InputType.PDF, expense_runner, buffer, session_id, user_id)
+        prompt+= await save_multimodal_artifact(file_info.file_path, InputType.PDF, expense_runner, buffer, session_id, user_id)
     elif message.voice or message.audio:
-        await save_multimodal_artifact(file_info.file_path, InputType.AUDIO, expense_runner, buffer, session_id, user_id)
+        prompt += await save_multimodal_artifact(file_info.file_path, InputType.AUDIO, expense_runner, buffer, session_id, user_id)
 
     try:
         result = await expense_runner.run_debug(
@@ -45,7 +46,7 @@ async def process_multimodal_request(message: Message)->str:
             user_id=user_id,
             user_messages=prompt
         )
-        return message.answer(
+        await message.answer(
             extract_text_from_result(result, "root_agent"),
             parse_mode = "MarkdownV2"
         )
@@ -75,7 +76,6 @@ async def handle_pdf(message: Message):
 
 @dp.message(F.voice | F.audio)
 async def handle_audio(message: Message):
-    # Telegram voice is usually .ogg
     await process_multimodal_request(message)
 
 
