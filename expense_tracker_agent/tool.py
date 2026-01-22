@@ -1,5 +1,6 @@
 from expense_tracker_agent.agent_typing import (
     Expense,
+    ExpenseSchema,
     PaymentMethod,
     Currency,
     ExpenseType
@@ -35,56 +36,11 @@ class MongoTool:
             )
             self.inited = True
             logging.info("MongoTool initialized")
-
-    async def create_expense(
-        self,
-        item: str,
-        amount: float,
-        currency: Currency,
-        date_input: str | datetime | date,
-        category: ExpenseType,
-        payment_method: PaymentMethod,
-        description: str | None = None,
-    ) -> None:
-        """
-        Docstring for insert_expense
-        Input:
-        - item: str = name of the item purchased
-        - amount: str = expense amount
-        - currency: Currency = currency code
-        - date_input: str | datetime | date = date of expense
-        - category: ExpenseType = expense category
-        - payment_method: PaymentMethod = payment method used
-        - description: Optional[str] = short description
-        Output: None
-        """
+    
+    async def save_expense(self, expense:Expense)->str:
         await self.init()
-        if isinstance(date_input, datetime):
-            d = date_input.date()
-        elif isinstance(date_input, date):
-            d = date_input
-        elif isinstance(date_input, str):
-            clean_date = date_input.lower().strip()
-            if clean_date in ["today", "now"]:
-                d = datetime.now().date()
-            else:
-                d = datetime.fromisoformat(date_input.replace("Z", "+00:00")).date()
-        else:
-            raise TypeError("date_input must be str, datetime, or date")
-
-        # 2. Construct the object
-        expense = Expense(
-            amount=amount,
-            currency=currency,
-            item=item,
-            date_recorded=datetime.now().date(),
-            datetime=d,
-            category=category,
-            payment_method=payment_method,
-            description=description,
-        )
-        print(str(expense))
-        return expense
+        await expense.insert()
+        return str(expense)
 
     async def search_expenses(self, limit: int = 50, **filters: Any) -> list[dict]:
         await self.init()

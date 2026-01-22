@@ -7,6 +7,7 @@ import io
 import hashlib
 import google.genai.types as types
 from .agent_typing import InputType
+import logging
 
 load_dotenv()
 
@@ -66,6 +67,7 @@ async def save_multimodal_artifact(
         user_id=user_id,
         session_id=session_id
     )
+    logging.info("save multimodal artifact succesful")
     return filename
 
 

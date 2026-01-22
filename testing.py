@@ -1,39 +1,52 @@
 import asyncio
-from expense_tracker_agent.tool import MongoTool
+import logging
+from datetime import datetime
+from expense_tracker_agent.sub_agents.saver_agent import ExpenseSchema
+from expense_tracker_agent.agent_typing import ExpenseSchema, Currency, Expense, ExpenseType, PaymentMethod
 from expense_tracker_agent.config import ExpenseTrackerConfig
-from bson.objectid import ObjectId
 
-# Initialize config and tool
-config = ExpenseTrackerConfig()
-# Make sure to pass the URI if it's not defaults to localhost in your config
-mongodb = config.mongodb
+# Setup logging to see what's happening
+logging.basicConfig(level=logging.INFO)
 
-from datetime import datetime, time
-
-def get_today_range():
-    # Get the start and end of the current day
-    today_start = datetime.combine(datetime.now(), time.min)
-    today_end = datetime.combine(datetime.now(), time.max)
-    return today_start, today_end
-
-# Example range: 2026-01-20 00:00:00 to 2026-01-20 23:59:59
-
-async def main():
-    # 1. YOU MUST CALL INIT FIRST
-    # This sets self.client from None to a real AsyncIOMotorClient
-    await mongodb.init()
+async def test_manual_save():
+    config = ExpenseTrackerConfig()
     
-    # 2. Access the database from the client
-    db = mongodb.client["user_expense"]
-    collection = db["Expense"] # Beanie usually names the collection after the Class
-    
-    target_id = "696f10ef8fa966eda5b1d53c"
-    
-    # 3. YOU MUST AWAIT THE DELETE
-    # result = db.delete_one(...) returns a coroutine in Motor
-    result = await collection.delete_one({"_id": ObjectId(target_id)})
-    print(f"Deleted count: {result.deleted_count}")
-    print(await mongodb.search_expenses(30))
+    # 1. Manually Initialize Mongo
+    print("--- Initializing MongoDB ---")
+    await config.mongodb.init()
+
+    # 2. Create a Mock Schema (simulating AI output)
+    # Note: Ensure your ExpenseSchema has 'date_input' field as fixed previously
+    mock_data = ExpenseSchema(
+        item="Manual Test Coffee",
+        amount=15.50,
+        currency=Currency.MYR,
+        date_input="today",
+        category=ExpenseType.FOOD,
+        payment_method=PaymentMethod.CASH,
+        description="Testing the save_expense function manually"
+    )
+
+    print(f"--- Converting Schema to Document ---")
+    try:
+        # Convert to Beanie Document
+        expense_doc = await mock_data.to_document()
+        
+        # 3. Save manually using your MongoTool method
+        print("--- Attempting Save ---")
+        saved_id_str = await config.mongodb.save_expense(expense_doc)
+        
+        print(f"✅ SUCCESS! Saved Expense ID/Str: {saved_id_str}")
+        
+        # 4. Verify by searching
+        print("--- Verifying Search ---")
+        results = await config.mongodb.search_expenses(limit=1)
+        print(f"Found in DB: {results}")
+
+    except Exception as e:
+        print(f"❌ FAILED: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(test_manual_save())

@@ -27,7 +27,6 @@ async def process_multimodal_request(message: Message):
     session_id = f"tg_{message.chat.id}"
     user_id = str(message.from_user.id)
 
-    # Shows "typing..." in the chat header while processing
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         prompt = message.caption or message.text or "Extract expenses from this file: "
 

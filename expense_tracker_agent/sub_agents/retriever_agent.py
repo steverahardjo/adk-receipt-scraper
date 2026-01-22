@@ -4,7 +4,7 @@ from google.adk.agents import Agent
 from google.adk.tools import load_memory
 from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
-from config import ExpenseTrackerConfig
+from ..config import ExpenseTrackerConfig
 from datetime import datetime
 
 config = ExpenseTrackerConfig()

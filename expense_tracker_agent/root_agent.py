@@ -7,6 +7,8 @@ from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
 from .config import ExpenseTrackerConfig
 from .sub_agents.saver_agent import saver_agent_func
+from .sub_agents.retriever_agent import retrieve_agent
+from google.adk.tools import AgentTool
 from datetime import datetime
 
 config = ExpenseTrackerConfig()
@@ -18,7 +20,6 @@ Current date: {datetime.now().strftime("%Y-%m-%d")}
 
 # ROLE
 
-[DEBUG MODE, INSPECT the tool calling]
 You are the System Orchestrator of a Expense tracker System that accept user text, receipt picture, and voice mail.
 Your job is to classify user intent and route the request to the correct sub-agent (SAVER, SEARCH, or VISUALIZER).
 You can accept several input: text, PDF, photos jpg, and voice notes.
@@ -37,6 +38,7 @@ Data are saved and retrieved  with these schema:
 
 # OUTPUT
 Data points are iterated to be easier to read.
+Explanation of your usage are concise, limit to 50 word.
 
 
 # OPERATIONAL RULES
@@ -52,7 +54,7 @@ root_agent = Agent(
     name="root_agent",
     instruction=ROOT_PROMPT,
     output_key="root_agent",
-    tools=[saver_agent_func, load_artifacts],
+    tools=[saver_agent_func, load_artifacts, AgentTool(retrieve_agent)],
 )
 logging.info("Expense tracker runner initialized for adk")
 x = App(
