@@ -111,7 +111,6 @@ async def handle_audio(message: Message):
 @dp.message(F.text)
 async def handle_text(message: Message):
     session_id = f"tg_{message.chat.id}"
-    ChatActionSender.
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         result = await expense_runner.run_debug(
             session_id=session_id,

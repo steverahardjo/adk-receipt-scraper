@@ -1,30 +1,72 @@
 # Development Experience Documentation
-This docs is created to document changing dev requirement, certain quirks, and difficulties I faced
-in implementing agentic system using Google ADK
 
-## Requirement
-Interface used
-Accepted input:
-- Text
-- Voicemail from telegram
-- OCR using a multimodal models
+This document records changing development requirements, implementation quirks, and practical difficulties encountered while building an agentic system using **Google ADK**.
 
-4 different agents:
-[x] Root agent
-[x] Save agent
-[x] Aggregate agent
-[ ] Visualizer agent
+---
 
-Tiny improvement that can help UX:
-- Saving user preference into the context
-- Enable backtrack to avoid double click
-- Artifact creation, saving, and output for visualizer
+## Requirements
 
-App Stack & feature change consideration:
-- Change third-party noSQLdb connection through beanie with sqlLite and ADK instance's `DatabaseSessionService`
-- Load_artifacts are very prompt and command sensitive, accuracy is needed
-- Add a local blob storage for non-text file format
-- Add a typing toast for loading.
-- Decouple app logic with the agent logic. 
+### Interfaces
 
+**Accepted inputs:**
 
+* Text
+* Telegram voice messages
+* OCR via multimodal models
+
+### Agents
+
+* [ ] Root Agent
+* [ ] Save Agent
+* [ ] Aggregate Agent
+* [ ] Visualizer Agent
+
+---
+
+## UX Improvements (Incremental)
+
+* Persist user preferences in context
+* Enable backtracking to prevent double actions (e.g. double-clicks)
+* Support artifact creation, persistence, and output for the Visualizer Agent
+* A toast when agent is loading.
+
+---
+
+## App Stack & Architecture Considerations
+
+* `load_artifacts` is highly prompt- and command-sensitive; requires strict accuracy
+* Introduce local blob storage for non-text artifacts
+* Add typing / loading toast for long-running operations
+* Decouple application orchestration logic from agent logic
+
+---
+
+## Refactoring: App Logic vs Agent Logic
+
+```mermaid
+flowchart TD
+    A[Root Agent] --> B{Is message a file artifact?}
+
+    B -- No --> C[Straight Text]
+    C --> D[save_agent_func(message, has_artifact=false)]
+    D --> E[run_async]
+    E --> F[Convert to Expense]
+    F --> G[Save Expense]
+
+    B -- Yes --> H[File / Artifact]
+    H --> I[save_agent_func(message, has_artifact=true)]
+    I --> J[run_async]
+    J --> K[Load Artifact]
+    K --> L[Convert to Expense]
+    L --> M[Modify Expense\n(add blob_filename)]
+    M --> N[Save File to Blob Storage]
+    N --> O[Save Expense]
+```
+
+---
+
+## Notes
+
+* Artifact handling introduces implicit state and ordering constraints.
+* File-based flows require stricter error handling and retry logic.
+* Visualizer Agent depends on reliable artifact metadata and storage guarantees.

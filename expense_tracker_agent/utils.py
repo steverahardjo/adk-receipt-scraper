@@ -5,9 +5,8 @@ import telegramify_markdown
 from google.adk.runners import Runner
 import io
 import hashlib
-from enum import Enum
 import google.genai.types as types
-import re
+from .agent_typing import InputType
 
 load_dotenv()
 
@@ -41,14 +40,6 @@ def extract_text_from_result(result, main_agent_name:str):
     
     return telegramify_markdown.standardize(result)
     
-import hashlib
-from enum import Enum
-
-class InputType(Enum):
-    PDF = ("application/pdf", "pdf")
-    IMG = ("image/jpeg", "jpg")
-    AUDIO = ("audio/mpeg", "mp3")
-
 def get_hashed_id(file_id: str) -> str:
     """Creates a deterministic SHA-256 hash of the file_id."""
     return hashlib.sha256(file_id.encode('utf-8')).hexdigest()
@@ -64,7 +55,7 @@ async def save_multimodal_artifact(
     """Saves artifact using raw ID to minimize token overhead."""
     mime_type, extension = t.value
     clean_id = file_id.split("/")[-1] 
-    filename = f"{clean_id}.{extension}"
+    filename = f"{clean_id}"
 
     # 3. Save Artifact
     buffer.seek(0)

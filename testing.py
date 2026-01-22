@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 # Initialize config and tool
 config = ExpenseTrackerConfig()
 # Make sure to pass the URI if it's not defaults to localhost in your config
-mongodb = MongoTool(db_name=config.mongodb_name)
+mongodb = config.mongodb
 
 from datetime import datetime, time
 

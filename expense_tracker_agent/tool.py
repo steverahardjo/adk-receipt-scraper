@@ -10,15 +10,13 @@ import logging
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from google.adk.tools import ToolContext
-from .subagent import visualiser_agent
+from .sub_agents.viz_agent import visualiser_agent
 from google.adk.tools.agent_tool import AgentTool
 from typing import Any
-from blob_storage import BlobService
+from blob_storage import GCSBlobService
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
-
-BlobService()
 
 
 
@@ -38,7 +36,7 @@ class MongoTool:
             self.inited = True
             logging.info("MongoTool initialized")
 
-    async def insert_expense(
+    async def create_expense(
         self,
         item: str,
         amount: float,
@@ -61,19 +59,20 @@ class MongoTool:
         Output: None
         """
         await self.init()
-        
-        if isinstance(date_input, date) and not isinstance(date_input, datetime):
-            d = date_input
-        elif isinstance(date_input, datetime):
+        if isinstance(date_input, datetime):
             d = date_input.date()
+        elif isinstance(date_input, date):
+            d = date_input
         elif isinstance(date_input, str):
-            if date == "today" and date == "now":
+            clean_date = date_input.lower().strip()
+            if clean_date in ["today", "now"]:
                 d = datetime.now().date()
             else:
                 d = datetime.fromisoformat(date_input.replace("Z", "+00:00")).date()
         else:
             raise TypeError("date_input must be str, datetime, or date")
 
+        # 2. Construct the object
         expense = Expense(
             amount=amount,
             currency=currency,
@@ -84,9 +83,8 @@ class MongoTool:
             payment_method=payment_method,
             description=description,
         )
-        await expense.insert()
-        logging.info(f"Inserted expense: {expense}")
-        return None
+        print(str(expense))
+        return expense
 
     async def search_expenses(self, limit: int = 50, **filters: Any) -> list[dict]:
         await self.init()

@@ -27,6 +27,11 @@ class Currency(str, Enum):
     JPY = "JPY"
     IDR = "IDR"
 
+class InputType(Enum):
+    PDF = ("application/pdf", "pdf")
+    IMG = ("image/jpeg", "jpeg")
+    AUDIO = ("audio/mpeg", "mp3")
+
 
 class Expense(Document):
     item: str | None = None

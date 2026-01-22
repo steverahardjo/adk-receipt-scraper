@@ -14,3 +14,4 @@ agents/.adk/
 .ruff_cache
 /agentops.log
 compose.yaml
+key.json
