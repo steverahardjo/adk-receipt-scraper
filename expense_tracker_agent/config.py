@@ -16,5 +16,10 @@ class ExpenseTrackerConfig:
     memory_service = InMemoryMemoryService()
     artifact_service = InMemoryArtifactService()
     session_service = InMemorySessionService()
+    
+@dataclass
+class AppRunnerConfig:
+    session_id:str
+    user_id:str
 
 

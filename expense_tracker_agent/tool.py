@@ -37,14 +37,27 @@ class MongoTool:
             self.inited = True
             logging.info("MongoTool initialized")
     
-    async def save_expense(self, expense:Expense)->str:
+    async def save_expense(self, expense: ExpenseSchema, blob_filename: str = None) -> str:
         await self.init()
-        await expense.insert()
-        return str(expense)
+        doc = await expense.to_document()
+        
+        if blob_filename:
+            doc.blob_filename = blob_filename
 
+        res = await doc.insert()
+
+        # Traditional logging
+        logging.info(
+            "Expense saved: %s | Blob: %s | ID: %s",
+            doc.item if hasattr(doc, "item") else "unknown",
+            blob_filename,
+            getattr(doc, "id", None)
+        )
+
+        return str(res)
+    
     async def search_expenses(self, limit: int = 50, **filters: Any) -> list[dict]:
         await self.init()
-
         query = Expense.find(filters)
         results = await query.sort(-Expense.datetime).limit(limit).to_list()
 

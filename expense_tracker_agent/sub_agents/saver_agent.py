@@ -2,11 +2,15 @@ import logging
 from google.adk.runners import Runner
 from google.adk.agents import Agent
 from google.adk.tools import load_memory, load_artifacts
+from google.adk.tools import ToolContext
 from ..config import ExpenseTrackerConfig
 from dotenv import load_dotenv
 from blob_storage import GCSBlobService
-from ..agent_typing import Expense, ExpenseSchema, ExpenseType, PaymentMethod
+from ..agent_typing import ExpenseSchema, ExpenseType, PaymentMethod
 from datetime import datetime
+import re
+from pydantic import ValidationError
+import json
 
 config = ExpenseTrackerConfig()
 load_dotenv()
@@ -64,76 +68,53 @@ saver_runner = Runner(
     session_service=config.session_service
 )
 
-async def saver_agent_func(
-    message: str,
-    has_artifact: bool,
-    session_id: str,
-    user_id: str,
-    filename: str | None,
-):
+async def saver_agent_func(saver_runner, message, filename:str, has_artifact):
     """
-    Docstring for saver_agent_func
+    Processes a user message through the saver_agent, extracts JSON, 
+    and validates it against the ExpenseSchema.
+    """
     
-    :param message: Description
-    :type message: str
-    :param has_artifact: Description
-    :type has_artifact: bool
-    :param session_id: Description
-    :type session_id: str
-    :param user_id: Description
-    :type user_id: str
-    :param filename: Description
-    :type filename: str | None
-    """
-    # 1. Prepare instructions (pure sync)
-    saver_agent.instruction = SAVER_PROMPT_TEMPLATE.format(
+    # 1. Setup Instructions
+    instruction = SAVER_PROMPT_TEMPLATE.format(
         current_date=datetime.now().strftime("%Y-%m-%d"),
         file_name=filename if has_artifact else "No file attached",
         categories=list(ExpenseType.__members__.keys()),
         payment_methods=list(PaymentMethod.__members__.keys()),
     )
+    
+    # We assume saver_agent is accessible or part of the runner state
+    # saver_agent.instruction = instruction 
 
-    # 2. Run agent → schema
-    result_schema = await saver_runner.run_debug(
-        session_id=session_id,
-        user_id=user_id,
-        user_messages=message,
-    )
-
-    if not isinstance(result_schema, ExpenseSchema):
-        return None
-
-    # 3. Init DB ONCE
-    await config.mongodb.init()
-
-    # 4. Schema → Document (THIS MUST BE AWAITED)
-    result_doc: Expense = await result_schema.to_document()
-
-    # 5. Handle artifact (if any)
-    if has_artifact:
-        if not filename:
-            filenames = await saver_runner.artifact_service.list_artifacts(
-                app_name=config.app_name,
-                session_id=session_id,
-                user_id=user_id,
-            )
-            filename = filenames[0] if filenames else "unknown_file"
-
-        artifact_part = await saver_runner.artifact_service.load_artifact(
-            app_name=config.app_name,
-            filename=filename,
-            session_id=session_id,
-            user_id=user_id,
+    try:
+        # 2. Run the Agent
+        # result_schema here is likely an AgentResponse or similar object
+        raw_response = await saver_runner.run_debug(
+            user_id="saver_agent",
+            session_id="sesh_1",
+            user_messages=message,
         )
+        raw_response.type()
 
-        blob_id = await blob_service.save(
-            data=artifact_part.inline_data,
-            filename=filename,
-            mime_type=artifact_part.mime_type,
-        )
-        result_doc.blob_filename = blob_id
-    saved_id = await config.mongodb.save_expense(result_doc)
+        # 3. The Bridge: Extract and Clean
+        # Extract the string content (adjust '.content' based on your specific framework)
+        content = raw_response.content if hasattr(raw_response, 'content') else str(raw_response)
+        
+        # Strip Markdown code blocks if the LLM included them (e.g., ```json ... ```)
+        clean_json = re.sub(r"```json\s?|\s?```", "", content).strip()
 
-    logging.info(f"Finalized Expense Saved: {saved_id}")
+        # 4. Validation
+        expense_data = ExpenseSchema.model_validate_json(clean_json)
+        
+        print("Successfully parsed expense!")
+        return expense_data
 
-    return str(saved_id)
+    except ValidationError as ve:
+        print(f"Schema Mismatch: The LLM returned invalid data structures. \n{ve}")
+    except json.JSONDecodeError:
+        print(f"JSON Error: The runner did not return valid JSON. Content: {content}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+    
+    return None
+
+# Example usage:

@@ -5,7 +5,7 @@ from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifac
 from google.adk.apps import App
 from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
-from .config import ExpenseTrackerConfig
+from .config import ExpenseTrackerConfig, AppRunnerConfig
 from .sub_agents.saver_agent import saver_agent_func
 from .sub_agents.retriever_agent import retrieve_agent
 from google.adk.tools import AgentTool
@@ -33,12 +33,9 @@ Data are saved and retrieved  with these schema:
 - description (str): Optional additional details
 
 # INTENT CLASSIFICATION
+1. **INPUT (saver agent): ** through `saver_agent_func` tool, save expenses to the db instances, important to fill has_artifacts(bool)
 2. **OUTPUT (Search Agent):** User asks to retrieve, list, or query past data (e.g., "How much did I spend last week?").
 3. **OUTPUT (generate_visual):** Process the data and generate a visualization, saving it in a directory.
-
-# OUTPUT
-Data points are iterated to be easier to read.
-Explanation of your usage are concise, limit to 50 word.
 
 
 # OPERATIONAL RULES
@@ -46,6 +43,8 @@ Explanation of your usage are concise, limit to 50 word.
 - DO NOT generate anything (code or long desc) that you are not instructed.
 - Be friendly and use emoji to introduce yourself to user.
 - You can save file as artifact and send back artifact to user.
+- Explanation of your usage are concise, limit to 100 word.
+
 
 """
 

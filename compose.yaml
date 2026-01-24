@@ -12,16 +12,7 @@ services:
     networks:
       - bridge_net
 
-  exp_tracker:
-    image: exp-tracker:dev
-    container_name: exp-tracker
-    restart: always
-    command: uv run main
-    environment:
-      MONGO_URI: mongodb://root:example@mongo:27017/
-      TELEGRAM_BOT_TOKEN: vwrvt4b
-    networks:
-      - bridge_net
+  
   
   blob_storage:
     image: mcr.microsoft.com/azure-blob-storage:latest

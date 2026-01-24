@@ -2,13 +2,11 @@ import os
 import asyncio
 import logging
 import io
-
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.utils.chat_action import ChatActionSender
 
-# Ensure these paths are correct for your local project structure
 from expense_tracker_agent.root_agent import expense_runner
 from expense_tracker_agent.utils import (
     InputType, 
