@@ -5,7 +5,6 @@ import io
 import aiohttp
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.types import Message, BufferedInputFile
-from aiogram.filters import Command
 from aiogram.utils.chat_action import ChatActionSender
 from expense_tracker_agent.agent_typing import AgentOutput
 from expense_tracker_agent.root_agent import expense_runner
@@ -17,6 +16,12 @@ from expense_tracker_agent.utils import (
     markdownify
 )
 
+from aiogram.types import MenuButtonWebApp, WebAppInfo
+
+
+from aiogram.types import WebAppInfo
+
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 async def fetch_signed_url_bytes(url: str) -> bytes:
     async with aiohttp.ClientSession(
         headers={"Host": "storage.googleapis.com"},
@@ -109,13 +114,6 @@ async def process_multimodal_request(message: Message):
             logging.error(f"Error processing agent: {e}")
             await message.answer("I encountered an error processing your request.")
 
-@dp.message(Command("start"))
-async def start_cmd(message: Message):
-    await message.answer(
-        "Hello! Send me a photo of a receipt, a PDF invoice, or a voice note of your spending."
-    )
-
-
 @dp.callback_query(F.data == "run_agent")
 async def handle_agent_run(callback: types.CallbackQuery):
     await callback.answer("Agent starting...")
@@ -144,6 +142,17 @@ async def handle_text(message: Message):
 
 async def main():
     logging.basicConfig(level=logging.INFO)
+    
+    # --- ENABLE MENU BUTTON ---
+    # This sets the button globally for all users
+    await bot.set_chat_menu_button(
+        menu_button=MenuButtonWebApp(
+            text="💰 Form",
+            web_app=WebAppInfo(url="")
+        )
+    )
+    
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

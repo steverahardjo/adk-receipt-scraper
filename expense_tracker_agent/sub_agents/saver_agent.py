@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from google.adk.tools.tool_context import ToolContext
-from blob_storage import GCSBlobService
+from ..tool import GCSBlobService
 from expense_tracker_agent.agent_typing import ExpenseSchema, ExpenseType, PaymentMethod
 from datetime import datetime
 from expense_tracker_agent.config import ExpenseTrackerConfig

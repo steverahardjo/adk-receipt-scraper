@@ -4,7 +4,6 @@ from typing import Literal, Optional
 from datetime import date
 from beanie import Document
 from datetime import datetime
-from blob_storage import GCSBlobService
 from google.adk.tools.tool_context import ToolContext
 
 class ExpenseType(str, Enum):
@@ -52,7 +51,6 @@ class Expense(Document):
     blob_filename: str |None = None
 
 
-blob_service = GCSBlobService()
 class ExpenseSchema(BaseModel):
     item: str
     amount: float
@@ -65,6 +63,9 @@ class ExpenseSchema(BaseModel):
     
     async def to_document(self, tool_context: ToolContext = None) -> Expense:
         """Converts the AI data into the actual Database Document."""
+        from .tool import GCSBlobService
+        
+        blob_service = GCSBlobService()
         d = self.datetime
         if isinstance(d, str):
             if d.lower() in ["today", "now"]:
