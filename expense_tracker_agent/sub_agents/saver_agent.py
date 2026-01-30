@@ -10,8 +10,6 @@ from dotenv import load_dotenv
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from google.adk.tools.tool_context import ToolContext
-from google.adk.tools.base_tool import BaseTool
-from typing import Dict, Any, Optional
 from blob_storage import GCSBlobService
 from expense_tracker_agent.agent_typing import ExpenseSchema, ExpenseType, PaymentMethod
 from datetime import datetime
@@ -19,6 +17,8 @@ from expense_tracker_agent.config import ExpenseTrackerConfig
 
 config = ExpenseTrackerConfig()
 load_dotenv()
+
+GCS_SERVICE = GCSBlobService()
 
 SAVER_PROMPT_TEMPLATE = """
 # IMPORTANT INFORMATION
@@ -44,7 +44,8 @@ If a file is provided, prioritize details found within the document.
 - Always validate that amount is a valid number.
 
 # TOOLS
-**Loading on Demand**: Use `load_artifacts()` to retrieve the file
+**Loading on Demand**: Use `load_artifacts()` to retrieve the file if its give to you.
+When needed, put filename so that we can save artifact as a blob.
 """
 load_dotenv()
 

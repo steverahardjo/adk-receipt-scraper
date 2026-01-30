@@ -89,7 +89,6 @@ async def start_cmd(message: Message):
 async def handle_agent_run(callback: types.CallbackQuery):
     await callback.answer("Agent starting...")
     async with ChatActionSender.typing(bot=bot, chat_id=callback.message.chat.id):
-        # Your agent logic here
         await asyncio.sleep(1) 
     await callback.message.answer("Agent task complete!")
 

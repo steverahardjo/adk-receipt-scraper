@@ -73,7 +73,6 @@ class ExpenseSchema(BaseModel):
                         self.blob_filename, 
                         raw_bytes
                     )
-            print(raw_bytes)
         return Expense(
             item=self.item,
             amount=self.amount,
