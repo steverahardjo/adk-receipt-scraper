@@ -6,7 +6,7 @@ from google.adk.apps import App
 from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
 from .config import ExpenseTrackerConfig, AppRunnerConfig
-from .sub_agents.saver_agent import saver_agent_func
+from .sub_agents.saver_agent import saver_agent
 from .sub_agents.retriever_agent import retrieve_agent
 from google.adk.tools import AgentTool
 from datetime import datetime
@@ -33,7 +33,7 @@ Data are saved and retrieved  with these schema:
 - description (str): Optional additional details
 
 # INTENT CLASSIFICATION
-1. **INPUT (saver agent): ** through `saver_agent_func` tool, save expenses to the db instances, important to fill has_artifacts(bool)
+1. **INPUT (saver agent): ** through `saver_agent` tool, save expenses to the db instances, important to fill has_artifacts(bool)
 2. **OUTPUT (Search Agent):** User asks to retrieve, list, or query past data (e.g., "How much did I spend last week?").
 3. **OUTPUT (generate_visual):** Process the data and generate a visualization, saving it in a directory.
 
@@ -53,7 +53,7 @@ root_agent = Agent(
     name="root_agent",
     instruction=ROOT_PROMPT,
     output_key="root_agent",
-    tools=[saver_agent_func, load_artifacts, AgentTool(retrieve_agent)],
+    tools=[AgentTool(saver_agent), load_artifacts, AgentTool(retrieve_agent)],
 )
 logging.info("Expense tracker runner initialized for adk")
 x = App(

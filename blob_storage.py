@@ -14,8 +14,9 @@ class GCSBlobService:
         """Uploads the expense artifact to Google Cloud Storage."""
         blob = self.bucket.blob(filename)
         blob.upload_from_string(data)
-        return f"Successfully uploaded {filename} to {self.bucket_name}"
-    
+        print(f"Upload is working for this {filename}")
+        return filename
+        
     def download_blob_file(self, filename: str) -> bytes:
         """Downloads the bytes of a file from Google Cloud Storage."""
         blob = self.bucket.blob(filename)

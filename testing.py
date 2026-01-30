@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def test_manual_save():
     config = ExpenseTrackerConfig()
-    res = await config.mongodb.search_expenses(3)
+    res = await config.mongodb.search_expenses()
     print(res)
 if __name__ == "__main__":
     asyncio.run(test_manual_save())

@@ -6,7 +6,6 @@ from expense_tracker_agent.agent_typing import (
     ExpenseType
 )
 from typing import Optional
-from datetime import datetime, date
 import logging
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -14,7 +13,7 @@ from google.adk.tools import ToolContext
 from .sub_agents.viz_agent import visualiser_agent
 from google.adk.tools.agent_tool import AgentTool
 from typing import Any
-from blob_storage import GCSBlobService
+from google.adk.tools.tool_context import ToolContext 
 
 
 MONGO_ADDR = "mongodb://localhost:27017"
@@ -37,24 +36,33 @@ class MongoTool:
             self.inited = True
             logging.info("MongoTool initialized")
     
-    async def save_expense(self, expense: ExpenseSchema, blob_filename: str = None) -> str:
-        await self.init()
-        doc = await expense.to_document()
-        
-        if blob_filename:
-            doc.blob_filename = blob_filename
-
-        res = await doc.insert()
-
-        # Traditional logging
-        logging.info(
-            "Expense saved: %s | Blob: %s | ID: %s",
-            doc.item if hasattr(doc, "item") else "unknown",
-            blob_filename,
-            getattr(doc, "id", None)
+    async def save_expense(
+        self, 
+        item: str, 
+        amount: float,
+        currency: Currency,
+        category: ExpenseType,
+        payment_method: PaymentMethod,
+        tool_context: ToolContext,
+        datetime: str = "today",
+        description: str | None = None,
+        blob_filename: str | None = None
+    ) -> str:
+        expense = ExpenseSchema(
+            item=item,
+            amount=amount,
+            currency=currency,
+            category=category,
+            payment_method=payment_method,
+            datetime=datetime,
+            description=description,
+            blob_filename=blob_filename
         )
-
+        await self.init()
+        doc = await expense.to_document(tool_context=tool_context)
+        res = await doc.insert()
         return str(res)
+
     
     async def search_expenses(self, limit: int = 50, **filters: Any) -> list[dict]:
         await self.init()
