@@ -8,6 +8,8 @@ import hashlib
 import google.genai.types as types
 from .agent_typing import InputType
 import logging
+from .agent_typing import AgentOutput
+import json
 
 load_dotenv()
 
@@ -19,27 +21,36 @@ def set_observ():
     )
     agentops.init(api_key=AGENTOPS_API_KEY, default_tags=["google adk"])
 
-def extract_text_from_result(result, main_agent_name:str):
-    """
-    Extract the correct last messagge being send by the main agent.
-        :param result: Description
-        :param main_agent_name: Description
-        :type main_agent_name: str
-    Output:
-        - A proper message in a MarkdownV2 used by the telegram frontend.
-    """
+def extract_agent_output(result, main_agent_name: str) -> AgentOutput:
     if not result or not isinstance(result, list):
-        return "No response generated."
+        return AgentOutput(type="text", content="No response generated.")
 
-    # 1. Get the last event in the list
     last_event = result[-1]
-    result = ""
-    if hasattr(last_event, 'content') and last_event.content.parts:
-        result = last_event.content.parts[0].text
-    if hasattr(last_event, 'actions') and last_event.actions.state_delta:
-        result = last_event.actions.state_delta.get(main_agent_name, "")
-    
-    return telegramify_markdown.standardize(result)
+    raw = None
+
+    if hasattr(last_event, "actions") and last_event.actions.state_delta:
+        raw = last_event.actions.state_delta.get(main_agent_name)
+
+    if not raw and hasattr(last_event, "content") and last_event.content.parts:
+        raw = last_event.content.parts[0].text
+
+    if not raw:
+        return AgentOutput(type="text", content="No response generated.")
+
+    if isinstance(raw, str):
+        raw = raw.strip()
+        try:
+            data = json.loads(raw)
+            return AgentOutput.model_validate(data)
+        except Exception:
+            return AgentOutput(type="text", content=raw)
+
+    return AgentOutput.model_validate(raw)
+
+
+def markdownify(text: str) -> str:
+    """Convert text to Telegram-compatible MarkdownV2 format."""
+    return telegramify_markdown.telegramify(text)
     
 def get_hashed_id(file_id: str) -> str:
     """Creates a deterministic SHA-256 hash of the file_id."""

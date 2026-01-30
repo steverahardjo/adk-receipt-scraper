@@ -106,11 +106,10 @@ adk-exp_tracker/
 ```bash
 # Install development dependencies
 pip install -e ".[dev]"
-
+```
 ### Project Configuration
 
 See [dev_exp.md](dev_exp.md) for development notes and architectural decisions.
-
 ## Dependencies
 
 Key dependencies include:

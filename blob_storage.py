@@ -1,6 +1,7 @@
 import os
 from google.cloud import storage
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -17,7 +18,26 @@ class GCSBlobService:
         print(f"Upload is working for this {filename}")
         return filename
         
-    def download_blob_file(self, filename: str) -> bytes:
-        """Downloads the bytes of a file from Google Cloud Storage."""
+    def generate_signed_url(self, filename: str) -> str:
+        """Generate a temporary signed URL for a GCS object."""
         blob = self.bucket.blob(filename)
-        return blob.download_as_bytes()
+
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=timedelta(seconds=600),
+            method="GET",
+        )
+
+        return url
+    
+    def complete_clearout(self):
+        """Deletes EVERY file in the bucket."""
+        blobs = self.bucket.list_blobs()
+        count = 0
+        
+        for blob in blobs:
+            blob.delete()
+            count += 1
+            
+        print(f"🔥 Bucket wipe complete. {count} files removed.")
+        return count

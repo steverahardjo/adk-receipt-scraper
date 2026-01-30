@@ -10,6 +10,7 @@ from .sub_agents.saver_agent import saver_agent
 from .sub_agents.retriever_agent import retrieve_agent
 from google.adk.tools import AgentTool
 from datetime import datetime
+from .agent_typing import AgentOutput
 
 config = ExpenseTrackerConfig()
 load_dotenv()
@@ -39,13 +40,17 @@ Data are saved and retrieved  with these schema:
 
 
 # OPERATIONAL RULES
-- Look into artifacts first to check whether user input other than text.
 - DO NOT generate anything (code or long desc) that you are not instructed.
 - Be friendly and use emoji to introduce yourself to user.
 - You can save file as artifact and send back artifact to user.
 - Explanation of your usage are concise, limit to 100 word.
 
 
+# OUTPUT FORMAT (STRICT)
+
+You MUST respond using valid JSON ONLY.
+Do NOT include any text outside JSON.
+Do NOT greet the user unless inside JSON.
 """
 
 root_agent = Agent(
@@ -54,6 +59,7 @@ root_agent = Agent(
     instruction=ROOT_PROMPT,
     output_key="root_agent",
     tools=[AgentTool(saver_agent), load_artifacts, AgentTool(retrieve_agent)],
+    output_schema=AgentOutput,
 )
 logging.info("Expense tracker runner initialized for adk")
 x = App(

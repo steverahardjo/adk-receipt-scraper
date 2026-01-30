@@ -6,9 +6,10 @@ from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
 from ..config import ExpenseTrackerConfig
 from datetime import datetime
+from blob_storage import GCSBlobService
 
 config = ExpenseTrackerConfig()
-
+blob_service = GCSBlobService()
 load_dotenv()
 
 SEARCH_PROMPT = f"""
@@ -27,8 +28,8 @@ Use ONLY a JSON object with keys: `limit` and `filters` and run it with the tool
 Return the user, data points reiterated. 
 
 # OPERATIONAL RULES
-
-## 1. Date Boundary Logic
+## 1. 'get_signed_url' tool is used to get a blob url, don't do anything unless user ask for a file. 
+## 2. Date Boundary Logic
 - For a single calendar day (e.g. "Jan 16", "yesterday"):
   - Create a datetime range from 00:00:00 of that day
     up to (but not including) 00:00:00 of the next day.
@@ -125,5 +126,5 @@ retrieve_agent = Agent(
     model=config.retriever_agent_model,
     name="retrieve_agent",
     instruction=SEARCH_PROMPT,
-    tools=[mongodb.search_expenses, load_memory, load_artifacts],
+    tools=[mongodb.search_expenses, load_memory, blob_service.generate_signed_url],
 )

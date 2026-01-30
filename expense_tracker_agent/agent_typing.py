@@ -1,5 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, Field
+from typing import Literal, Optional
 from datetime import date
 from beanie import Document
 from datetime import datetime
@@ -13,6 +14,12 @@ class ExpenseType(str, Enum):
     UTILITIES = "utilities"
     ENTERTAINMENT = "entertainment"
     OTHER = "other"
+
+class AgentOutput(BaseModel):
+    type: Literal["text", "signed_url"]
+    content: Optional[str] = None
+    url: Optional[str] = None
+    caption: Optional[str] = None
 
 
 class PaymentMethod(str, Enum):
