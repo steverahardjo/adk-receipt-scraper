@@ -1,5 +1,6 @@
 from google.adk.code_executors import BuiltInCodeExecutor
 from google.adk.agents import Agent
+from ..config import ExpenseTrackerConfig
 
 VISUALIZER_PROMPT = """
 # ROLE
@@ -48,13 +49,12 @@ def save_chart(fig, filename: str) -> str:
 - The file will be automatically tracked by the artifact system and viewable in the web UI.
 - The file will be automatically tracked by the artifact system and viewable in the web UI.
 """
-
-
-
-model_name = "gemini-2.0-flash-exp"
+code_executor = BuiltInCodeExecutor()
+config = ExpenseTrackerConfig()
 visualiser_agent = Agent(
-    model=model_name,
+    model= config.insert_agent_model,
     name="visualiser_agent",
     instruction=VISUALIZER_PROMPT,
     description="Executes Python code to perform visualization.",
+    code_executor=code_executor,
 )

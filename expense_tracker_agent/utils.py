@@ -21,7 +21,7 @@ def set_observ():
     )
     agentops.init(api_key=AGENTOPS_API_KEY, default_tags=["google adk"])
 
-def extract_agent_output(result, main_agent_name: str) -> AgentOutput:
+def extract_agent_output(result:str, main_agent_name: str) -> AgentOutput:
     if not result or not isinstance(result, list):
         return AgentOutput(type="text", content="No response generated.")
 
@@ -41,16 +41,16 @@ def extract_agent_output(result, main_agent_name: str) -> AgentOutput:
         raw = raw.strip()
         try:
             data = json.loads(raw)
-            return AgentOutput.model_validate(data)
+            return AgentOutput.model_validate_json(json.dumps(data))
         except Exception:
             return AgentOutput(type="text", content=raw)
+        
+    return AgentOutput.model_validate_json(json.dumps(raw))
 
-    return AgentOutput.model_validate(raw)
 
-
-def markdownify(text: str) -> str:
+async def markdownify(text: str) -> str:
     """Convert text to Telegram-compatible MarkdownV2 format."""
-    return telegramify_markdown.telegramify(text)
+    return telegramify_markdown.standardize(text)
     
 def get_hashed_id(file_id: str) -> str:
     """Creates a deterministic SHA-256 hash of the file_id."""

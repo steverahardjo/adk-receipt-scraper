@@ -20,7 +20,8 @@ Current date: {datetime.now().strftime("%Y-%m-%d")}
 Your role is to translate natural language into:
 1. a Python-ready `filters` dictionary
 2. a `limit` integer
-
+Your secondary role:
+After pulling the data, if a blob exist and user request it to be shown, return a signed url. 
 These will be passed directly to:
 `await search_expenses(limit=limit, **filters)`
 

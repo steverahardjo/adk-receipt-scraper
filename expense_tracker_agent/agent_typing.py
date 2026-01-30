@@ -21,7 +21,6 @@ class AgentOutput(BaseModel):
     url: Optional[str] = None
     caption: Optional[str] = None
 
-
 class PaymentMethod(str, Enum):
     CASH = "cash"
     DEBIT_CARD = "debit_card"

@@ -1,11 +1,10 @@
 import logging
 from google.adk.runners import Runner
 from google.adk.agents import Agent
-from google.adk.plugins.save_files_as_artifacts_plugin import SaveFilesAsArtifactsPlugin
 from google.adk.apps import App
 from google.adk.tools import load_artifacts
 from dotenv import load_dotenv
-from .config import ExpenseTrackerConfig, AppRunnerConfig
+from .config import ExpenseTrackerConfig
 from .sub_agents.saver_agent import saver_agent
 from .sub_agents.retriever_agent import retrieve_agent
 from google.adk.tools import AgentTool
@@ -32,10 +31,12 @@ Data are saved and retrieved  with these schema:
 - category (str): Category (e.g., "food", "transport", "entertainment")
 - payment_method (str): Payment method (e.g., "cash", "card", "mobile")
 - description (str): Optional additional details
+- blob_filename(str): name of blob file to be downloaded
 
 # INTENT CLASSIFICATION
 1. **INPUT (saver agent): ** through `saver_agent` tool, save expenses to the db instances, important to fill has_artifacts(bool)
-2. **OUTPUT (Search Agent):** User asks to retrieve, list, or query past data (e.g., "How much did I spend last week?").
+2. **OUTPUT (Search Agent):** User asks to retrieve, list, or query past data (e.g., "How much did I spend last week?"). 
+You are also capable to return a signed url of the previous expense if that exist. 
 3. **OUTPUT (generate_visual):** Process the data and generate a visualization, saving it in a directory.
 
 
@@ -47,7 +48,6 @@ Data are saved and retrieved  with these schema:
 
 
 # OUTPUT FORMAT (STRICT)
-
 You MUST respond using valid JSON ONLY.
 Do NOT include any text outside JSON.
 Do NOT greet the user unless inside JSON.

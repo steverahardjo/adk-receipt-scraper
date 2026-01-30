@@ -10,7 +10,6 @@ import logging
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from google.adk.tools import ToolContext
-from .sub_agents.viz_agent import visualiser_agent
 from google.adk.tools.agent_tool import AgentTool
 from typing import Any
 from google.adk.tools.tool_context import ToolContext 
@@ -146,6 +145,7 @@ async def generate_visual(tool_context: ToolContext, user_request: str, dataset:
     Returns:
     Response from viz agent as a address of the file.
     """
+    from .sub_agents.viz_agent import visualiser_agent
     agent_tool = AgentTool(visualiser_agent)
     output = await agent_tool.run_async(
         args={"request": user_request, "dataset": dataset}, tool_context=tool_context
