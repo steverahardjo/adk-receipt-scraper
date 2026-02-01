@@ -4,11 +4,14 @@ An intelligent, multimodal expense tracking application powered by [Google ADK](
 
 ## Features
 
-- **Multimodal Input Support**: Process expenses via:
+- **Multimodal Input Support** Process expenses via telegram-bot:
   - Text messages
   - Photo receipts (OCR-enabled)
   - PDF invoices
   - Voice notes
+
+- **Vue form Web app**:
+  - Implement a situational predicting autocomplete. 
 
 - **Agentic Architecture**: Distributed processing across specialized agents:
   - **Root Agent**: Orchestrates the expense tracking workflow
@@ -40,7 +43,7 @@ cd adk-exp-tracker
 2. Create a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 ```
 
 3. Install dependencies:
@@ -56,18 +59,15 @@ cp .env.example .env
 
 Required environment variables:
 - `TELEGRAM_BOT_TOKEN`: Your Telegram bot token
-- `MONGODB_URI`: MongoDB connection string
-- `GOOGLE_ADK_API_KEY`: Google ADK API credentials
-- Additional Arize and observability credentials (optional)
+- `GOOGLE_API_KEY`: Google API key for Gemini models
+- `GOOGLE_CLOUD_PROJECT_ID`: Google Cloud project ID
+- `GCS_BUCKET_NAME`: Google Cloud Storage bucket for artifacts
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to service account key file
+- `AGENTOPS_API_KEY`: AgentOps monitoring key (optional)
 
 ### Running the Application
 
-**Telegram Bot**:
-```bash
-python telegram-bot.py
-```
-
-**Main Application**:
+**Main Application with Telegram Bot**:
 ```bash
 python main.py
 ```
@@ -79,15 +79,19 @@ python main.py
 ```
 adk-exp_tracker/
 ├── expense_tracker_agent/        # Core agent implementation
-│   ├── agent.py                  # Agent definitions and initialization
-│   ├── tool.py                   # Custom tools (MongoDB operations)
-│   ├── subagent.py               # Sub-agent implementations
-│   ├── prompts.py                # Agent system prompts
+│   ├── root_agent.py             # Root agent orchestration
+│   ├── tool.py                   # Custom tools (MongoDB, GCS operations)
 │   ├── config.py                 # Configuration management
-│   ├── tracing.py                # Observability setup
-│   └── agent_typing.py           # Type definitions
-├── telegram-bot.py               # Telegram bot interface
-├── main.py                       # Main application entry point
+│   ├── agent_typing.py           # Type definitions and schemas
+│   ├── utils.py                  # Utility functions
+│   └── sub_agents/               # Specialized sub-agents
+│       ├── saver_agent.py        # Expense saving agent
+│       ├── retriever_agent.py    # Expense retrieval agent
+│       └── viz_agent.py          # Visualization agent
+├── open-form/                    # Vue.js frontend application
+├── main.py                       # Main Telegram bot entry point
+├── testing.py                    # Test utilities
+├── compose.yaml                  # Docker Compose configuration
 └── pyproject.toml                # Project metadata and dependencies
 ```
 
@@ -142,12 +146,13 @@ The application uses environment-based configuration through `expense_tracker_ag
 ### Agent Tools
 
 Agents have access to the following tools:
-- `mongodb.insert_expense`: Save expense records
-- `mongodb.search_expenses`: Query stored expenses
-- `mongodb.clear_db`: Database management
+- `save_expense`: Save expense records to MongoDB with optional blob attachment
+- `search_expenses`: Query stored expenses with filters
+- `generate_visual`: Create visualizations from expense data using Matplotlib
+- `save_artifact`: Save files as ADK artifacts
 - `load_memory`: Access conversation history
-- `load_artifacts`: Retrieve generated artifacts
-- `subagent.generate_visual`: workaround for subagent "visual-agent" to create a python-based data viz and save it as artifact.
+- `load_artifacts`: Retrieve previously generated artifacts
+- `get_signed_url`: Generate signed URLs for blob storage access
 
 ## Observability
 
@@ -158,12 +163,17 @@ The application integrates with multiple observability platforms:
 
 Configure credentials in environment variables to enable monitoring.
 
-## Roadmap
-- [ ] Project planning and early conception
-- [ ] Familiarization and early usage of Google ADK.
-- [ ] Root agent and insert agent implementation
-- [ ] MongoTool implementation and function tool interaction with agent.
-- [ ] Enable retrieve agent.
+## Project planning and early conception
+- [x] Familiarization and early usage of Google ADK
+- [x] Root agent and saver agent implementation
+- [x] MongoTool implementation and function tool interaction with agent
+- [x] Retriever agent for expense queries
+- [x] Visualizer agent for creating expense reports
+- [ ] Web form (open-form) frontend integration
+- [ ] Enhanced error handling and retry logic
+- [ ] User preference persistence
+- [ ] Implement a autocomplete for the title vue frontend.
+- [ ] Double-click prevention for artifact creation
 - [ ] implementing Viz agent and save to artifact.
 
 ## Contributing
