@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { vMaska } from "maska/vue";
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import "flag-icons/css/flag-icons.min.css"
+import '@material/web/button/elevated-button.js'
+
+import DatePicker from 'primevue/datepicker';
 
 type Currency = 'USD' | 'IDR' | 'SGD' | 'MYR' | 'JPY'
 
@@ -30,10 +32,36 @@ watch(currency, val => {
 })
 
 const showCurrencyDropdown = ref(false)
+const currencyDropdownRef = ref<HTMLElement | null>(null)
+
+const handleClickOutside = (e: MouseEvent) => {
+  const el = currencyDropdownRef.value
+  if (!el) return
+  const target = e.target as Node
+  if (showCurrencyDropdown.value && !el.contains(target)) {
+    showCurrencyDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const selectCurrency = (key: string) => {
   currency.value = key as Currency
   showCurrencyDropdown.value = false
+}
+
+const resetForm = () => {
+  title.value = ''
+  amount.value = null // or 0
+  date.value = ''
+  payment_type.value = ''
+  description.value = ''
 }
 
 const submitForm = () => {
@@ -50,7 +78,8 @@ const submitForm = () => {
   }
 
   console.log('expense-payload', JSON.stringify(payload, null, 2))
-  alert(`Saved: ${payload.currency} ${payload.amount} for ${payload.title}`)
+  alert(`Saved: ${payload.currency} ${payload.amount} for ${payload.title} with ${payload.payment_type}`)
+  resetForm()
 }
 </script>
 
@@ -84,11 +113,11 @@ const submitForm = () => {
       <label>
         Amount
         <div class="money-field">
-          <div class="currency-dropdown">
+          <div class="currency-dropdown" ref="currencyDropdownRef">
             <button
               type="button"
               class="currency-btn"
-              @click.prevent="showCurrencyDropdown = !showCurrencyDropdown"
+              @click.prevent.stop="showCurrencyDropdown = !showCurrencyDropdown"
             >
               <span :class="['fi', `fi-${currencyMap[currency].code}`]"></span>
               <span class="currency-code">{{ currency }}</span>
@@ -114,16 +143,9 @@ const submitForm = () => {
             </ul>
           </div>
 
-          <input
-            v-model="amount"
-            type="number"
-            inputmode="decimal"
-            class="amount-input"
-            placeholder="0.00"
-            :step="currency === 'JPY' || currency === 'IDR' ? '1' : '0.01'"
-            min="0"
-            required
-          />
+        <InputNumber 
+              v-model="amount"
+            />
         </div>
       </label>
 
@@ -155,7 +177,7 @@ const submitForm = () => {
         />
       </label>
 
-      <button type="submit" class="submit-btn">Save Expense</button>
+      <md-elevated-button class="submit-btn" @click="submitForm">Save Expense</md-elevated-button>
     </form>
   </main>
 </template>
@@ -215,7 +237,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border: 2px solid #0b57d0;
-  padding: calc(0.875rem - 1px) calc(1rem - 1px); /* Prevent layout shift */
+  padding: calc(0.875rem - 1px) calc(1rem - 1px);
 }
 
 /* --- Money Field Wrapper --- */

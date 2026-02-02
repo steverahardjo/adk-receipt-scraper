@@ -15,7 +15,10 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
+    "@material/web": "^2.4.1",
+    "@primeuix/themes": "^2.0.3",
     "flag-icons": "^7.5.0",
+    "primevue": "^4.5.4",
     "vue": "^3.5.27"
   },
   "devDependencies": {
