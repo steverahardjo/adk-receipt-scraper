@@ -5,7 +5,6 @@ build/
 dist/
 wheels/
 *.egg-info
-/compose.yaml
 
 # Virtual environments
 .venv
@@ -36,3 +35,6 @@ pnpm-lock.yaml
 *.swo
 *~
 .DS_Store
+
+# Rust
+autocomplete/target/
