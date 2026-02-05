@@ -143,12 +143,10 @@ async def handle_text(message: Message):
 async def main():
     logging.basicConfig(level=logging.INFO)
     
-    # --- ENABLE MENU BUTTON ---
-    # This sets the button globally for all users
     await bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
             text="💰 Form",
-            web_app=WebAppInfo(url="")
+            web_app=WebAppInfo(url="https://www.google.com/")
         )
     )
     

@@ -3,4 +3,4 @@ __pycache__
 *.pyo
 *.pyd
 .venv/
-
+/completion-eng/.zig-cache

@@ -1,0 +1,6 @@
+2026-01-31 01:28:22,585 - WARNING - Could not wrap google.adk.telemetry.trace_tool_response: module 'google.adk.telemetry' has no attribute 'trace_tool_response'
+2026-01-31 01:28:22,585 - INFO - Google ADK patching complete
+2026-01-31 01:28:22,585 - INFO - Google ADK instrumentation enabled
+2026-01-31 01:28:22,586 - INFO - Session Replay for default trace: https://app.agentops.ai/sessions?trace_id=91e01b03900b6ffcb587c98b053bce8a
+2026-01-31 01:28:23,427 - INFO - You're on the agentops free plan 🤔
+2026-01-31 01:52:08,725 - INFO - Session Replay for default.session trace: https://app.agentops.ai/sessions?trace_id=91e01b03900b6ffcb587c98b053bce8a
