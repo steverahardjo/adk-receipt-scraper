@@ -147,9 +147,11 @@ def synthetize_data(rec_dir, bg_dir, out_dir, n_pairs=2000, variations_per_pair=
             rec = rec_orig.copy()
             canvas = bg_orig.copy()
 
+            # Randomly apply folding effect to simulate wrinkled receipt
             if random.random() > 0.5:
                 rec = folding(rec)
 
+            # Adjust brightness to match different lighting conditions
             rec = brightness(rec)
 
             # Scale

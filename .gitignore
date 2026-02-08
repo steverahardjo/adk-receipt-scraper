@@ -36,3 +36,5 @@ pnpm-lock.yaml
 *.swo
 *~
 .DS_Store
+mlflow.db
+/mlruns
