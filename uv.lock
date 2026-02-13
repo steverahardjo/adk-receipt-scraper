@@ -32,6 +32,7 @@ dependencies = [
     { name = "pymongo" },
     { name = "python-telegram-bot" },
     { name = "telegramify-markdown" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -57,6 +58,7 @@ requires-dist = [
     { name = "pymongo", specifier = ">=4.15.5" },
     { name = "python-telegram-bot", specifier = ">=22.5" },
     { name = "telegramify-markdown", specifier = ">=0.5.4" },
+    { name = "uvicorn", specifier = ">=0.40.0" },
 ]
 
 [[package]]

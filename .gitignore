@@ -37,4 +37,5 @@ pnpm-lock.yaml
 *~
 .DS_Store
 mlflow.db
-/mlruns
+receipt-yolo/mlruns/
+receipt-yolo/receipt.onnx

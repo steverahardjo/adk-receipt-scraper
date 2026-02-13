@@ -4,8 +4,6 @@ import gdown
 import onnx
 from datetime import datetime
 
-# 1. FIX: The link must be the direct download format, or gdown handles the conversion
-# if you provide the correct file ID.
 MODEL_ID = "16Jty6BR3Y1ec6BkmYFZkl2SQNdrLWDaL"
 MODEL_LINK = f"https://drive.google.com/uc?id={MODEL_ID}"
 
@@ -19,8 +17,8 @@ def load_gdrive(model_link: str, model_name: str) -> str:
         # fuzzy=True helps gdown handle Drive URLs better
         gdown.download(model_link, output, quiet=False, fuse=True)
     return output
-# --- Execution ---
 
+# --- Execution ---
 # 2. Download/Locate the model first
 model_path = load_gdrive(MODEL_LINK, "receipt-yolo")
 
