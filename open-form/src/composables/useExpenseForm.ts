@@ -104,8 +104,8 @@ export function useExpenseForm() {
     error.value = null
 
     try {
-      const dateValue = typeof form.date === 'string' 
-        ? form.date 
+      const dateValue = typeof form.date === 'string'
+        ? form.date
         : form.date.toISOString().slice(0, 10)
 
       const payload: ExpensePayload = {
@@ -118,7 +118,17 @@ export function useExpenseForm() {
         description: form.description.trim() || undefined,
       }
 
-      response.value = await submitExpense(payload)
+      // Simulate API call for testing (remove when backend is available)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      response.value = {
+        id: crypto.randomUUID(),
+        ...payload,
+        created_at: new Date().toISOString(),
+      }
+      
+      // Uncomment below to use real API
+      // response.value = await submitExpense(payload)
+      
       isSuccess.value = true
       return true
     } catch (err) {

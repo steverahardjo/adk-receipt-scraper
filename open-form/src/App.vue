@@ -46,7 +46,7 @@ const CURRENCY_MAP: Record<Currency, { code: string; label: string }> = {
 
 // Composables
 const { form, errors, isLoading, isSuccess, error, submit, resetForm } = useExpenseForm()
-const { toast, success, error: showError } = useToast()
+const { toast, success, error: showError, hide } = useToast()
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 
 // Initialize currency from localStorage
@@ -63,6 +63,11 @@ const handleSubmit = async () => {
     showError(error.value)
   }
 }
+
+// Clear toast when it's closed
+const handleToastClose = () => {
+  hide()
+}
 </script>
 
 <template>
@@ -72,6 +77,7 @@ const handleSubmit = async () => {
       :message="toast.message"
       :type="toast.type"
       @update:visible="toast.visible = $event"
+      @close="handleToastClose"
     />
 
     <PageHeader
