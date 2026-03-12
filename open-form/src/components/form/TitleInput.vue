@@ -4,7 +4,6 @@ interface Props {
   error?: string
   isLoading: boolean
 }
-
 const props = withDefaults(defineProps<Props>(), {
   error: '',
 })
