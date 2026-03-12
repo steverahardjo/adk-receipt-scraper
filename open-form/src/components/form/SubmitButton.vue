@@ -47,20 +47,10 @@ const emit = defineEmits<{
   box-shadow: 0 2px 8px rgba(11, 87, 208, 0.3);
 }
 
-.dark-mode .submit-btn {
-  background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
-}
-
 .submit-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #0947a8 0%, #0b57d0 100%);
   box-shadow: 0 4px 12px rgba(11, 87, 208, 0.4);
   transform: translateY(-1px);
-}
-
-.dark-mode .submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4285f4 0%, #5c9aff 100%);
-  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.5);
 }
 
 .submit-btn:active:not(:disabled) {

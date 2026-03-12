@@ -56,10 +56,6 @@ const emit = defineEmits<{
   color: #444746;
 }
 
-.dark-mode .label {
-  color: #e0e0e0;
-}
-
 .label__optional {
   color: #9aa0a6;
   font-weight: 400;
@@ -81,16 +77,8 @@ const emit = defineEmits<{
   transition: color 0.2s;
 }
 
-.dark-mode .input__icon {
-  color: #707080;
-}
-
 .input-wrapper:focus-within .input__icon {
   color: #0b57d0;
-}
-
-.dark-mode .input-wrapper:focus-within .input__icon {
-  color: #4285f4;
 }
 
 .textarea {
@@ -108,18 +96,8 @@ const emit = defineEmits<{
   line-height: 1.5;
 }
 
-.dark-mode .textarea {
-  background: #2a2a3e;
-  border-color: #404055;
-  color: #f0f0f0;
-}
-
 .textarea:hover {
   border-color: #5f6368;
-}
-
-.dark-mode .textarea:hover {
-  border-color: #606080;
 }
 
 .textarea:focus {
@@ -128,16 +106,7 @@ const emit = defineEmits<{
   box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.1);
 }
 
-.dark-mode .textarea:focus {
-  border-color: #4285f4;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
-}
-
 .textarea::placeholder {
   color: #9aa0a6;
-}
-
-.dark-mode .textarea::placeholder {
-  color: #707080;
 }
 </style>

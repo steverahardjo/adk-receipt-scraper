@@ -40,7 +40,7 @@
   --gray-900: #111827;
 
   /* Semantic variables */
-  --color-background: var(--gray-50);
+  --color-background: var(--white);
   --color-background-soft: var(--white);
   --color-background-mute: var(--gray-100);
   --color-border: var(--gray-300);

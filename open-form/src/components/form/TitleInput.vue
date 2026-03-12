@@ -58,16 +58,8 @@ const emit = defineEmits<{
   color: #444746;
 }
 
-.dark-mode .label {
-  color: #e0e0e0;
-}
-
 .label__required {
   color: #d93025;
-}
-
-.dark-mode .label__required {
-  color: #ff6b6b;
 }
 
 .input-wrapper {
@@ -89,16 +81,8 @@ const emit = defineEmits<{
   transition: color 0.2s;
 }
 
-.dark-mode .input__icon {
-  color: #707080;
-}
-
 .input-wrapper:focus-within .input__icon {
   color: #0b57d0;
-}
-
-.dark-mode .input-wrapper:focus-within .input__icon {
-  color: #4285f4;
 }
 
 .input-wrapper--error .input__icon {
@@ -117,29 +101,14 @@ const emit = defineEmits<{
   color: #1f1f1f;
 }
 
-.dark-mode .input {
-  background: #2a2a3e;
-  border-color: #404055;
-  color: #f0f0f0;
-}
-
 .input:hover {
   border-color: #5f6368;
-}
-
-.dark-mode .input:hover {
-  border-color: #606080;
 }
 
 .input:focus {
   outline: none;
   border-color: #0b57d0;
   box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.1);
-}
-
-.dark-mode .input:focus {
-  border-color: #4285f4;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
 }
 
 .input--error {
@@ -149,10 +118,6 @@ const emit = defineEmits<{
 
 .input::placeholder {
   color: #9aa0a6;
-}
-
-.dark-mode .input::placeholder {
-  color: #707080;
 }
 
 .error-message {

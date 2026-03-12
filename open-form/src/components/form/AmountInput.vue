@@ -131,16 +131,8 @@ onUnmounted(() => {
   color: #444746;
 }
 
-.dark-mode .label {
-  color: #e0e0e0;
-}
-
 .label__required {
   color: #d93025;
-}
-
-.dark-mode .label__required {
-  color: #ff6b6b;
 }
 
 .money-field {
@@ -153,27 +145,13 @@ onUnmounted(() => {
   transition: all 0.2s;
 }
 
-.dark-mode .money-field {
-  background: #2a2a3e;
-  border-color: #404055;
-}
-
 .money-field:hover {
   border-color: #5f6368;
-}
-
-.dark-mode .money-field:hover {
-  border-color: #606080;
 }
 
 .money-field:focus-within {
   border-color: #0b57d0;
   box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.1);
-}
-
-.dark-mode .money-field:focus-within {
-  border-color: #4285f4;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
 }
 
 .money-field--error {
@@ -186,10 +164,6 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   border-right: 1px solid #dadce0;
-}
-
-.dark-mode .currency-dropdown {
-  border-right-color: #404055;
 }
 
 .currency-btn {
@@ -207,17 +181,8 @@ onUnmounted(() => {
   transition: background-color 0.2s;
 }
 
-.dark-mode .currency-btn {
-  background: #32324a;
-  color: #e0e0e0;
-}
-
 .currency-btn:hover:not(:disabled) {
   background: #e8eaed;
-}
-
-.dark-mode .currency-btn:hover:not(:disabled) {
-  background: #3a3a55;
 }
 
 .currency-btn:disabled {
@@ -248,12 +213,6 @@ onUnmounted(() => {
   list-style: none;
 }
 
-.dark-mode .currency-list {
-  background: #2a2a3e;
-  border-color: #404055;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
 .currency-list li {
   padding: 0.625rem 1rem;
   display: flex;
@@ -265,16 +224,8 @@ onUnmounted(() => {
   transition: background-color 0.15s;
 }
 
-.dark-mode .currency-list li {
-  color: #e0e0e0;
-}
-
 .currency-list li:hover {
   background: #f0f7ff;
-}
-
-.dark-mode .currency-list li:hover {
-  background: #32324a;
 }
 
 .fi {
@@ -306,14 +257,6 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   padding: 0;
-}
-
-.dark-mode .amount-input :deep(.p-inputnumber-input) {
-  color: #f0f0f0;
-}
-
-.dark-mode .amount-input :deep(input) {
-  color: #f0f0f0;
 }
 
 .error-message {

@@ -43,10 +43,6 @@ defineProps<Props>()
   visibility: visible;
 }
 
-.dark-mode .success-overlay {
-  background: rgba(30, 30, 46, 0.95);
-}
-
 .success-content {
   text-align: center;
   animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -73,18 +69,10 @@ defineProps<Props>()
   margin: 0 0 0.5rem 0;
 }
 
-.dark-mode .success-content h2 {
-  color: #f0f0f0;
-}
-
 .success-content p {
   font-size: 0.9375rem;
   color: #5f6368;
   margin: 0;
-}
-
-.dark-mode .success-content p {
-  color: #a0a0a0;
 }
 
 @keyframes scaleIn {

@@ -66,16 +66,8 @@ const emit = defineEmits<{
   color: #444746;
 }
 
-.dark-mode .label {
-  color: #e0e0e0;
-}
-
 .label__required {
   color: #d93025;
-}
-
-.dark-mode .label__required {
-  color: #ff6b6b;
 }
 
 .select-grid {
@@ -97,31 +89,15 @@ const emit = defineEmits<{
   transition: all 0.2s;
 }
 
-.dark-mode .type-card {
-  background: #2a2a3e;
-  border-color: #404055;
-}
-
 .type-card:hover:not(:disabled) {
   border-color: #0b57d0;
   background: #f0f7ff;
-}
-
-.dark-mode .type-card:hover:not(:disabled) {
-  border-color: #4285f4;
-  background: #32324a;
 }
 
 .type-card--selected {
   border-color: #0b57d0;
   background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
   box-shadow: 0 2px 8px rgba(11, 87, 208, 0.15);
-}
-
-.dark-mode .type-card--selected {
-  border-color: #4285f4;
-  background: linear-gradient(135deg, #2a3a5a 0%, #324060 100%);
-  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
 }
 
 .type-card--error {
@@ -142,10 +118,6 @@ const emit = defineEmits<{
   font-weight: 500;
   color: #444746;
   text-align: center;
-}
-
-.dark-mode .type-card__label {
-  color: #e0e0e0;
 }
 
 .error-message {

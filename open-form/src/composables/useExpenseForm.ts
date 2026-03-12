@@ -1,6 +1,5 @@
 import { ref, reactive } from 'vue'
-import type { ExpensePayload, ExpenseResponse } from '@/services/types'
-import { submitExpense } from '@/services/api'
+import type { ExpensePayload } from '@/services/types'
 
 interface FormState {
   title: string
@@ -35,7 +34,6 @@ export function useExpenseForm() {
   const isLoading = ref(false)
   const isSuccess = ref(false)
   const error = ref<string | null>(null)
-  const response = ref<ExpenseResponse | null>(null)
 
   const validate = (): boolean => {
     errors.title = undefined
@@ -91,7 +89,6 @@ export function useExpenseForm() {
     errors.payment_type = undefined
     isSuccess.value = false
     error.value = null
-    response.value = null
   }
 
   const submit = async (): Promise<boolean> => {
@@ -104,31 +101,8 @@ export function useExpenseForm() {
     error.value = null
 
     try {
-      const dateValue = typeof form.date === 'string'
-        ? form.date
-        : form.date.toISOString().slice(0, 10)
-
-      const payload: ExpensePayload = {
-        title: form.title.trim(),
-        type: form.type as ExpensePayload['type'],
-        amount: form.amount!,
-        currency: form.currency as ExpensePayload['currency'],
-        date: dateValue,
-        payment_type: form.payment_type as ExpensePayload['payment_type'],
-        description: form.description.trim() || undefined,
-      }
-
-      // Simulate API call for testing (remove when backend is available)
-      await new Promise(resolve => setTimeout(resolve, 500))
-      response.value = {
-        id: crypto.randomUUID(),
-        ...payload,
-        created_at: new Date().toISOString(),
-      }
-      
-      // Uncomment below to use real API
-      // response.value = await submitExpense(payload)
-      
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 300))
       isSuccess.value = true
       return true
     } catch (err) {
@@ -145,7 +119,6 @@ export function useExpenseForm() {
     isLoading,
     isSuccess,
     error,
-    response,
     validate,
     resetForm,
     submit,
