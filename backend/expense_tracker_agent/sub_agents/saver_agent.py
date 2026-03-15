@@ -1,24 +1,23 @@
-import logging
 import sys
 from pathlib import Path
-from google.adk.runners import Runner
-from google.adk.agents import Agent
-from google.adk.tools import load_memory, load_artifacts
+
 from dotenv import load_dotenv
+from google.adk.agents import Agent
+from google.adk.tools import load_artifacts, load_memory
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from google.adk.tools.tool_context import ToolContext
-from ..tool import GCSBlobService
-from expense_tracker_agent.agent_typing import ExpenseSchema, ExpenseType, PaymentMethod
 from datetime import datetime
-from expense_tracker_agent.config import ExpenseTrackerConfig
 
-config = ExpenseTrackerConfig()
+
+from expense_tracker_agent.agent_typing import ExpenseType, PaymentMethod
+from expense_tracker_agent.config import get_config
+
+config = get_config()
 load_dotenv()
 
-GCS_SERVICE = GCSBlobService()
+GCS_SERVICE = config.gcs
 
 SAVER_PROMPT_TEMPLATE = """
 # IMPORTANT INFORMATION
@@ -26,7 +25,7 @@ Current date: {current_date}
 System Mode: Saver Agent (MongoDB / Expense Recording Specialist). You have access to tools such as memory retrieval and artifact loading.
 
 # CONTEXT
-Your role is to create a schema for a mongodb database. Parse user input and extract expense details from TEXT, IMAGE, AUDIO, or PDF. 
+Your role is to create a schema for a mongodb database. Parse user input and extract expense details from TEXT, IMAGE, AUDIO, or PDF.
 If a file is provided, prioritize details found within the document.
 
 # EXTRACTION SCHEMA
@@ -55,8 +54,7 @@ saver_agent = Agent(
     instruction=SAVER_PROMPT_TEMPLATE.format(
         current_date=datetime.now().strftime("%Y-%m-%d"),
         categories=list(ExpenseType.__members__.keys()),
-        payment_methods=list(PaymentMethod.__members__.keys())
+        payment_methods=list(PaymentMethod.__members__.keys()),
     ),
     tools=[load_memory, load_artifacts, config.mongodb.save_expense],
 )
-

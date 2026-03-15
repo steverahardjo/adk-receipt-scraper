@@ -26,7 +26,6 @@ import kagglehub
 import os
 import cv2
 import random
-import numpy as np
 from augraphy import *
 
 receipt_path = kagglehub.dataset_download("dhiaznaidi/receiptdatasetssd300v2")

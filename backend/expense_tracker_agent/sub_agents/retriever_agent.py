@@ -1,12 +1,13 @@
+from datetime import datetime
+
+from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.tools import load_memory
-from dotenv import load_dotenv
-from ..config import ExpenseTrackerConfig
-from datetime import datetime
-from ..tool import GCSBlobService
 
-config = ExpenseTrackerConfig()
-blob_service = GCSBlobService()
+from ..config import get_config
+
+config = get_config()
+blob_service = config.gcs
 load_dotenv()
 
 SEARCH_PROMPT = f"""
@@ -18,15 +19,15 @@ Your role is to translate natural language into:
 1. a Python-ready `filters` dictionary
 2. a `limit` integer
 Your secondary role:
-After pulling the data, if a blob exist and user request it to be shown, return a signed url. 
+After pulling the data, if a blob exist and user request it to be shown, return a signed url.
 These will be passed directly to:
 `await search_expenses(limit=limit, **filters)`
 
 Use ONLY a JSON object with keys: `limit` and `filters` and run it with the tool `get_expenses()`
-Return the user, data points reiterated. 
+Return the user, data points reiterated.
 
 # OPERATIONAL RULES
-## 1. 'get_signed_url' tool is used to get a blob url, don't do anything unless user ask for a file. 
+## 1. 'get_signed_url' tool is used to get a blob url, don't do anything unless user ask for a file.
 ## 2. Date Boundary Logic
 - For a single calendar day (e.g. "Jan 16", "yesterday"):
   - Create a datetime range from 00:00:00 of that day

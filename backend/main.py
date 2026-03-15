@@ -1,27 +1,24 @@
-import os
 import asyncio
-import logging
 import io
+import logging
+import os
+
 import aiohttp
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.types import Message, BufferedInputFile
+from aiogram.types import BufferedInputFile, MenuButtonWebApp, Message, WebAppInfo
 from aiogram.utils.chat_action import ChatActionSender
 from expense_tracker_agent.agent_typing import AgentOutput
+from expense_tracker_agent.config import initialize_services
 from expense_tracker_agent.root_agent import expense_runner
 from expense_tracker_agent.utils import (
-    InputType, 
-    set_observ, 
-    save_multimodal_artifact, 
+    InputType,
     extract_agent_output,
-    markdownify
+    markdownify,
+    save_multimodal_artifact,
+    set_observ,
 )
 
-from aiogram.types import MenuButtonWebApp, WebAppInfo
 
-
-from aiogram.types import WebAppInfo
-
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 async def fetch_signed_url_bytes(url: str) -> bytes:
     async with aiohttp.ClientSession(
         headers={"Host": "storage.googleapis.com"},
@@ -45,9 +42,7 @@ set_observ()
 async def run_agent(session_id: str, user_id: str, prompt: str) -> AgentOutput:
     """Run the expense agent and extract output."""
     result = await expense_runner.run_debug(
-        session_id=session_id,
-        user_id=user_id,
-        user_messages=prompt
+        session_id=session_id, user_id=user_id, user_messages=prompt
     )
     return extract_agent_output(result, "root_agent")
 
@@ -56,8 +51,7 @@ async def send_agent_response(message: Message, output: AgentOutput) -> None:
     """Send agent output to Telegram, handling both text and image responses."""
     if output.type == "text":
         await message.answer(
-            text=await markdownify(output.content),
-            parse_mode="MarkdownV2"
+            text=await markdownify(output.content), parse_mode="MarkdownV2"
         )
     elif output.type == "signed_url":
         file_bytes = await fetch_signed_url_bytes(output.url)
@@ -65,7 +59,7 @@ async def send_agent_response(message: Message, output: AgentOutput) -> None:
         await message.answer_photo(
             photo=file,
             caption=await markdownify(output.caption) or "",
-            parse_mode="MarkdownV2"
+            parse_mode="MarkdownV2",
         )
 
 
@@ -99,12 +93,12 @@ async def process_multimodal_request(message: Message):
         buffer.seek(0)
 
         prompt += await save_multimodal_artifact(
-            file_info.file_path, 
-            input_type, 
-            expense_runner, 
-            buffer, 
-            session_id=session_id, 
-            user_id=user_id
+            file_info.file_path,
+            input_type,
+            expense_runner,
+            buffer,
+            session_id=session_id,
+            user_id=user_id,
         )
 
         try:
@@ -114,15 +108,21 @@ async def process_multimodal_request(message: Message):
             logging.error(f"Error processing agent: {e}")
             await message.answer("I encountered an error processing your request.")
 
+
 @dp.callback_query(F.data == "run_agent")
 async def handle_agent_run(callback: types.CallbackQuery):
     await callback.answer("Agent starting...")
     async with ChatActionSender.typing(bot=bot, chat_id=callback.message.chat.id):
-        await asyncio.sleep(1) 
+        await asyncio.sleep(1)
     await callback.message.answer("Agent task complete!")
 
 
-@dp.message(F.photo | (F.document & (F.document.mime_type == "application/pdf")) | F.voice | F.audio)
+@dp.message(
+    F.photo
+    | (F.document & (F.document.mime_type == "application/pdf"))
+    | F.voice
+    | F.audio
+)
 async def handle_multimodal(message: Message):
     await process_multimodal_request(message)
 
@@ -130,6 +130,7 @@ async def handle_multimodal(message: Message):
 @dp.message(F.text)
 async def handle_text(message: Message):
     session_id = f"tg_{message.chat.id}"
+    message
     user_id = str(message.from_user.id)
 
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
@@ -140,18 +141,21 @@ async def handle_text(message: Message):
             logging.error(f"Error processing agent: {e}")
             await message.answer("I encountered an error processing your request.")
 
+
 async def main():
     logging.basicConfig(level=logging.INFO)
     
+    await initialize_services()
+
     await bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
-            text="💰 Form",
-            web_app=WebAppInfo(url="https://www.google.com/")
+            text="Form", web_app=WebAppInfo(url="https://www.google.com/")
         )
     )
-    
+
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     try:

@@ -1,10 +1,11 @@
+from datetime import date, datetime
 from enum import Enum
-from pydantic import BaseModel, Field
 from typing import Literal, Optional
-from datetime import date
+
 from beanie import Document
-from datetime import datetime
 from google.adk.tools.tool_context import ToolContext
+from pydantic import BaseModel, Field
+
 
 class ExpenseType(str, Enum):
     FOOD = "food"
@@ -14,11 +15,13 @@ class ExpenseType(str, Enum):
     ENTERTAINMENT = "entertainment"
     OTHER = "other"
 
+
 class AgentOutput(BaseModel):
     type: Literal["text", "signed_url"]
     content: Optional[str] = None
     url: Optional[str] = None
     caption: Optional[str] = None
+
 
 class PaymentMethod(str, Enum):
     CASH = "cash"
@@ -34,10 +37,12 @@ class Currency(str, Enum):
     JPY = "JPY"
     IDR = "IDR"
 
+
 class InputType(Enum):
     PDF = ("application/pdf", "pdf")
     IMG = ("image/jpeg", "jpeg")
     AUDIO = ("audio/mpeg", "mp3")
+
 
 class Expense(Document):
     item: str | None = None
@@ -48,7 +53,19 @@ class Expense(Document):
     category: ExpenseType
     payment_method: PaymentMethod
     description: str | None = None
-    blob_filename: str |None = None
+    blob_filename: str | None = None
+
+
+class BankStatement(Document):
+    """Monthly bank statement for reconciliation."""
+
+    month: int
+    year: int
+    bank_name: str
+    blob_filename: str  # PDF or CSV file
+    uploaded_at: datetime = Field(
+        default_factory=lambda: datetime.now().replace(microsecond=0)
+    )
 
 
 class ExpenseSchema(BaseModel):
@@ -60,11 +77,11 @@ class ExpenseSchema(BaseModel):
     payment_method: PaymentMethod
     description: str | None = None
     blob_filename: str | None = None
-    
+
     async def to_document(self, tool_context: ToolContext = None) -> Expense:
         """Converts the AI data into the actual Database Document."""
-        from .tool import GCSBlobService
-        
+        from tools import GCSBlobService
+
         blob_service = GCSBlobService()
         d = self.datetime
         if isinstance(d, str):
@@ -73,25 +90,23 @@ class ExpenseSchema(BaseModel):
             else:
                 d = datetime.fromisoformat(d.replace("Z", "+00:00")).date()
 
-        if self.blob_filename not  in [None, ""]:
+        if self.blob_filename not in [None, ""]:
             artifact_part = await tool_context.load_artifact(self.blob_filename)
             raw_bytes = artifact_part.inline_data.data
             self.blob_filename = blob_service.upload_blob_file(
-                        self.blob_filename, 
-                        raw_bytes
-                    )
+                self.blob_filename, raw_bytes
+            )
         return Expense(
             item=self.item,
             amount=self.amount,
             currency=self.currency,
-            date_recorded=datetime.now().replace(microsecond=0),            
+            date_recorded=datetime.now().replace(microsecond=0),
             datetime=d,
             category=self.category,
             payment_method=self.payment_method,
             description=self.description,
-            blob_filename=self.blob_filename
+            blob_filename=self.blob_filename,
         )
-
 
 
 class PayloadType(str, Enum):

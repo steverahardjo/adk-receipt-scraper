@@ -1,6 +1,7 @@
-from google.adk.code_executors import BuiltInCodeExecutor
 from google.adk.agents import Agent
-from ..config import ExpenseTrackerConfig
+from google.adk.code_executors import BuiltInCodeExecutor
+
+from ..config import get_config
 
 VISUALIZER_PROMPT = """
 # ROLE
@@ -47,12 +48,12 @@ def save_chart(fig, filename: str) -> str:
 - Generate code to save the file as a descriptive slug of the user's request (e.g., `expenses_by_category.jpg`).
 - Provide the code snippets being used to user.
 - The file will be automatically tracked by the artifact system and viewable in the web UI.
-- The file will be automatically tracked by the artifact system and viewable in the web UI.
 """
+
+config = get_config()
 code_executor = BuiltInCodeExecutor()
-config = ExpenseTrackerConfig()
 visualiser_agent = Agent(
-    model= config.insert_agent_model,
+    model=config.insert_agent_model,
     name="visualiser_agent",
     instruction=VISUALIZER_PROMPT,
     description="Executes Python code to perform visualization.",

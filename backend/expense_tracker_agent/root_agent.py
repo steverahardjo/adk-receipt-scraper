@@ -1,56 +1,57 @@
 import logging
-from google.adk.runners import Runner
+from datetime import datetime
+
+from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.apps import App
-from google.adk.tools import load_artifacts
-from dotenv import load_dotenv
-from .config import ExpenseTrackerConfig
-from .sub_agents.saver_agent import saver_agent
-from .sub_agents.retriever_agent import retrieve_agent
-from google.adk.tools import AgentTool
-from datetime import datetime
-from .agent_typing import AgentOutput
+from google.adk.runners import Runner
+from google.adk.tools import AgentTool, load_artifacts
+from tools import generate_visual
 
-config = ExpenseTrackerConfig()
+from .agent_typing import AgentOutput
+from .config import get_config
+from .sub_agents.retriever_agent import retrieve_agent
+from .sub_agents.saver_agent import saver_agent
+
+config = get_config()
 load_dotenv()
 
 ROOT_PROMPT = f"""
-#Important Information
-Current date: {datetime.now().strftime("%Y-%m-%d")}
-
 # ROLE
+Expense Tracker Orchestrator. Route user requests to correct tool.
+Date: {datetime.now().strftime("%Y-%m-%d")}
 
-You are the System Orchestrator of a Expense tracker System that accept user text, receipt picture, and voice mail.
-Your job is to classify user intent and route the request to the correct sub-agent (SAVER, SEARCH, or VISUALIZER).
-You can accept several input: text, PDF, photos jpg, and voice notes.
+# TOOLS
+- `saver_agent`: Save expenses (receipts, invoices, manual entries)
+- `retrieve_agent`: Search/query expenses
+- `load_artifacts`: Access attached files
+- `generate_visual`: Create charts/graphs
 
-Data are saved and retrieved  with these schema: 
-- item (str): Description of the expense
-- amount (float): Expense amount
-- currency (str): Currency code (e.g., "USD", "EUR")
-- category (str): Category (e.g., "food", "transport", "entertainment")
-- payment_method (str): Payment method (e.g., "cash", "card", "mobile")
-- description (str): Optional additional details
-- blob_filename(str): name of blob file to be downloaded
+# INTENT → TOOL MAPPING
 
-# INTENT CLASSIFICATION
-1. **INPUT (saver agent): ** through `saver_agent` tool, save expenses to the db instances, important to fill has_artifacts(bool)
-2. **OUTPUT (Search Agent):** User asks to retrieve, list, or query past data (e.g., "How much did I spend last week?"). 
-You are also capable to return a signed url of the previous expense if that exist. 
-3. **OUTPUT (generate_visual):** Process the data and generate a visualization, saving it in a directory.
+| Intent | Triggers | Tool |
+|--------|----------|------|
+| SAVE | "spent", "bought", "paid", receipt, invoice, voice note | `saver_agent` |
+| RETRIEVE | "show", "list", "how much", "total", "find" | `retrieve_agent` |
+| VISUALIZE | "chart", "graph", "plot", "trend" | `retrieve_agent` → `generate_visual` |
+| CHAT | greetings, help, questions | Respond directly |
 
+# SCHEMA
+item, amount, currency, category, payment_method, datetime, description, blob_filename
 
-# OPERATIONAL RULES
-- DO NOT generate anything (code or long desc) that you are not instructed.
-- Be friendly and use emoji to introduce yourself to user.
-- You can save file as artifact and send back artifact to user.
-- Explanation of your usage are concise, limit to 100 word.
+# RULES
+- Friendly, concise (≤100 words)
+- Emoji sparingly: 💰📊🧾
+- No data fabrication
+- JSON output only
 
+# OUTPUT FORMAT
+{{"type": "text"|"signed_url", "content": "...", "url": "...", "caption": "..."}}
 
-# OUTPUT FORMAT (STRICT)
-You MUST respond using valid JSON ONLY.
-Do NOT include any text outside JSON.
-Do NOT greet the user unless inside JSON.
+# EXAMPLES
+User: "Spent $45 on lunch" → {{"type": "text", "content": "Recorded $45 lunch 💰"}}
+User: "Show food expenses" → {{"type": "text", "content": "Food: $68 total"}}
+User: "Receipt photo" → {{"type": "text", "content": "Extracting from receipt 📸"}}
 """
 
 root_agent = Agent(
@@ -58,7 +59,12 @@ root_agent = Agent(
     name="root_agent",
     instruction=ROOT_PROMPT,
     output_key="root_agent",
-    tools=[AgentTool(saver_agent), load_artifacts, AgentTool(retrieve_agent)],
+    tools=[
+        AgentTool(saver_agent),
+        AgentTool(retrieve_agent),
+        load_artifacts,
+        generate_visual,
+    ],
     output_schema=AgentOutput,
 )
 logging.info("Expense tracker runner initialized for adk")
