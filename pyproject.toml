@@ -10,6 +10,7 @@ dependencies = [
     "augraphy>=8.2.6",
     "beanie>=2.0.1",
     "cookiecutter-data-science>=2.3.0",
+    "fastapi>=0.128.4",
     "gdown>=5.2.1",
     "google>=3.0.0",
     "google-adk>=1.21.0",
@@ -24,4 +25,5 @@ dependencies = [
     "pymongo>=4.15.5",
     "python-telegram-bot>=22.5",
     "telegramify-markdown>=0.5.4",
+    "uvicorn[standard]>=0.40.0",
 ]

@@ -1,22 +1,25 @@
-import mlflow.onnx
 import os
-import gdown
-import onnx
 from datetime import datetime
+
+import gdown
+import mlflow.onnx
+import onnx
 
 MODEL_ID = "16Jty6BR3Y1ec6BkmYFZkl2SQNdrLWDaL"
 MODEL_LINK = f"https://drive.google.com/uc?id={MODEL_ID}"
+
 
 def load_gdrive(model_link: str, model_name: str) -> str:
     # Ensure we save it in the root project dir where you want it
     script_dir = os.path.dirname(os.path.abspath(__file__))
     output = os.path.join(script_dir, "..", f"{model_name}.onnx")
-    
+
     if not os.path.exists(output):
         print(f"Downloading model to {output}...")
         # fuzzy=True helps gdown handle Drive URLs better
-        gdown.download(model_link, output, quiet=False, fuse=True)
+        gdown.download(model_link, output, quiet=False)
     return output
+
 
 # --- Execution ---
 # 2. Download/Locate the model first
@@ -33,27 +36,28 @@ except Exception as e:
     exit(1)
 
 # 4. MLflow Logging
-mlflow.set_tracking_uri("file:./mlruns") # Ensures logs stay in your project
-with mlflow.start_run(run_name=f"versioning_receipt-yolo_{datetime.now().strftime('%Y%m%d')}"):
-    mlflow.set_tags({
-        "training_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "gpu_model": "Tesla-T2",
-        "framework": "Ultralytics 8.4.11",
-        "device_id": "CUDA:0"
-    })
-    
+mlflow.set_tracking_uri("file:./mlruns")  # Ensures logs stay in your project
+with mlflow.start_run(
+    run_name=f"versioning_receipt-yolo_{datetime.now().strftime('%Y%m%d')}"
+):
+    mlflow.set_tags(
+        {
+            "training_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "gpu_model": "Tesla-T2",
+            "framework": "Ultralytics 8.4.11",
+            "device_id": "CUDA:0",
+        }
+    )
+
     # Fixed typo in 'images'
-    mlflow.log_metrics({
-        "mAP_50": 0.995,
-        "images": 596,
-        "inference_ms": 7.1,
-        "postprocess_ms": 1.5
-    })
-    
+    mlflow.log_metrics(
+        {"mAP_50": 0.995, "images": 596, "inference_ms": 7.1, "postprocess_ms": 1.5}
+    )
+
     mlflow.onnx.log_model(
         onnx_model=onnx_model,
         artifact_path="model",
-        registered_model_name="receipt-yolo" # Fixed parameter name
+        registered_model_name="receipt-yolo",  # Fixed parameter name
     )
 
 print("MLflow run complete and model registered.")
