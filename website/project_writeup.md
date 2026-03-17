@@ -23,7 +23,7 @@ This website are build to facilitate mainly mobile user to:
 - *better-auth* for authentication
 - lazy-loading with *vue* and *tanstack*
 - *shadcn* for components
-- *vue* for frontend framework
+- *react* for frontend framework
 - *mongodb* no sql for database
 - A *django* backend for the API.
 
