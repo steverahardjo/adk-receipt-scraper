@@ -92,8 +92,8 @@ export default function Header() {
               <Link to="/auth/signup">
                 <Button size="sm">Sign Up</Button>
               </Link>
-              <Link to="/auth/profiling">
-                <Button size="sm">Your Own Profile</Button>
+              <Link to="expense_form">
+                <Button size="sm">Expense Form</Button>
               </Link>
             </>
           )}
