@@ -29,4 +29,19 @@ import {
   InputGroupTextarea,
 } from '@/components/ui/input-group'
 
-const profileformSchema = z.object({})
+export const profileFormSchema = z.object({
+  income_source: z.string(),
+
+  liquid_cash: z.number(),
+  monthly_expense_estimate: z.number(),
+
+  debt_total: z.number().optional(),
+
+  goal: z
+    .object({
+      name: z.string(),
+      amount: z.number(),
+      timeframe_months: z.number(),
+    })
+    .optional(),
+})
