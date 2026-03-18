@@ -18,8 +18,6 @@ export const auth = betterAuth({
     magicLink({
       async sendMagicLink(data) {
         console.log(`Magic link for ${data.email}: ${data.url}`);
-        // TODO: Integrate with email service (Resend, SendGrid, etc.)
-        // await fetch("https://api.resend.com/emails", { ... })
       },
     }),
   ],
