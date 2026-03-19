@@ -2,7 +2,18 @@ import * as React from "react"
 
 import { cn } from "#/lib/utils"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+interface InputProps extends React.ComponentProps<"input"> {
+  // react-number-format props that should not be passed to DOM
+  thousandSeparator?: boolean | string
+  decimalScale?: number
+  fixedDecimalScale?: boolean
+  allowNegative?: boolean
+  prefix?: string
+  suffix?: string
+  thousandsGroupStyle?: "thousand" | "lakh" | "wan" | "none"
+}
+
+function Input({ className, type, thousandSeparator, decimalScale, fixedDecimalScale, allowNegative, prefix, suffix, thousandsGroupStyle, ...props }: InputProps) {
   return (
     <input
       type={type}
