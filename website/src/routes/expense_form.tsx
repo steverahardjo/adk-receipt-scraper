@@ -13,7 +13,6 @@ import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/style.css'
 
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
@@ -38,35 +37,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-const TYPES = [
-  'Food',
-  'Transport',
-  'Shopping',
-  'Bills',
-  'Entertainment',
-  'Health',
-  'Other',
-]
-
-const PAYMENTS = ['Cash', 'Debit', 'Credit', 'E-Wallet', 'Bank Transfer']
-
-const CURRENCIES = {
-  USD: '$',
-  IDR: 'Rp',
-  SGD: 'S$',
-  MYR: 'RM',
-  JPY: '¥',
-}
-
-const schema = z.object({
-  title: z.string().min(1),
-  amount: z.number().min(0.01),
-  currency: z.string(),
-  date: z.date(),
-  type: z.string(),
-  paymentMethod: z.string(),
-  description: z.string().optional(),
-})
+import { schema, TYPES, PAYMENTS, CURRENCIES } from '@/schema'
 
 export const Route = createFileRoute('/expense_form')({
   component: ExpenseFormPage,

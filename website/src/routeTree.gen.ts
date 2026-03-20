@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -16,6 +17,11 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as ApiAuthChar91DotAllChar93RouteImport } from './routes/api/auth/[...all]'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Expense_formRoute = Expense_formRouteImport.update({
   id: '/expense_form',
   path: '/expense_form',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/expense_form': typeof Expense_formRoute
+  '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
   '/api/auth/[./all]': typeof ApiAuthChar91DotAllChar93Route
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/expense_form': typeof Expense_formRoute
+  '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
   '/api/auth/[./all]': typeof ApiAuthChar91DotAllChar93Route
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/expense_form': typeof Expense_formRoute
+  '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
   '/api/auth/[./all]': typeof ApiAuthChar91DotAllChar93Route
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/expense_form'
+    | '/test'
     | '/auth/signin'
     | '/auth/signup'
     | '/api/auth/[./all]'
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/expense_form'
+    | '/test'
     | '/auth/signin'
     | '/auth/signup'
     | '/api/auth/[./all]'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/expense_form'
+    | '/test'
     | '/auth/signin'
     | '/auth/signup'
     | '/api/auth/[./all]'
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   Expense_formRoute: typeof Expense_formRoute
+  TestRoute: typeof TestRoute
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
   ApiAuthChar91DotAllChar93Route: typeof ApiAuthChar91DotAllChar93Route
@@ -111,6 +124,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/expense_form': {
       id: '/expense_form'
       path: '/expense_form'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   Expense_formRoute: Expense_formRoute,
+  TestRoute: TestRoute,
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
   ApiAuthChar91DotAllChar93Route: ApiAuthChar91DotAllChar93Route,
