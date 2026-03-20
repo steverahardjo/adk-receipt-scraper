@@ -31,5 +31,14 @@ const schema = z.object({
   description: z.string().optional(),
 })
 
+const revenueSchema = z.object({
+  title: z.string().min(1),
+  amount: z.number().min(0.01),
+  currency: z.string(),
+  date: z.date(),
+  description: z.string().optional(),
+})
+
 export { schema, TYPES, PAYMENTS, CURRENCIES }
 export type Expense = z.infer<typeof schema>
+export type Revenue = z.infer<typeof revenueSchema>
