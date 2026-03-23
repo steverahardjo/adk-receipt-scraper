@@ -1,4 +1,4 @@
-/*A dialog to ask whether they want teleram-profiling or form profiling */
+/*A dialog to ask whether they want telegram-profiling or form profiling */
 'use client'
 
 import {
@@ -15,7 +15,7 @@ export function ProfileDialog({ open, onOpenChange, onSelect }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Signup successful</DialogTitle>
+          <DialogTitle>Create Your Profile</DialogTitle>
           <DialogDescription>
             How would you like to kickstart your profile?
           </DialogDescription>

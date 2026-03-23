@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-import { schema, TYPES, PAYMENTS, CURRENCIES } from '@/schema'
+import {expenseSchema, TYPES, PAYMENTS, CURRENCIES } from '@/schema'
 
 export const Route = createFileRoute('/expense_form')({
   component: ExpenseFormPage,
@@ -46,8 +46,8 @@ export const Route = createFileRoute('/expense_form')({
 function ExpenseFormPage() {
   const navigate = useNavigate()
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof expenseSchema>>({
+    resolver: zodResolver(expenseSchema),
     defaultValues: {
       title: '',
       amount: 0,
@@ -57,8 +57,7 @@ function ExpenseFormPage() {
       paymentMethod: 'E-Wallet',
     },
   })
-
-  const onSubmit = async (data: z.infer<typeof schema>) => {
+   const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
     await new Promise((r) => setTimeout(r, 800))
     toast.success('Expense added')
     navigate({ to: '/' })

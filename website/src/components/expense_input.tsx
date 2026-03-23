@@ -1,4 +1,3 @@
-import { Controller } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 
 import {
@@ -21,7 +20,7 @@ import { Input } from '@/components/ui/input'
 import { CURRENCIES } from '@/schema'
 
 type Props = {
-  control: Controller<any>
+  control: Control<any>
 }
 
 export function ExpenseInput({ control }: Props) {

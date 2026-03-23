@@ -17,6 +17,9 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  ssr: {
+    noExternal: ['better-auth'],
+  },
 })
 
 export default config
