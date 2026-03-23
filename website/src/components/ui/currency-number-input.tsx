@@ -1,16 +1,16 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { PatternFormat } from "react-number-format"
-import { Input } from "./input"
+import * as React from 'react'
+import { PatternFormat } from 'react-number-format'
+import { Input } from './input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./select"
-import { cn } from "#/lib/utils"
+} from './select'
+import { cn } from '#/lib/utils'
 
 export interface Currency {
   value: string
@@ -19,8 +19,10 @@ export interface Currency {
   symbol: string
 }
 
-export interface CurrencyNumberInputProps
-  extends Omit<React.ComponentProps<"input">, "onChange" | "value"> {
+export interface CurrencyNumberInputProps extends Omit<
+  React.ComponentProps<'input'>,
+  'onChange' | 'value'
+> {
   value?: string
   onValueChange?: (value: string, currency: string) => void
   currencies?: Currency[]
@@ -31,19 +33,19 @@ export interface CurrencyNumberInputProps
 }
 
 const DEFAULT_CURRENCIES: Currency[] = [
-  { value: "USD", label: "US Dollar", flag: "🇺🇸", symbol: "$" },
-  { value: "IDR", label: "Indonesian Rupiah", flag: "🇮🇩", symbol: "Rp" },
-  { value: "SGD", label: "Singapore Dollar", flag: "🇸🇬", symbol: "S$" },
-  { value: "MYR", label: "Malaysian Ringgit", flag: "🇲🇾", symbol: "RM" },
-  { value: "JPY", label: "Japanese Yen", flag: "🇯🇵", symbol: "¥" },
+  { value: 'USD', label: 'US Dollar', flag: '🇺🇸', symbol: '$' },
+  { value: 'IDR', label: 'Indonesian Rupiah', flag: '🇮🇩', symbol: 'Rp' },
+  { value: 'SGD', label: 'Singapore Dollar', flag: '🇸🇬', symbol: 'S$' },
+  { value: 'MYR', label: 'Malaysian Ringgit', flag: '🇲🇾', symbol: 'RM' },
+  { value: 'JPY', label: 'Japanese Yen', flag: '🇯🇵', symbol: '¥' },
 ]
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
-  USD: "$",
-  IDR: "Rp",
-  SGD: "S$",
-  MYR: "RM",
-  JPY: "¥",
+  USD: '$',
+  IDR: 'Rp',
+  SGD: 'S$',
+  MYR: 'RM',
+  JPY: '¥',
 }
 
 export const CurrencyNumberInput = React.forwardRef<
@@ -52,12 +54,12 @@ export const CurrencyNumberInput = React.forwardRef<
 >(
   (
     {
-      value = "",
+      value = '',
       onValueChange,
       currencies = DEFAULT_CURRENCIES,
-      currency = "USD",
+      currency = 'USD',
       onCurrencyChange,
-      placeholder = "0.00",
+      placeholder = '0.00',
       disabled = false,
       className,
       ...props
@@ -86,11 +88,11 @@ export const CurrencyNumberInput = React.forwardRef<
             placeholder={placeholder}
             disabled={disabled}
             className={cn(
-              "pr-12",
-              " [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+              'pr-12',
+              ' [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
               className,
             )}
-            inputRef={ref}
+            getInputRef={ref}
             {...props}
           />
         </div>
@@ -106,7 +108,9 @@ export const CurrencyNumberInput = React.forwardRef<
             <SelectValue>
               <span className="flex items-center gap-1">
                 <span>{selectedCurrency.flag}</span>
-                <span className="hidden sm:inline">{selectedCurrency.value}</span>
+                <span className="hidden sm:inline">
+                  {selectedCurrency.value}
+                </span>
               </span>
             </SelectValue>
           </SelectTrigger>
@@ -126,6 +130,6 @@ export const CurrencyNumberInput = React.forwardRef<
   },
 )
 
-CurrencyNumberInput.displayName = "CurrencyNumberInput"
+CurrencyNumberInput.displayName = 'CurrencyNumberInput'
 
 export default CurrencyNumberInput

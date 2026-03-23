@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
@@ -25,6 +26,11 @@ const TestRoute = TestRouteImport.update({
 const Expense_formRoute = Expense_formRouteImport.update({
   id: '/expense_form',
   path: '/expense_form',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -57,6 +63,7 @@ const ApiAuthChar91DotAllChar93Route =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chat': typeof ChatRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chat': typeof ChatRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chat': typeof ChatRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/chat'
     | '/expense_form'
     | '/test'
     | '/auth/signin'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/chat'
     | '/expense_form'
     | '/test'
     | '/auth/signin'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/chat'
     | '/expense_form'
     | '/test'
     | '/auth/signin'
@@ -115,6 +127,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ChatRoute: typeof ChatRoute
   Expense_formRoute: typeof Expense_formRoute
   TestRoute: typeof TestRoute
   AuthSigninRoute: typeof AuthSigninRoute
@@ -136,6 +149,13 @@ declare module '@tanstack/react-router' {
       path: '/expense_form'
       fullPath: '/expense_form'
       preLoaderRoute: typeof Expense_formRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -179,6 +199,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ChatRoute: ChatRoute,
   Expense_formRoute: Expense_formRoute,
   TestRoute: TestRoute,
   AuthSigninRoute: AuthSigninRoute,
