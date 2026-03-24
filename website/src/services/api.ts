@@ -1,52 +1,62 @@
-import type { Expense } from '@/schema'
-import { CURRENCIES } from '@/schema'
+import axios from 'axios'
+import { authClient } from '@/lib/auth-client'
+import type { Expense, Profile } from '@/schema'
 
 const BASE_URL = 'https://expense-tracker.com'
+
+// 1. Create the base instance
+export const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// 2. The Interceptor: This runs BEFORE every request
+api.interceptors.request.use(
+  async (config) => {
+    // Pull the session from Better Auth
+    const { data: session } = await authClient.getSession()
+
+    // Use User ID if logged in, otherwise fallback to a persistent Guest ID
+    const identifier =
+      session?.user?.id ||
+      sessionStorage.getItem('guest_id') ||
+      'anonymous_user'
+
+    // Attach it to the custom header for your Agentic Backend
+    config.headers['X-User-Id'] = identifier
+
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+
+export const dashboardAPI = {
+  fetchDashboard: () => api.get('/dashboard').then((res) => res.data),
+}
+
+export const profileAPI = {
+  fetchProfile: () => api.get('/profile').then((res) => res.data),
+  updateProfile: (profile: Partial<Profile>) =>
+    api.post('/profile', profile).then((res) => res.data),
+}
+
+// 3. Clean Feature APIs (No more passing 'id' manually!)
 export const chatAPI = {
-  fetchMessages: async () => {
-    const res = await fetch(`${BASE_URL}/chat`)
-    if (!res.ok) {
-      throw new Error('Failed to fetch messages')
-    }
-    return res.json()
-  },
-  sendMessage: async (text: string) => {
-    const res = await fetch(`${BASE_URL}/messages`, {
-      method: 'POST',
-      body: JSON.stringify({ text }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-    return res.json()
-  },
-  fetchProfileInput: async () => {
-    const res = await fetch(`${BASE_URL}/chat/profile`)
-    if (!res.ok) {
-      throw new Error('Failed to enable profile input through chat platform')
-    }
-    return res.json()
-  },
+  fetchMessages: () => api.get<any[]>('/chat').then((res) => res.data),
+
+  sendMessage: (text: string) =>
+    api.post('/messages', { text }).then((res) => res.data),
+
+  fetchProfileInput: () => api.get('/chat/profile').then((res) => res.data),
 }
 
 export const expenseAPI = {
-  sendExpense: async (newExpense: Omit<Expense, 'id'>) => {
-    const res = await fetch(`${BASE_URL}/expenses`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newExpense),
-    })
+  fetchExpenses: () => api.get<Expense[]>('/expenses').then((res) => res.data),
 
-    if (!res.ok) {
-      const errorBody = await res.json().catch(() => ({}))
-      throw new Error(errorBody.message || 'Failed to save expense')
-    }
-
-    return res.json() as Promise<Expense>
-  },
-  fetchExpenses: async () => {
-    const res = await fetch(`${BASE_URL}/expenses`)
-    if (!res.ok) {
-      throw new Error('Failed to fetch expenses')
-    }
-    return res.json()
-  },
+  sendExpense: (newExpense: Omit<Expense, 'id'>) =>
+    api.post<Expense>('/expenses', newExpense).then((res) => res.data),
 }
