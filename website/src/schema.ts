@@ -31,6 +31,7 @@ const OwnedAssets = z.object({
 const profileSchema = z.object({
   nickname: z.string().min(1),
   moneySource: z.string().min(1),
+  currentMonthSpending: z.number().min(0),
   monthBudget: z.number().min(0.01),
   ownedAssets: OwnedAssets.optional(),
 })

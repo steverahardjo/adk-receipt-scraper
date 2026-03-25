@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const TestRoute = TestRouteImport.update({
 const Expense_formRoute = Expense_formRouteImport.update({
   id: '/expense_form',
   path: '/expense_form',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
 }
@@ -60,21 +68,30 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
   '/expense_form': typeof Expense_formRoute
   '/test': typeof TestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/chat' | '/expense_form' | '/test'
+  fullPaths: '/' | '/about' | '/chat' | '/dashboard' | '/expense_form' | '/test'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/chat' | '/expense_form' | '/test'
-  id: '__root__' | '/' | '/about' | '/chat' | '/expense_form' | '/test'
+  to: '/' | '/about' | '/chat' | '/dashboard' | '/expense_form' | '/test'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/chat'
+    | '/dashboard'
+    | '/expense_form'
+    | '/test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChatRoute: typeof ChatRoute
+  DashboardRoute: typeof DashboardRoute
   Expense_formRoute: typeof Expense_formRoute
   TestRoute: typeof TestRoute
 }
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/expense_form'
       fullPath: '/expense_form'
       preLoaderRoute: typeof Expense_formRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -123,6 +147,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChatRoute: ChatRoute,
+  DashboardRoute: DashboardRoute,
   Expense_formRoute: Expense_formRoute,
   TestRoute: TestRoute,
 }

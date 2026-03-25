@@ -15,7 +15,6 @@ export const api = axios.create({
 // 2. The Interceptor: This runs BEFORE every request
 api.interceptors.request.use(
   async (config) => {
-    // Pull the session from Better Auth
     const { data: session } = await authClient.getSession()
 
     // Use User ID if logged in, otherwise fallback to a persistent Guest ID
@@ -44,7 +43,6 @@ export const profileAPI = {
     api.post('/profile', profile).then((res) => res.data),
 }
 
-// 3. Clean Feature APIs (No more passing 'id' manually!)
 export const chatAPI = {
   fetchMessages: () => api.get<any[]>('/chat').then((res) => res.data),
 
