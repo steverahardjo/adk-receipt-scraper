@@ -1,10 +1,11 @@
-package main
+package storage
 
 import (
 	"time"
 )
 
-// We use string aliases for Enums in Go to ensure type safety
+/* ---------- ENUMS ---------- */
+
 type ExpenseType string
 type PaymentMethod string
 
@@ -23,6 +24,8 @@ const (
 	EWallet  PaymentMethod = "E-Wallet"
 )
 
+/* ---------- SUBSIDIARY STRUCTS ---------- */
+
 type Asset struct {
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
@@ -34,21 +37,31 @@ type OwnedAssets struct {
 	Assets        []Asset `json:"assets"`
 }
 
+/* ---------- CORE MODELS ---------- */
+
 type User struct {
-	ID       int64  `json:"id"`
-	name     string `json:"name"`
-	email    string `json:"email"`
-	password string `json:"password"`
+	ID           int64     `json:"id"`
+	Name         string    `json:"name"`
+	Email        string    `json:"email"`
+	PasswordHash string    `json:"-"` // "-" hides the password from JSON responses
+	CreatedAt    time.Time `json:"created_at"`
+}
+
+type UserAppStat struct {
+	ID         int64     `json:"id"`
+	LastLogin  time.Time `json:"last_login"`
+	UpdateAt   time.Time `json:"update_at"`
+	LastIPAddr string    `json:"last_ip_address"`
 }
 
 type Profile struct {
-	ID          int64        `json:"id"`
-	Nickname    string       `json:"nickname"`
-	MoneySource string       `json:"money_source"`
-	MonthBudget float64      `json:"month_budget"`
-	OwnedAssets *OwnedAssets `json:"owned_assets,omitempty"
+	ID          int64   `json:"id"`
+	Nickname    string  `json:"nickname"`
+	MoneySource string  `json:"money_source"`
+	MonthBudget float64 `json:"month_budget"`
+	// Note: In Postgres, this should be a JSONB column
+	OwnedAssets *OwnedAssets `json:"owned_assets,omitempty"`
 }
-
 
 type Expense struct {
 	ID            int64         `json:"id"`
