@@ -19,7 +19,7 @@ func (e *ExpenseStore) InitSchema(db *sql.DB) error {
 			title          TEXT NOT NULL,
 			amount         INT NOT NULL,
 			currency       TEXT NOT NULL,
-			date           TEXT NOT NULL,
+			date           TIMESTAMP NOT NULL,
 			type           TEXT NOT NULL,
 			payment_method TEXT NOT NULL,
 			description    TEXT,

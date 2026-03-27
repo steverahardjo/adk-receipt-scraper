@@ -65,8 +65,7 @@ type Expense struct {
 	Type          ExpenseType   `json:"type"`
 	PaymentMethod PaymentMethod `json:"payment_method"`
 	Description   string        `json:"description,omitempty"`
-	UserID 		  string        `json:"user_id"`
-	`
+	UserID        string        `json:"user_id"`
 }
 
 type Revenue struct {
@@ -76,4 +75,5 @@ type Revenue struct {
 	Currency    string    `json:"currency"`
 	Date        time.Time `json:"date"`
 	Description string    `json:"description,omitempty"`
+	UserID      string    `json:"user_id"`
 }
