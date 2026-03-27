@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-/* ---------- ENUMS ---------- */
-
 type ExpenseType string
 type PaymentMethod string
 
@@ -24,8 +22,6 @@ const (
 	EWallet  PaymentMethod = "E-Wallet"
 )
 
-/* ---------- SUBSIDIARY STRUCTS ---------- */
-
 type Asset struct {
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
@@ -37,13 +33,11 @@ type OwnedAssets struct {
 	Assets        []Asset `json:"assets"`
 }
 
-/* ---------- CORE MODELS ---------- */
-
 type User struct {
 	ID           int64     `json:"id"`
 	Name         string    `json:"name"`
 	Email        string    `json:"email"`
-	PasswordHash string    `json:"-"` // "-" hides the password from JSON responses
+	PasswordHash string    `json:"-"`
 	CreatedAt    time.Time `json:"created_at"`
 }
 
@@ -55,11 +49,10 @@ type UserAppStat struct {
 }
 
 type Profile struct {
-	ID          int64   `json:"id"`
-	Nickname    string  `json:"nickname"`
-	MoneySource string  `json:"money_source"`
-	MonthBudget float64 `json:"month_budget"`
-	// Note: In Postgres, this should be a JSONB column
+	ID          int64        `json:"id"`
+	Nickname    string       `json:"nickname"`
+	MoneySource string       `json:"money_source"`
+	MonthBudget float64      `json:"month_budget"`
 	OwnedAssets *OwnedAssets `json:"owned_assets,omitempty"`
 }
 
@@ -72,6 +65,8 @@ type Expense struct {
 	Type          ExpenseType   `json:"type"`
 	PaymentMethod PaymentMethod `json:"payment_method"`
 	Description   string        `json:"description,omitempty"`
+	UserID 		  string        `json:"user_id"`
+	`
 }
 
 type Revenue struct {
