@@ -51,11 +51,11 @@ type UserAppStat struct {
 }
 
 type Profile struct {
-	ID          int64        `json:"id"`
-	Nickname    string       `json:"nickname"`
-	MoneySource string       `json:"money_source"`
-	MonthBudget float64      `json:"month_budget"`
-	OwnedAssets *OwnedAssets `json:"owned_assets,omitempty"`
+	ID          int64   `json:"id"`
+	Nickname    string  `json:"nickname"`
+	MoneySource string  `json:"money_source"`
+	MonthBudget float64 `json:"month_budget"`
+	QuantAsset  float64 `json:"quant_asset"`
 }
 
 type Expense struct {

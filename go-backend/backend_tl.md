@@ -5,4 +5,5 @@ Last updated: March 27 2026
 - Define proper config for the db.
 - Optimize db early with indexing
 - Test for Storage functions
+- Context Propagation or Request-Scoped Context for the services
 - Working on the API design

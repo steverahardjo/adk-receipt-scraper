@@ -1,78 +1,27 @@
-// Storing useful aggregated info about users for dashboard
 package storage
 
-import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
-)
-
-type ProfileStore struct {
-	db *sql.DB
-}
-
-func (s *ProfileStore) InitSchema(db *sql.DB) error {
-	s.db = db
-	_, err := s.db.Exec(`
-		CREATE TABLE IF NOT EXISTS profiles (
-			user_id INTEGER PRIMARY KEY,
-			nickname VARCHAR(256) NOT NULL,
-			money_source TEXT NOT NULL,
-			month_budget NUMERIC NOT NULL,
-			owned_assets JSONB
-		)
-	`)
+func (d *Database) InitProfileSchema() error {
+	_, err := d.Conn.Exec(`
+        CREATE TABLE IF NOT EXISTS profiles (
+            user_id      INTEGER PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
+            nickname     VARCHAR(256) NOT NULL,
+            money_source TEXT NOT NULL,
+            month_budget NUMERIC(15, 2) NOT NULL,
+            quant_asset NUMERIC(15, 2)
+        )`)
 	return err
 }
 
-func (s *ProfileStore) InsertProfile(profile *Profile) error {
-	assetsJSON, err := json.Marshal(profile.OwnedAssets)
-	if err != nil {
-		return fmt.Errorf("[ERR] marshaling owned_assets: %w", err)
-	}
+func (d *Database) GetProfile(userID int64) (*Profile, error) {
+	var p Profile
+	query := `SELECT user_id, nickname, money_source, month_budget FROM profiles WHERE user_id = $1`
 
-	query := `
-		INSERT INTO profiles (
-			user_id, nickname, money_source, month_budget, owned_assets
-		) VALUES ($1, $2, $3, $4, $5)
-	`
-	_, err = s.db.Exec(query, profile.ID, profile.Nickname, profile.MoneySource, profile.MonthBudget, assetsJSON)
-	return err
+	err := d.Conn.QueryRow(query, userID).Scan(&p.ID, &p.Nickname, &p.MoneySource, &p.MonthBudget)
+	return &p, err
 }
 
-func (s *ProfileStore) GetProfile(userID int64) (*Profile, error) {
-	row := s.db.QueryRow(`
-		SELECT user_id, nickname, money_source, month_budget, owned_assets 
-		FROM profiles WHERE user_id = $1
-	`, userID)
-
-	var profile Profile
-	var assetsJSON []byte
-	err := row.Scan(&profile.ID, &profile.Nickname, &profile.MoneySource, &profile.MonthBudget, &assetsJSON)
-	if err != nil {
-		return nil, fmt.Errorf("[ERR] getting profile: %w", err)
-	}
-
-	if len(assetsJSON) > 0 {
-		if err := json.Unmarshal(assetsJSON, &profile.OwnedAssets); err != nil {
-			return nil, fmt.Errorf("[ERR] unmarshaling owned_assets: %w", err)
-		}
-	}
-
-	return &profile, nil
-}
-
-func (s *ProfileStore) UpdateProfile(profile *Profile) error {
-	assetsJSON, err := json.Marshal(profile.OwnedAssets)
-	if err != nil {
-		return fmt.Errorf("[ERR] marshaling owned_assets: %w", err)
-	}
-
-	query := `
-		UPDATE profiles 
-		SET nickname = $2, money_source = $3, month_budget = $4, owned_assets = $5
-		WHERE user_id = $1
-	`
-	_, err = s.db.Exec(query, profile.ID, profile.Nickname, profile.MoneySource, profile.MonthBudget, assetsJSON)
+func (d *Database) UpdateProfile(p *Profile) error {
+	query := `UPDATE profiles SET nickname = $2, money_source = $3, month_budget = $4 WHERE user_id = $1`
+	_, err := d.Conn.Exec(query, p.ID, p.Nickname, p.MoneySource, p.MonthBudget)
 	return err
 }
