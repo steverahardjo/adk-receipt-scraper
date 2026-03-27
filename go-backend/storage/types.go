@@ -38,13 +38,15 @@ type User struct {
 	Name         string    `json:"name"`
 	Email        string    `json:"email"`
 	PasswordHash string    `json:"-"`
+	IPAddress    string    `json:"ip_address,omitempty"`
 	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 type UserAppStat struct {
-	ID         int64     `json:"id"`
+	UserID     int64     `json:"user_id"`
 	LastLogin  time.Time `json:"last_login"`
-	UpdateAt   time.Time `json:"update_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 	LastIPAddr string    `json:"last_ip_address"`
 }
 
@@ -65,7 +67,7 @@ type Expense struct {
 	Type          ExpenseType   `json:"type"`
 	PaymentMethod PaymentMethod `json:"payment_method"`
 	Description   string        `json:"description,omitempty"`
-	UserID        string        `json:"user_id"`
+	UserID        int64         `json:"user_id"`
 }
 
 type Revenue struct {
@@ -75,5 +77,5 @@ type Revenue struct {
 	Currency    string    `json:"currency"`
 	Date        time.Time `json:"date"`
 	Description string    `json:"description,omitempty"`
-	UserID      string    `json:"user_id"`
+	UserID      int64     `json:"user_id"`
 }

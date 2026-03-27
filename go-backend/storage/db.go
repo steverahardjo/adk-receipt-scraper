@@ -17,12 +17,12 @@ type Database struct {
 func ConnectPostgres(connStr string) (*Database, error) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		fmt.Errorf("[DB]Unable to connect")
+		return nil, fmt.Errorf("[DB] Unable to connect: %w", err)
 	}
 	//test connection through ping
 	err = db.Ping()
 	if err != nil {
-		fmt.Errorf("[DB]Unable to ping")
+		return nil, fmt.Errorf("[DB] Unable to ping: %w", err)
 	}
 	return &Database{Conn: db}, nil
 }
