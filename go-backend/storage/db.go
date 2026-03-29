@@ -6,29 +6,45 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"time"
 
-	_ "github.com/lib/pq" // Driver registration
+	pq "github.com/lib/pq"
 )
+
+var cfg pq.Config
+
+func GetDsnConfig() string {
+	// 1. Get values from environment
+	host := "localhost"
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASSWORD")
+	name := os.Getenv("DB_NAME")
+
+	port, err := strconv.Atoi(os.Getenv("DB_PORT"))
+	if err != nil {
+		port = 5432
+	}
+
+	cfg := pq.Config{
+		Host:     host,
+		Port:     port,
+		User:     user,
+		Password: pass,
+		Database: name,
+		SSLMode:  "disable",
+	}
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database)
+}
 
 type Database struct {
 	Conn *sql.DB
 }
 
-// GetConnStr builds the string from Env.
-// Moved out of const because os.Getenv happens at runtime.
-func GetConnStr() string {
-	host := "localhost"
-	port := os.Getenv("DB_PORT") // Changed from PORT to avoid web server conflicts
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASSWORD")
-	name := os.Getenv("DB_NAME")
+func ConnectPostgres(max_pool int) (*Database, error) {
+	c, err := pq.NewConnectorConfig(cfg)
 
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, pass, name)
-}
-
-func ConnectPostgres(connStr string, max_pool int) (*Database, error) {
-	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, fmt.Errorf("[DB] Connection open error: %w", err)
 	}
@@ -39,6 +55,7 @@ func ConnectPostgres(connStr string, max_pool int) (*Database, error) {
 
 	db.SetMaxOpenConns(max_pool)
 	db.SetMaxIdleConns(max_pool)
+	db.SetConnMaxIdleTime(10 * time.Minute)
 
 	return &Database{Conn: db}, nil
 }
