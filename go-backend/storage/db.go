@@ -48,6 +48,8 @@ func ConnectPostgres(max_pool int) (*Database, error) {
 	if err != nil {
 		return nil, fmt.Errorf("[DB] Connection open error: %w", err)
 	}
+	db := sql.OpenDB(c)
+	defer db.Close()
 
 	if err = db.Ping(); err != nil {
 		return nil, fmt.Errorf("[DB] Ping failed: %w", err)
@@ -69,8 +71,6 @@ func (d *Database) Close() {
 // InitAllSchemas runs all table creations in the correct order.
 // This is better than separate InitSchema calls in every file.
 func (d *Database) InitAllSchemas() error {
-	// 1. Users first (needed for foreign keys)
-	// 2. Expenses & Profiles next
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS users (
             user_id SERIAL PRIMARY KEY,
