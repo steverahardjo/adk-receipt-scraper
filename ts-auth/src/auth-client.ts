@@ -1,8 +1,7 @@
 import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins/jwt";
 import { emailOTP } from "better-auth/plugins/email-otp";
-import { OtpEmail } from "./otp";
-
+import SignInOtpEmail from "./emails/otp";
 import { Pool } from "pg";
 import * as dotenv from "dotenv";
 
@@ -26,9 +25,6 @@ pool.on("error", (err) => {
   process.exit(-1);
 });
 
-import { betterAuth } from "better-auth";
-import { emailOTP } from "better-auth/plugins";
-
 export const auth = betterAuth({
   database: {
     // your database config (PostgreSQL, MySQL, SQLite, etc.)
@@ -45,19 +41,19 @@ export const auth = betterAuth({
           await sendEmail({
             to: email,
             subject: "Your Sign In Code",
-            html: OtpEmail({ validationCode: otp }),
+            html: SignInOtpEmail({ validationCode: otp }),
           });
         } else if (type === "email-verification") {
           await sendEmail({
             to: email,
             subject: "Verify Your Email",
-            html: OtpEmail({ validationCode: otp }),
+            html: SignInOtpEmail({ validationCode: otp }),
           });
         } else if (type === "forget-password") {
           await sendEmail({
             to: email,
             subject: "Reset Your Password",
-            html: OtpEmail({ validationCode: otp }),
+            html: SignInOtpEmail({ validationCode: otp }),
           });
         }
       },
