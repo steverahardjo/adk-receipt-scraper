@@ -1,21 +1,31 @@
 {
+  "name": "ts-auth",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/index.ts",
+    "email": "bunx react-email dev --dir src/emails",
+    "test": "jest"
+  },
   "dependencies": {
     "@react-email/components": "1.0.10",
     "@react-email/html": "0.0.12",
-    "auth-client": "^0.4.11",
     "better-auth": "^1.5.6",
     "dotenv": "^17.3.1",
     "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "19.2.4",
-    "react-email": "5.2.10",
-    "tailwind": "^4.0.0"
+    "react-email": "5.2.10"
   },
   "devDependencies": {
-    "@react-email/preview-server": "5.2.10",
+    "@types/bun": "latest",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
-    "jest": "^30.3.0"
+    "typescript": "^5",
+    "jest": "^30.3.0",
+    "@react-email/preview-server": "5.2.10"
   }
 }
