@@ -93,7 +93,7 @@ export function SignInOtpEmail({ validationCode = "123456" }: OtpEmailProps) {
               </Text>
               <Text style={copyright}>
                 © {new Date().getFullYear()} Deneb Inc. <br />
-                San Francisco, CA
+                Kuala Lumpur, Malaysia
               </Text>
             </Section>
           </Section>
