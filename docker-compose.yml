@@ -1,0 +1,8 @@
+services:
+  ts-auth-postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"  # This maps [Host Port]:[Container Port]
+    environment:
+      POSTGRES_USER: authuser
+      ...

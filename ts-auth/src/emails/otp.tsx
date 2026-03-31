@@ -18,7 +18,7 @@ import { Resend } from "resend";
 interface OtpEmailProps {
   subject?: string;
   validationCode: string;
-  toEmail?: string; // Optional for the component itself
+  toEmail?: string;
 }
 
 // 2. Component must be SYNC (Removed 'async')
@@ -122,8 +122,11 @@ export async function SendEmail({
   const codeString = validationCode.toString();
 
   try {
+    await resend.domains.create({
+      name: "sjrah.net",
+    });
     const { data, error } = await resend.emails.send({
-      from: "Deneb <onboarding@resend.dev>",
+      from: "Deneb <authservice@sjrah.net>",
       to: toEmail,
       subject: subject,
       react: <SignInOtpEmail validationCode={codeString} />,
