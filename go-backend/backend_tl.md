@@ -26,3 +26,14 @@ Handled by go-backend:
 - Connect and serve the adk python chatbot functionality for all different type of data: text, file, noise, photos.
 - Connect the ocr ml model to preprocess receipt picture.
 - Enable two layer context function; http/middleware layer for the jwt id, storage context
+
+
+notes on building http  server: 
+- making a server builder
+- Adding a type validation thats not a string
+- Test out the handler as a independent function with output of:
+`func Handle<responsi>(service RespService) http.HandlerFunc{}`
+- try to scoped the specific output of a api inside that handler
+- Use ServeMux to do a HandlerFunc
+- Create a json
+- use Sync.Once to defer expensive ops
