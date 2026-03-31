@@ -12,18 +12,20 @@ import {
   Font,
 } from "@react-email/components";
 import * as React from "react";
+import { Resend } from "resend";
 
+// 1. Unified Interface
 interface OtpEmailProps {
-  validationCode?: string;
+  subject?: string;
+  validationCode: string;
+  toEmail?: string; // Optional for the component itself
 }
 
-export default function SignInOtpEmail({
-  validationCode = "123456",
-}: OtpEmailProps) {
+// 2. Component must be SYNC (Removed 'async')
+export function SignInOtpEmail({ validationCode = "123456" }: OtpEmailProps) {
   return (
     <Html>
       <Head>
-        {/* Claude's signature UI fonts */}
         <Font
           fontFamily="Inter"
           fallbackFontFamily="Arial"
@@ -50,9 +52,7 @@ export default function SignInOtpEmail({
         <Container style={container}>
           <Section style={card}>
             <Heading style={logo}>DENEB</Heading>
-
             <Heading style={h1}>Verify your login</Heading>
-
             <Text style={text}>
               To finish logging in to your account, please enter the following
               verification code. For your security, this code will expire in{" "}
@@ -103,113 +103,120 @@ export default function SignInOtpEmail({
   );
 }
 
-// --- Styling ---
+// 3. Sender Function (Async is correct here)
+export async function SendEmail({
+  subject = "Deneb OTP Sign In",
+  validationCode,
+  toEmail,
+}: {
+  subject?: string;
+  validationCode: string | number;
+  toEmail: string;
+}) {
+  if (!process.env.RESEND_KEY) {
+    console.error("Missing RESEND_KEY in environment variables");
+    return;
+  }
 
+  const resend = new Resend(process.env.RESEND_KEY);
+  const codeString = validationCode.toString();
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Deneb <onboarding@resend.dev>",
+      to: toEmail,
+      subject: subject,
+      react: <SignInOtpEmail validationCode={codeString} />,
+    });
+
+    if (error) {
+      console.error("Resend Error details:", error);
+      return;
+    }
+
+    console.log("Email sent successfully! ID:", data?.id);
+  } catch (err) {
+    console.error("Runtime Error sending email:", err);
+  }
+}
+
+// --- Styles (unchanged from your original, kept for completeness) ---
 const main: React.CSSProperties = {
-  backgroundColor: "#f9fafb", // Soft off-white
-  fontFamily:
-    '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  backgroundColor: "#f9fafb",
+  fontFamily: '"Inter", sans-serif',
 };
-
 const container: React.CSSProperties = {
   margin: "40px auto",
   padding: "0 20px",
   maxWidth: "480px",
 };
-
 const card: React.CSSProperties = {
   backgroundColor: "#ffffff",
   border: "1px solid #e5e7eb",
   borderRadius: "12px",
   padding: "40px",
-  textAlign: "center" as const,
+  textAlign: "center",
 };
-
 const logo: React.CSSProperties = {
   color: "#008080",
   fontSize: "15px",
   fontWeight: 700,
   letterSpacing: "0.15em",
-  textTransform: "uppercase, bold",
+  textTransform: "uppercase",
   margin: "0 0 40px",
-  fontFamily: '"Inter", sans-serif',
 };
-
 const h1: React.CSSProperties = {
   color: "#111827",
   fontSize: "24px",
   fontWeight: 600,
   lineHeight: "32px",
   margin: "0 0 16px",
-  letterSpacing: "-0.02em",
 };
-
 const text: React.CSSProperties = {
   color: "#374151",
   fontSize: "16px",
   lineHeight: "26px",
   margin: "0 0 32px",
 };
-
 const codeContainer: React.CSSProperties = {
-  background: "#f3f4f6", // Light gray tech-block
+  background: "#f3f4f6",
   borderRadius: "8px",
   margin: "0 auto 32px",
   width: "100%",
   padding: "24px 0",
 };
-
 const codeText: React.CSSProperties = {
   color: "#111827",
-  // Claude's specific monospace font
-  fontFamily:
-    '"JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace',
+  fontFamily: '"JetBrains Mono", monospace',
   fontSize: "32px",
   fontWeight: 700,
   letterSpacing: "0.2em",
-  lineHeight: "1",
   margin: "0",
-  textAlign: "center" as const,
 };
-
 const subtext: React.CSSProperties = {
   color: "#6b7280",
   fontSize: "14px",
   lineHeight: "22px",
   margin: "0 0 24px",
 };
-
 const hr: React.CSSProperties = {
   borderTop: "1px solid #e5e7eb",
   margin: "32px 0 24px",
 };
-
-const footer: React.CSSProperties = {
-  textAlign: "center" as const,
-};
-
-const footerText: React.CSSProperties = {
-  color: "#6b7280",
-  fontSize: "14px",
-  lineHeight: "24px",
-  margin: "0",
-};
-
+const footer: React.CSSProperties = { textAlign: "center" };
+const footerText: React.CSSProperties = { color: "#6b7280", fontSize: "14px" };
 const footerLinks: React.CSSProperties = {
   margin: "8px 0 16px",
   fontSize: "14px",
   color: "#9ca3af",
 };
-
 const footerLink: React.CSSProperties = {
   color: "#111827",
   textDecoration: "underline",
   fontWeight: 500,
 };
-
 const copyright: React.CSSProperties = {
   color: "#9ca3af",
   fontSize: "12px",
-  lineHeight: "18px",
   marginTop: "16px",
 };

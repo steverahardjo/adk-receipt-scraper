@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
-import { jwt } from "better-auth/plugins/jwt";
 import { emailOTP } from "better-auth/plugins/email-otp";
-import SignInOtpEmail from "./emails/otp";
+import { SendEmail } from "./emails/otp";
 import { Pool } from "pg";
 import dotenv from "dotenv";
 
@@ -36,6 +35,11 @@ async function sendEmail({
 }
 
 export const auth = betterAuth({
+  session: {
+    expiresIn: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 24,
+    freshAge: 60 * 60 * 15,
+  },
   baseURL: "http://localhost:3000",
   database: pool,
   emailAndPassword: {
@@ -46,22 +50,22 @@ export const auth = betterAuth({
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
         if (type === "sign-in") {
-          await sendEmail({
-            to: email,
-            subject: "Your Sign In Code",
-            html: SignInOtpEmail({ validationCode: otp }),
+          await SendEmail({
+            toEmail: email,
+            validationCode: otp,
+            subject: "[Deneb] OTP Sign In",
           });
         } else if (type === "email-verification") {
-          await sendEmail({
-            to: email,
-            subject: "Verify Your Email",
-            html: SignInOtpEmail({ validationCode: otp }),
+          await SendEmail({
+            toEmail: email,
+            validationCode: otp,
+            subject: "[Deneb] Verify Your Email",
           });
         } else if (type === "forget-password") {
-          await sendEmail({
-            to: email,
-            subject: "Reset Your Password",
-            html: SignInOtpEmail({ validationCode: otp }),
+          await SendEmail({
+            toEmail: email,
+            validationCode: otp,
+            subject: "[Deneb] Reset Your Password",
           });
         }
       },
@@ -70,11 +74,6 @@ export const auth = betterAuth({
       allowedAttempts: 3,
       disableSignUp: false,
       overrideDefaultEmailVerification: false,
-    }),
-    jwt({
-      jwt: {
-        expirationTime: "1h",
-      },
     }),
   ],
 });
