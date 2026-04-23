@@ -1,10 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
-@import "tailwindcss";
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import 'tw-animate-css';
 
-* {
-  box-sizing: border-box;
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================================
+   ROOT (LIGHT)
+========================================================= */
+:root {
+  /* Brand */
+  --lagoon: #4fd1c5;
+  --lagoon-deep: #2fb5ab;
+  --deneb-blue: #1a365d;
+  --deneb-blue-soft: #2c5282;
+
+  /* Text */
+  --sea-ink: #163a43;
+  --sea-ink-soft: #4a6b73;
+
+  /* Backgrounds */
+  --sand: #edf7f5;
+  --foam: #f7fbfa;
+  --bg-base: #eef7f4;
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+
+  /* Borders */
+  --line: rgba(26, 54, 93, 0.12);
+
+  /* Accents */
+  --kicker: var(--deneb-blue);
+  --danger: #dc2626;
+
+  /* Gradients */
+  --hero-a: rgba(79, 209, 197, 0.28);
+  --hero-b: rgba(26, 54, 93, 0.12);
+
+  /* Radius */
+  --radius: 0.625rem;
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
+/* =========================================================
+   DARK MODE
+========================================================= */
+.dark {
+  --lagoon: #5eead4;
+  --lagoon-deep: #2dd4bf;
+  --deneb-blue: #93c5fd;
+
+  --sea-ink: #e6fffb;
+  --sea-ink-soft: #a7d7d2;
+
+  --sand: #0b1c22;
+  --foam: #0e2229;
+  --bg-base: #08171c;
+
+  --surface: rgba(12, 28, 34, 0.82);
+  --surface-strong: rgba(10, 24, 30, 0.94);
+
+  --line: rgba(94, 234, 212, 0.16);
+
+  --kicker: #67e8f9;
+
+  --hero-a: rgba(79, 209, 197, 0.12);
+  --hero-b: rgba(26, 54, 93, 0.18);
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+/* =========================================================
+   TAILWIND THEME BRIDGE
+========================================================= */
+@theme inline {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--bg-base);
+  --color-foreground: var(--sea-ink);
+
+  --color-card: var(--surface);
+  --color-card-foreground: var(--sea-ink);
+
+  --color-primary: var(--lagoon);
+  --color-primary-foreground: white;
+
+  --color-secondary: var(--deneb-blue);
+  --color-secondary-foreground: white;
+
+  --color-muted: var(--foam);
+  --color-muted-foreground: var(--sea-ink-soft);
+
+  --color-accent: var(--lagoon-deep);
+  --color-accent-foreground: white;
+
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--lagoon);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+}
+
+/* =========================================================
+   BASE
+========================================================= */
 html,
 body,
 #app {
@@ -13,5 +139,188 @@ body,
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--sea-ink);
+
+  background-color: var(--bg-base);
+  background:
+    radial-gradient(900px 500px at 10% -10%, var(--hero-a), transparent 60%),
+    radial-gradient(800px 500px at 100% -10%, var(--hero-b), transparent 60%),
+    linear-gradient(180deg, var(--foam) 0%, var(--bg-base) 100%);
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* subtle texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.18;
+
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(255, 255, 255, 0.7),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(79, 209, 197, 0.18),
+      transparent 50%
+    );
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+.display-title {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+a {
+  color: var(--deneb-blue);
+  text-decoration-color: rgba(26, 54, 93, 0.3);
+}
+
+a:hover {
+  color: var(--lagoon-deep);
+}
+
+code {
+  font-size: 0.9em;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--surface-strong) 82%, white 18%);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+.page-wrap {
+  width: min(1080px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+/* =========================================================
+   SURFACES
+========================================================= */
+.island-shell {
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, var(--surface-strong), var(--surface));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 12px 30px rgba(26, 54, 93, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+.feature-card {
+  background: linear-gradient(160deg, var(--surface-strong), var(--surface));
+  box-shadow: 0 10px 24px rgba(26, 54, 93, 0.08);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--lagoon) 40%, var(--line));
+}
+
+/* =========================================================
+   NAV
+========================================================= */
+.nav-link {
+  position: relative;
+  color: var(--sea-ink-soft);
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--deneb-blue);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  background: linear-gradient(90deg, var(--lagoon), var(--deneb-blue));
+  transition: transform 160ms ease;
+}
+
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+/* =========================================================
+   LABELS
+========================================================= */
+.island-kicker {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: var(--kicker);
+}
+
+/* =========================================================
+   MOTION
+========================================================= */
+button,
+.island-shell,
+a {
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.rise-in {
+  animation: rise-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: color-mix(in oklab, var(--foam) 80%, transparent);
+}
+
+/* =========================================================
+   TAILWIND BASE LAYER
+========================================================= */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--sea-ink);
+  }
+}

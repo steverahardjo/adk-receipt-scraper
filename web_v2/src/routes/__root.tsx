@@ -3,9 +3,6 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { StyledEngineProvider } from '@mui/material/styles'
-import './styles.css'
-
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
@@ -30,7 +27,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Deneb Finance',
       },
     ],
     links: [
@@ -50,9 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {/* Wrap children here so every page inherits the 'injectFirst' behavior */}
-        <StyledEngineProvider injectFirst>{children}</StyledEngineProvider>
-
+        {children}
         <TanStackDevtools
           config={{
             position: 'bottom-right',

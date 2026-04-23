@@ -14,11 +14,11 @@
   "framework": "react",
   "chosenAddOns": [
     "eslint",
-    "cloudflare",
+    "compiler",
     "form",
-    "table",
+    "shadcn",
+    "t3env",
     "better-auth",
-    "tanstack-query",
-    "store"
+    "tanstack-query"
   ]
 }

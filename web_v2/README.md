@@ -50,6 +50,33 @@ bun --bun run check
 ```
 
 
+## Shadcn
+
+Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
+
+```bash
+pnpm dlx shadcn@latest add button
+```
+
+
+## T3Env
+
+- You can use T3Env to add type safety to your environment variables.
+- Add Environment variables to the `src/env.mjs` file.
+- Use the environment variables in your code.
+
+### Usage
+
+```ts
+import { env } from "#/env";
+
+console.log(env.VITE_APP_TITLE);
+```
+
+
+
+
+
 ## Setting up Better Auth
 
 1. Generate and set the `BETTER_AUTH_SECRET` environment variable in your `.env.local`:
