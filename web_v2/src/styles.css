@@ -271,7 +271,7 @@ code {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 1rem;
   color: var(--kicker);
 }
 
@@ -317,6 +317,9 @@ a {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  h3 {
+    @apply text-2xl font-bold;
   }
 
   body {
