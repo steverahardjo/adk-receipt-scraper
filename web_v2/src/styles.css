@@ -56,36 +56,49 @@
    DARK MODE
 ========================================================= */
 .dark {
-  --lagoon: #5eead4;
-  --lagoon-deep: #2dd4bf;
-  --deneb-blue: #93c5fd;
+  /* The Bauhaus Primary Palette */
+  --bauhaus-red: #e63946; /* "Kandinsky Red" */
+  --bauhaus-yellow: #ffbe0b; /* "Itten Yellow" */
+  --bauhaus-blue: #004e98; /* "Stölzl Blue" */
 
-  --sea-ink: #e6fffb;
-  --sea-ink-soft: #a7d7d2;
+  /* Primary Brand Overrides */
+  --lagoon: var(--bauhaus-yellow);
+  --lagoon-deep: var(--bauhaus-red);
+  --deneb-blue: var(--bauhaus-blue);
 
-  --sand: #0b1c22;
-  --foam: #0e2229;
-  --bg-base: #08171c;
+  /* Typography/Ink */
+  --sea-ink: #f1faee; /* Clean Paper White */
+  --sea-ink-soft: #adb5bd; /* Concrete Gray */
 
-  --surface: rgba(12, 28, 34, 0.82);
-  --surface-strong: rgba(10, 24, 30, 0.94);
+  /* Neutrals & Backgrounds (The "Foundry" look) */
+  --sand: #121212; /* Solid Black */
+  --foam: #1a1a1a; /* Graphite */
+  --bg-base: #0f0f0f; /* Deep Charcoal */
 
-  --line: rgba(94, 234, 212, 0.16);
+  /* Surfaces (Minimalist & Structural) */
+  --surface: rgba(26, 26, 26, 0.85);
+  --surface-strong: rgba(18, 18, 18, 0.98);
 
-  --kicker: #67e8f9;
+  /* Structural Lines (Hard geometric borders) */
+  --line: rgba(241, 250, 238, 0.1);
 
-  --hero-a: rgba(79, 209, 197, 0.12);
-  --hero-b: rgba(26, 54, 93, 0.18);
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* Accents & Highlights */
+  --kicker: var(--bauhaus-red);
+
+  /* Gradients (Bauhaus is usually flat, so these are subtle structural shifts) */
+  --hero-a: rgba(230, 57, 70, 0.08); /* Faint Red Tint */
+  --hero-b: rgba(0, 78, 152, 0.12); /* Faint Blue Tint */
+
+  /* Sidebar (Functionalist Grey/Black) */
+  --sidebar: #121212;
+  --sidebar-foreground: #f1faee;
+  --sidebar-primary: var(--bauhaus-red);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: var(--bauhaus-yellow);
+  --sidebar-border: #222222;
+  --sidebar-ring: var(--bauhaus-blue);
 }
-
 /* =========================================================
    TAILWIND THEME BRIDGE
 ========================================================= */
