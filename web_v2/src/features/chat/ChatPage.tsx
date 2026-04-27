@@ -17,7 +17,7 @@ export default function ChatPage() {
         profilePicture="https://i.pravatar.cc/150?img=12"
       />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-10">
         <ChatBubble output="Hi How are you ?" sender="user" date={new Date()} />
         <ChatBubble
           output="I'm doing well, thank you!"

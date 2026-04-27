@@ -2,9 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import ChatPage from '@/features/chat/ChatPage'
 
 export const Route = createFileRoute('/chatbot')({
-  component: SignupPage,
+  component: Chat,
 })
 
-function SignupPage() {
+function Chat() {
   return <ChatPage />
 }

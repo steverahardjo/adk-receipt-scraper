@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import ThemeSwitch from '@/components/light_switch'
+import { cn } from '@/lib/utils'
 
 type Mode = 'planning' | 'operations' | 'reporting'
 
@@ -17,47 +18,54 @@ interface Props {
 }
 
 export default function ChatHeader({ mode, setMode, profilePicture }: Props) {
+  const labelMap: Record<Mode, string> = {
+    planning: 'Planning',
+    operations: 'Operations',
+    reporting: 'Reporting',
+  }
+
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b">
-      {/* LEFT SIDE */}
-      <div className="flex items-center gap-3">
-        <Avatar>
+    <div className="sticky top-0 z-50 flex items-center justify-between px-5 py-3 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* LEFT */}
+      <div className="flex items-center gap-4">
+        <Avatar className="h-9 w-9">
           <AvatarImage src={profilePicture || ''} />
           <AvatarFallback>AI</AvatarFallback>
         </Avatar>
 
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold">AI Chatbot</span>
+        <div className="flex flex-col leading-tight">
+          <span className="text-sm font-medium">AI Chatbot</span>
           <span className="text-xs text-muted-foreground">Assistant</span>
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
-      <div className="flex items-center gap-3">
-        {/* MODE SELECTOR */}
+      {/* RIGHT */}
+      <div className="flex items-center gap-2">
+        {/* MODE */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="text-sm">
-              {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            <Button variant="outline" size="sm" className="h-9 px-3 text-sm">
+              {labelMap[mode]}
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setMode('planning')}>
-              Planning
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => setMode('operations')}>
-              Daily Operations
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => setMode('reporting')}>
-              Reporting
-            </DropdownMenuItem>
+          <DropdownMenuContent align="end" className="w-44">
+            {(['planning', 'operations', 'reporting'] as Mode[]).map((m) => (
+              <DropdownMenuItem
+                key={m}
+                onClick={() => setMode(m)}
+                className={cn(
+                  'cursor-pointer',
+                  mode === m && 'bg-muted font-medium',
+                )}
+              >
+                {labelMap[m]}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* LIGHT SWITCH */}
+        {/* THEME */}
         <ThemeSwitch />
       </div>
     </div>
