@@ -11,7 +11,7 @@ interface ChatBubbleProps {
   sender: 'user' | 'assistant'
 }
 
-export default function ChatBubble({
+export default function TextBubble({
   output,
   sender,
   date,
