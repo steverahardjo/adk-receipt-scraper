@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as Expense_formRouteImport } from './routes/expense_form'
 import { Route as ChatbotRouteImport } from './routes/chatbot'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -23,6 +24,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Expense_formRoute = Expense_formRouteImport.update({
+  id: '/expense_form',
+  path: '/expense_form',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatbotRoute = ChatbotRouteImport.update({
@@ -44,6 +50,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chatbot': typeof ChatbotRoute
+  '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chatbot': typeof ChatbotRoute
+  '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -59,21 +67,36 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chatbot': typeof ChatbotRoute
+  '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chatbot' | '/login' | '/signup' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/chatbot'
+    | '/expense_form'
+    | '/login'
+    | '/signup'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chatbot' | '/login' | '/signup' | '/api/auth/$'
-  id: '__root__' | '/' | '/chatbot' | '/login' | '/signup' | '/api/auth/$'
+  to: '/' | '/chatbot' | '/expense_form' | '/login' | '/signup' | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/chatbot'
+    | '/expense_form'
+    | '/login'
+    | '/signup'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChatbotRoute: typeof ChatbotRoute
+  Expense_formRoute: typeof Expense_formRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -93,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expense_form': {
+      id: '/expense_form'
+      path: '/expense_form'
+      fullPath: '/expense_form'
+      preLoaderRoute: typeof Expense_formRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chatbot': {
@@ -122,6 +152,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChatbotRoute: ChatbotRoute,
+  Expense_formRoute: Expense_formRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
