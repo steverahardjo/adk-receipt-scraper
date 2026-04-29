@@ -3,23 +3,21 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { appToast } from '@/lib/toast'
+import type { ChatMessage } from '../types'
 
-interface ChatBubbleProps {
-  output: string
-  complement?: string
-  date: Date
-  sender: 'user' | 'assistant'
+interface Props {
+  message: ChatMessage
 }
 
-export default function TextBubble({
-  output,
-  sender,
-  date,
-  complement,
-}: ChatBubbleProps) {
+export default function TextBubble({ message }: Props) {
+  if (message.type !== 'text') return null
+
+  const { role, createdAt, status } = message
+  const { text } = message.content
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(output)
+      await navigator.clipboard.writeText(text)
       appToast.success('Message copied')
     } catch {
       appToast.error('Failed to copy')
@@ -29,39 +27,44 @@ export default function TextBubble({
   const formattedTime = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
-  }).format(date)
+  }).format(new Date(createdAt))
 
   return (
     <div
       className={cn(
         'flex w-full gap-3 mb-4',
-        sender === 'user' ? 'flex-row-reverse' : 'flex-row',
+        role === 'user' ? 'flex-row-reverse' : 'flex-row',
       )}
     >
       {/* BUBBLE */}
       <div
         className={cn(
           'flex flex-col max-w-[75%] gap-1',
-          sender === 'user' ? 'items-end' : 'items-start',
+          role === 'user' ? 'items-end' : 'items-start',
         )}
       >
         {/* HEADER */}
-        <div className="text-[11px] text-muted-foreground uppercase px-1">
-          {sender}
-          {complement && ` • ${complement}`}
+        <div className="text-[11px] text-muted-foreground uppercase px-1 flex items-center gap-2">
+          <span>{role}</span>
+
+          {role === 'user' && (
+            <span className="text-[10px] normal-case">
+              {status === 'processing' && 'Sending...'}
+              {status === 'sent' && 'Sent'}
+              {status === 'completed' && 'Delivered'}
+            </span>
+          )}
         </div>
 
         {/* MESSAGE */}
         <Card
           className={cn(
             'px-3 py-2.5',
-            sender === 'user'
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-muted',
+            role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted',
           )}
         >
           <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-            {output}
+            {text}
           </p>
         </Card>
 

@@ -1,5 +1,5 @@
 import ChatHeader from './ChatHeader'
-import type { ChatMessage } from './types'
+import type { ChatMessage, ChatMode, TextMessage, FileMessage } from './types'
 import { useState } from 'react'
 
 import { useSendChatFile, useSendChatText } from '@/hooks/use_chat'
@@ -9,57 +9,63 @@ import ChatBar from './ChatBar'
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [mode, setMode] = useState<ChatMode>('operations')
 
   const { mutate: sendText } = useSendChatText()
   const { mutate: sendFile } = useSendChatFile()
 
-  // --- SEND TEXT
+  // --- TEXT
   const handleSendText = (text: string) => {
-    const userMsg: ChatMessage = {
+    const userMsg: TextMessage = {
       id: crypto.randomUUID(),
       type: 'text',
-      sender: 'user',
-      content: text,
-      date: new Date(),
+      role: 'user',
+      mode,
+      createdAt: new Date().toISOString(),
+      status: 'sent',
+      content: { text },
     }
 
-    // optimistic update
     setMessages((prev) => [...prev, userMsg])
 
     sendText(
       {
-        userId: '123',
         message: text,
-        mode: 'planning',
+        mode,
       },
       {
-        onSuccess: (res) => {
+        onSuccess: (res: ChatMessage) => {
           setMessages((prev) => [...prev, res])
         },
       },
     )
   }
 
-  // --- SEND FILE / AUDIO
+  // --- FILE
   const handleSendFile = (file: File) => {
-    const userMsg: ChatMessage = {
+    const previewUrl = URL.createObjectURL(file)
+
+    const userMsg: FileMessage = {
       id: crypto.randomUUID(),
       type: 'file',
-      sender: 'user',
-      file,
-      date: new Date(),
+      role: 'user',
+      mode,
+      createdAt: new Date().toISOString(),
+      status: 'sent',
+      content: {
+        fileId: undefined,
+        url: previewUrl,
+        filename: file.name,
+        mimeType: file.type,
+      },
     }
 
     setMessages((prev) => [...prev, userMsg])
 
     sendFile(
+      { file, mode },
       {
-        userId: '123',
-        file,
-        mode: 'planning',
-      },
-      {
-        onSuccess: (res) => {
+        onSuccess: (res: ChatMessage) => {
           setMessages((prev) => [...prev, res])
         },
       },
@@ -68,20 +74,30 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col">
-      <ChatHeader />
+      {/* HEADER */}
+      <ChatHeader mode={mode} setMode={setMode} />
 
-      {/* CHAT BODY */}
+      {/* BODY */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg) => {
-          if (msg.type === 'text') {
-            return <TextBubble key={msg.id} message={msg} />
-          }
+          switch (msg.type) {
+            case 'text':
+              return <TextBubble key={msg.id} message={msg} />
 
-          if (msg.type === 'file') {
-            return <FileBubble key={msg.id} message={msg} />
-          }
+            case 'file':
+              return (
+                <FileBubble
+                  key={msg.id}
+                  output={msg.content.url}
+                  sender="user"
+                  date={new Date(msg.createdAt)}
+                  filename={msg.content.filename}
+                />
+              )
 
-          return null
+            default:
+              return null
+          }
         })}
       </div>
 

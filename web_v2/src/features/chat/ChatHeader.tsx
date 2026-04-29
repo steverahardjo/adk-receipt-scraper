@@ -8,17 +8,16 @@ import {
 import { Button } from '@/components/ui/button'
 import ThemeSwitch from '@/components/light_switch'
 import { cn } from '@/lib/utils'
-
-type Mode = 'planning' | 'operations' | 'reporting'
+import type { ChatMode } from './types'
 
 interface Props {
-  mode: Mode
-  setMode: (mode: Mode) => void
+  mode: ChatMode
+  setMode: (mode: ChatMode) => void
   profilePicture?: string
 }
 
 export default function ChatHeader({ mode, setMode, profilePicture }: Props) {
-  const labelMap: Record<Mode, string> = {
+  const labelMap: Record<ChatMode, string> = {
     planning: 'Planning',
     operations: 'Operations',
     reporting: 'Reporting',
@@ -50,18 +49,20 @@ export default function ChatHeader({ mode, setMode, profilePicture }: Props) {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-44">
-            {(['planning', 'operations', 'reporting'] as Mode[]).map((m) => (
-              <DropdownMenuItem
-                key={m}
-                onClick={() => setMode(m)}
-                className={cn(
-                  'cursor-pointer',
-                  mode === m && 'bg-muted font-medium',
-                )}
-              >
-                {labelMap[m]}
-              </DropdownMenuItem>
-            ))}
+            {(['planning', 'operations', 'reporting'] as ChatMode[]).map(
+              (m) => (
+                <DropdownMenuItem
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={cn(
+                    'cursor-pointer',
+                    mode === m && 'bg-muted font-medium',
+                  )}
+                >
+                  {labelMap[m]}
+                </DropdownMenuItem>
+              ),
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 

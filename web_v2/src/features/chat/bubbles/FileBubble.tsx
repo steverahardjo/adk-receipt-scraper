@@ -1,5 +1,4 @@
 import { Download, FileText } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -9,6 +8,7 @@ interface FileBubbleProps {
   sender: 'user' | 'assistant'
   date: Date
   downloadUrl?: string
+  filename?: string
 }
 
 export default function FileBubble({
@@ -16,19 +16,28 @@ export default function FileBubble({
   sender,
   date,
   downloadUrl,
+  filename,
 }: FileBubbleProps) {
-  const handleDownload = () => {
-    toast.success('Download started')
-  }
+  const url = downloadUrl || output
 
-  const fileName = output.split('/').pop() || 'attachment.file'
+  const fileName =
+    filename ||
+    (() => {
+      try {
+        return new URL(url).pathname.split('/').pop() || 'attachment.file'
+      } catch {
+        return 'attachment.file'
+      }
+    })()
 
   const time = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
   }).format(date)
 
-  const url = downloadUrl || output
+  const handleDownload = () => {
+    toast.success('Download started')
+  }
 
   return (
     <div
@@ -49,7 +58,7 @@ export default function FileBubble({
           {sender}
         </div>
 
-        {/* BUBBLE (NO ACTIONS INSIDE) */}
+        {/* BUBBLE */}
         <Card
           className={cn(
             'p-3 flex items-center justify-between gap-4',
@@ -58,7 +67,6 @@ export default function FileBubble({
               : 'bg-muted',
           )}
         >
-          {/* LEFT */}
           <div className="flex items-center gap-2 min-w-0">
             <FileText className="h-4 w-4 opacity-70" />
 
@@ -75,14 +83,15 @@ export default function FileBubble({
         <span className="text-[10px] text-muted-foreground px-1">{time}</span>
       </div>
 
-      {/* OUTSIDE ACTION */}
-      <div className="flex items-center justify-center">
-        <Button size="icon" variant="ghost" onClick={handleDownload} asChild>
-          <a href={url} download target="_blank" rel="noreferrer">
-            <Download className="h-4 w-4 text-muted-foreground" />
-          </a>
-        </Button>
-      </div>
+      {/* ACTION */}
+      <a
+        href={url}
+        download
+        onClick={handleDownload}
+        className="flex items-center justify-center"
+      >
+        <Download className="h-4 w-4 text-muted-foreground" />
+      </a>
     </div>
   )
 }

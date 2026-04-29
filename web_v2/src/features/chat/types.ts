@@ -1,10 +1,30 @@
 export type MessageType = 'text' | 'file' | 'image' | 'audio'
+export type ChatMode = 'planning' | 'operations' | 'reporting'
+export type ChatRole = 'user' | 'assistant'
+export type ChatStatus = 'sent' | 'processing' | 'completed'
 
-export type ChatMessage = {
+type BaseMessage = {
   id: string
-  role: 'user' | 'assistant'
-  type: MessageType
-  content: string
-  createdAt: number
-  status?: 'sending' | 'sent' | 'error'
+  createdAt: string
+  mode: ChatMode
+  role: ChatRole
+  status: ChatStatus
 }
+
+export type TextMessage = BaseMessage & {
+  type: 'text'
+  content: { text: string }
+}
+
+export type FileMessage = BaseMessage & {
+  type: 'file'
+  content: {
+    fileId: string
+    url: string
+    filename: string
+    mimeType: string
+    caption?: string
+  }
+}
+
+export type ChatMessage = TextMessage | FileMessage

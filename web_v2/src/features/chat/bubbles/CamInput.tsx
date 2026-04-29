@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
 
 type Props = {
@@ -8,35 +10,39 @@ type Props = {
 export default function CameraInput({ onSend, onCancel }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
-  const [stream, setStream] = useState<MediaStream | null>(null)
-  const [capturedUrl, setCapturedUrl] = useState<string | null>(null)
+  const [capturedFile, setCapturedFile] = useState<File | null>(null)
 
-  // open camera once on mount
-  useEffect(() => {
-    async function init() {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        })
-        setStream(mediaStream)
+  // start camera
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' }, // mobile rear camera
+        },
+      })
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream
-        }
-      } catch (err) {
-        console.error(err)
+      streamRef.current = stream
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
       }
+    } catch (err) {
+      console.error('Camera error:', err)
+      onCancel()
     }
+  }
 
-    init()
+  useEffect(() => {
+    startCamera()
 
     return () => {
-      stream?.getTracks().forEach((t) => t.stop())
+      streamRef.current?.getTracks().forEach((t) => t.stop())
     }
   }, [])
 
-  function capture() {
+  const capture = () => {
     const video = videoRef.current
     const canvas = canvasRef.current
     if (!video || !canvas) return
@@ -52,53 +58,41 @@ export default function CameraInput({ onSend, onCancel }: Props) {
     canvas.toBlob((blob) => {
       if (!blob) return
 
-      const file = new File([blob], 'photo.png', { type: 'image/png' })
+      const file = new File([blob], 'photo.png', {
+        type: 'image/png',
+      })
 
-      // preview
-      const url = URL.createObjectURL(blob)
-      setCapturedUrl(url)
-
-      // cache locally
-      localStorage.setItem('last_capture', url)
+      setCapturedFile(file)
 
       // stop camera after capture
-      stream?.getTracks().forEach((t) => t.stop())
+      streamRef.current?.getTracks().forEach((t) => t.stop())
     }, 'image/png')
   }
 
-  function retake() {
-    setCapturedUrl(null)
-    // reopen camera
-    navigator.mediaDevices.getUserMedia({ video: true }).then((mediaStream) => {
-      setStream(mediaStream)
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream
-      }
-    })
+  const retake = async () => {
+    setCapturedFile(null)
+    await startCamera()
   }
 
-  function confirm() {
-    if (!capturedUrl) return
-
-    fetch(capturedUrl)
-      .then((res) => res.blob())
-      .then((blob) => {
-        const file = new File([blob], 'photo.png', { type: 'image/png' })
-        onSend(file)
-      })
+  const confirm = () => {
+    if (!capturedFile) return
+    onSend(capturedFile)
   }
 
   return (
     <div className="space-y-3">
-      {/* PREVIEW MODE */}
-      {capturedUrl ? (
+      {capturedFile ? (
         <>
-          <img src={capturedUrl} className="w-full rounded-xl object-cover" />
+          <img
+            src={URL.createObjectURL(capturedFile)}
+            className="w-full rounded-xl object-cover"
+          />
 
           <div className="flex gap-2">
             <button onClick={retake} className="flex-1 border rounded p-2">
               Retake
             </button>
+
             <button
               onClick={confirm}
               className="flex-1 bg-black text-white rounded p-2"
@@ -109,12 +103,11 @@ export default function CameraInput({ onSend, onCancel }: Props) {
         </>
       ) : (
         <>
-          {/* LIVE CAMERA */}
           <video
             ref={videoRef}
             autoPlay
             playsInline
-            className="w-full rounded-xl"
+            className="w-full rounded-xl bg-black"
           />
 
           <div className="flex gap-2">
@@ -124,6 +117,7 @@ export default function CameraInput({ onSend, onCancel }: Props) {
             >
               Capture
             </button>
+
             <button onClick={onCancel} className="flex-1 border rounded p-2">
               Cancel
             </button>

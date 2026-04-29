@@ -1,163 +1,265 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { Send, Aperture, Mic, Paperclip } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import {
+  Send,
+  Aperture,
+  Paperclip,
+  Mic,
+  X,
+  Music,
+  Image as ImageIcon,
+  FileIcon,
+} from 'lucide-react'
+import CameraInput from './bubbles/CamInput'
+import RecordInput from './bubbles/RecordInput' // Import your new component
+
+// Shadcn UI Components
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import RecordInput from './bubbles/RecordInput'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
-type PanelState =
-  | { type: 'none' }
-  | { type: 'audio' }
-  | { type: 'file'; file: File }
+interface PendingFile {
+  id: string
+  file: File | Blob
+  previewUrl: string
+  type: 'image' | 'audio' | 'other'
+}
 
-export default function ChatInput() {
-  const [message, setMessage] = useState('')
-  const [panel, setPanel] = useState<PanelState>({ type: 'none' })
-  const [openCamera, setOpenCamera] = useState(false)
+export default function ChatBar({
+  onSendText,
+  onSendFile,
+}: {
+  onSendText: (t: string) => void
+  onSendFile: (f: File) => void
+}) {
+  const [text, setText] = useState('')
+  const [camera, setCamera] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([])
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const fileRef = useRef<HTMLInputElement | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // auto resize
+  // Auto-expand textarea logic
   useEffect(() => {
-    const el = textareaRef.current
-    if (!el) return
-    el.style.height = '0px'
-    el.style.height = Math.min(el.scrollHeight, 160) + 'px'
-  }, [message])
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto'
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`
+    }
+  }, [text])
 
-  const showPanel = panel.type !== 'none'
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
 
-  // --- SEND HANDLERS (centralized)
-  const handleSendText = () => {
-    if (!message.trim()) return
+    const newPending: PendingFile[] = Array.from(files).map((f) => ({
+      id: crypto.randomUUID(),
+      file: f,
+      previewUrl: URL.createObjectURL(f),
+      type: f.type.startsWith('image/')
+        ? 'image'
+        : f.type.startsWith('audio/')
+          ? 'audio'
+          : 'other',
+    }))
 
-    console.log('send text:', message)
-    setMessage('')
+    setPendingFiles((prev) => [...prev, ...newPending])
+    if (fileRef.current) fileRef.current.value = ''
   }
 
-  const handleSendFile = (file: File) => {
-    console.log('send file:', file)
-    setPanel({ type: 'none' })
+  const handleVoiceRecord = (blob: Blob) => {
+    const file = new File([blob], `voice-message-${Date.now()}.webm`, {
+      type: 'audio/webm',
+    })
+    const newPending: PendingFile = {
+      id: crypto.randomUUID(),
+      file: file,
+      previewUrl: URL.createObjectURL(blob),
+      type: 'audio',
+    }
+    setPendingFiles((prev) => [...prev, newPending])
+    setIsRecording(false)
   }
 
-  const handleSendAudio = (blob: Blob) => {
-    const file = new File([blob], 'audio.webm')
-    console.log('send audio:', file)
-    setPanel({ type: 'none' })
+  const removeFile = (id: string) => {
+    setPendingFiles((prev) => {
+      const filtered = prev.filter((f) => f.id !== id)
+      const removed = prev.find((f) => f.id === id)
+      if (removed) URL.revokeObjectURL(removed.previewUrl)
+      return filtered
+    })
+  }
+
+  const handleSend = () => {
+    if (!text.trim() && pendingFiles.length === 0) return
+    if (text.trim()) onSendText(text)
+    pendingFiles.forEach((p) => onSendFile(p.file as File))
+
+    setText('')
+    setPendingFiles([])
+    if (textareaRef.current) textareaRef.current.style.height = 'auto'
   }
 
   return (
-    <>
-      {/* CAMERA */}
-      {openCamera && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
-          <div className="bg-background p-4 rounded-xl w-full max-w-md">
-            <p className="text-sm">Camera</p>
-            <Button onClick={() => setOpenCamera(false)}>Close</Button>
+    <TooltipProvider>
+      {/* CAMERA OVERLAY */}
+      {camera && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card border shadow-lg rounded-2xl w-full max-w-md relative overflow-hidden p-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 z-10 rounded-full"
+              onClick={() => setCamera(false)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            <CameraInput
+              onSend={(file) => {
+                onSendFile(file)
+                setCamera(false)
+              }}
+              onCancel={() => setCamera(false)}
+            />
           </div>
         </div>
       )}
 
-      {/* PANEL */}
-      <div
-        className={`
-          overflow-hidden transition-all duration-300
-          ${showPanel ? 'max-h-60' : 'max-h-0'}
-        `}
-      >
-        <div className="px-2 pt-2">
-          {/* AUDIO */}
-          {panel.type === 'audio' && (
+      {/* VOICE RECORDING OVERLAY */}
+      {isRecording && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
             <RecordInput
-              onSend={handleSendAudio}
-              onCancel={() => setPanel({ type: 'none' })}
+              onSend={handleVoiceRecord}
+              onCancel={() => setIsRecording(false)}
             />
-          )}
+          </div>
+        </div>
+      )}
 
-          {/* FILE */}
-          {panel.type === 'file' && (
-            <div className="p-3 border rounded-xl text-sm flex items-center justify-between gap-2">
-              <span className="truncate">{panel.file.name}</span>
-
-              <div className="flex gap-2">
-                <Button size="sm" onClick={() => handleSendFile(panel.file)}>
-                  Send
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setPanel({ type: 'none' })}
-                >
-                  ✕
-                </Button>
-              </div>
+      <div className="border-t bg-background p-4 space-y-2">
+        <div className="max-w-4xl mx-auto flex flex-col bg-muted/50 rounded-2xl border overflow-hidden transition-all">
+          {/* CANDIDACY PREVIEW AREA */}
+          {pendingFiles.length > 0 && (
+            <div className="p-3 border-b bg-background/50">
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex gap-3 pb-2">
+                  {pendingFiles.map((pf) => (
+                    <div key={pf.id} className="relative group shrink-0">
+                      <button
+                        onClick={() => removeFile(pf.id)}
+                        className="absolute -top-2 -right-2 z-10 bg-destructive text-destructive-foreground rounded-full p-1 shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                      >
+                        <X size={12} />
+                      </button>
+                      <div className="w-20 h-20 rounded-xl border bg-card flex items-center justify-center overflow-hidden shadow-sm">
+                        {pf.type === 'image' ? (
+                          <img
+                            src={pf.previewUrl}
+                            alt="preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : pf.type === 'audio' ? (
+                          <div className="flex flex-col items-center gap-1">
+                            <Music className="text-blue-500 h-6 w-6" />
+                            <span className="text-[9px] px-1 truncate w-16 text-center font-medium">
+                              Voice
+                            </span>
+                          </div>
+                        ) : (
+                          <FileIcon className="text-muted-foreground h-6 w-6" />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             </div>
           )}
+
+          {/* INPUT BAR */}
+          <div className="flex items-end gap-2 p-2">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full shrink-0"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Paperclip className="h-5 w-5 text-muted-foreground" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden rounded-full shrink-0"
+                onClick={() => setCamera(true)}
+              >
+                <Aperture className="h-5 w-5 text-muted-foreground" />
+              </Button>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full shrink-0"
+                    onClick={() => setIsRecording(true)}
+                  >
+                    <Mic className="h-5 w-5 text-muted-foreground" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Record audio</TooltipContent>
+              </Tooltip>
+            </div>
+
+            <input
+              ref={fileRef}
+              type="file"
+              multiple
+              hidden
+              onChange={handleFileSelect}
+            />
+
+            <div className="flex-1 overflow-hidden">
+              <Textarea
+                ref={textareaRef}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Type a message..."
+                rows={1}
+                className="min-h-[40px] w-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent resize-none py-2 px-0"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleSend()
+                  }
+                }}
+              />
+            </div>
+
+            <Button
+              size="icon"
+              className="rounded-xl shrink-0 transition-all active:scale-95"
+              disabled={!text.trim() && pendingFiles.length === 0}
+              onClick={handleSend}
+            >
+              <Send
+                className={`h-5 w-5 ${text.trim() || pendingFiles.length > 0 ? 'fill-current' : ''}`}
+              />
+            </Button>
+          </div>
         </div>
       </div>
-
-      {/* INPUT */}
-      <div className="p-2 border-t">
-        <div className="flex items-end gap-2">
-          <Textarea
-            ref={textareaRef}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 resize-none overflow-hidden min-h-[44px] max-h-[160px]"
-          />
-
-          {/* CAMERA */}
-          <Button
-            variant="outline"
-            className="h-10 w-10 p-0"
-            onClick={() => setOpenCamera(true)}
-          >
-            <Aperture className="h-4 w-4" />
-          </Button>
-
-          {/* FILE */}
-          <input
-            ref={fileRef}
-            type="file"
-            hidden
-            onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (!f) return
-              setPanel({ type: 'file', file: f })
-            }}
-          />
-
-          <Button
-            variant="outline"
-            className="h-10 w-10 p-0"
-            onClick={() => fileRef.current?.click()}
-          >
-            <Paperclip className="h-4 w-4" />
-          </Button>
-
-          {/* MIC */}
-          <Button
-            variant="outline"
-            className="h-10 w-10 p-0"
-            onClick={() =>
-              setPanel((prev) =>
-                prev.type === 'audio' ? { type: 'none' } : { type: 'audio' },
-              )
-            }
-          >
-            <Mic className="h-4 w-4" />
-          </Button>
-
-          {/* SEND */}
-          <Button className="h-10 w-10 p-0" onClick={handleSendText}>
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </>
+    </TooltipProvider>
   )
 }
