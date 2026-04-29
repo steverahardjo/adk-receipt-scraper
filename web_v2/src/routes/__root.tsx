@@ -1,6 +1,7 @@
 import {
   HeadContent,
   Scripts,
+  Outlet,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
@@ -19,9 +20,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
+      { charSet: 'utf-8' },
       {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
@@ -40,19 +39,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   shellComponent: RootDocument,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument() {
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
+
       <body>
-        {children}
+        {/* ✅ THIS is where routes render */}
+        <Outlet />
+
+        {/* Global UI */}
         <Toaster position="top-center" />
-        {/* <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
+
+        <TanStackDevtools
+          config={{ position: 'bottom-right' }}
           plugins={[
             {
               name: 'Tanstack Router',
@@ -60,7 +62,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
             TanStackQueryDevtools,
           ]}
-        /> */}
+        />
+
         <Scripts />
       </body>
     </html>

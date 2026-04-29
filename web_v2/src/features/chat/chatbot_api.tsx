@@ -1,4 +1,4 @@
-import type { ChatMessage } from '../features/chat/types'
+import type { ChatMessage } from './types'
 
 const apiUrl = 'https://api.example.com'
 

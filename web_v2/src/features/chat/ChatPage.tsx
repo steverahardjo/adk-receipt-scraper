@@ -3,7 +3,7 @@ import type { ChatMessage, ChatMode, TextMessage, FileMessage } from './types'
 import { useState } from 'react'
 
 import { useSendChatFile, useSendChatText } from '@/hooks/use_chat'
-import FileBubble from './bubbles/FileBubble'
+import FileBubble from './FileBubble'
 import TextBubble from './bubbles/TextBubble'
 import ChatBar from './ChatBar'
 
@@ -53,7 +53,7 @@ export default function ChatPage() {
       createdAt: new Date().toISOString(),
       status: 'sent',
       content: {
-        fileId: undefined,
+        fileId: crypto.randomUUID(),
         url: previewUrl,
         filename: file.name,
         mimeType: file.type,

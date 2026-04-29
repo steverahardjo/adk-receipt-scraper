@@ -8,7 +8,6 @@ import {
   Mic,
   X,
   Music,
-  Image as ImageIcon,
   FileIcon,
 } from 'lucide-react'
 import CameraInput from './bubbles/CamInput'
