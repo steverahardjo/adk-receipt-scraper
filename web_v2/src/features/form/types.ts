@@ -1,6 +1,15 @@
 import { z } from 'zod'
-
-/* ---------- CONSTANTS ---------- */
+import {
+  Utensils,
+  Car,
+  ShoppingBag,
+  Receipt,
+  MoreHorizontal,
+  CreditCard,
+  Wallet,
+  Banknote,
+  Smartphone,
+} from 'lucide-react'
 
 export const TYPES = [
   'Food',
@@ -9,7 +18,6 @@ export const TYPES = [
   'Bills',
   'Other',
 ] as const
-
 export const PAYMENTS = ['Cash', 'Card', 'Transfer', 'E-Wallet'] as const
 
 export const CURRENCIES = {
@@ -19,26 +27,29 @@ export const CURRENCIES = {
   IDR: 'Rp',
 } as const
 
-const currencySchema = z.enum(['MYR', 'USD', 'EUR', 'IDR'])
-
-/* ---------- EXPENSE ---------- */
-
 export const expenseSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-
-  amount: z.number().min(0.01, 'Amount must be > 0'),
-
-  currency: currencySchema,
-
+  title: z.string().min(1),
+  amount: z.number().min(0.01),
+  currency: z.enum(['MYR', 'USD', 'EUR', 'IDR']),
   date: z.date(),
-
   type: z.enum(TYPES),
-
   paymentMethod: z.enum(PAYMENTS),
-
   description: z.string().optional(),
 })
 
-/* ---------- TYPES ---------- */
-
 export type Expense = z.infer<typeof expenseSchema>
+
+export const TYPE_UI = {
+  Food: { icon: Utensils },
+  Transport: { icon: Car },
+  Shopping: { icon: ShoppingBag },
+  Bills: { icon: Receipt },
+  Other: { icon: MoreHorizontal },
+} as const
+
+export const PAYMENT_UI = {
+  Cash: { icon: Wallet },
+  Card: { icon: CreditCard },
+  Transfer: { icon: Banknote },
+  'E-Wallet': { icon: Smartphone },
+} as const
