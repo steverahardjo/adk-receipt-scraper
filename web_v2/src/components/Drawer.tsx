@@ -9,17 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Branding } from '#/config/Branding'
-
-import {
-  Home,
-  Receipt,
-  TrendingUp,
-  Sparkles,
-  Settings,
-  User,
-  Wallet,
-  Tags,
-} from 'lucide-react'
+import { navItems, bottomItems } from '#/config/Navigation'
 
 export default function MobileDrawer({
   open,
@@ -31,20 +21,6 @@ export default function MobileDrawer({
   const pathname = useRouterState({
     select: (s) => s.location.pathname,
   })
-
-  const navItems = [
-    { label: 'Dashboard', to: '/', icon: Home },
-    { label: 'Records', to: '/records', icon: Receipt },
-    { label: 'Budgets', to: '/budgets', icon: Wallet },
-    { label: 'Categories', to: '/categories', icon: Tags },
-    { label: 'Analytics', to: '/analytics', icon: TrendingUp },
-    { label: 'AI Chat', to: '/ai', icon: Sparkles },
-  ]
-
-  const bottomItems = [
-    { label: 'Settings', to: '/settings', icon: Settings },
-    { label: 'Profile', to: '/profile', icon: User },
-  ]
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

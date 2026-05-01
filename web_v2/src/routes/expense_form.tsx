@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import ExpenseFormPage from '#/features/form/components/ExpenseFormPage'
-import { BaseLayer } from '@/components/BaseLayer'
+import BaseLayer from '@/components/BaseLayer'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import Drawer from '#/components/Drawer'
