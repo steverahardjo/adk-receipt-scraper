@@ -1,3 +1,6 @@
+'use client'
+
+import * as React from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -6,6 +9,12 @@ import {
   DrawerFooter,
   DrawerClose,
 } from '@/components/ui/drawer'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion' // Ensure you have the shadcn accordion component
 import { Button } from '@/components/ui/button'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Branding } from '#/config/Branding'
@@ -24,89 +33,105 @@ export default function MobileDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="bg-background flex flex-col">
-        {/* HEADER */}
-        <DrawerHeader>
+      <DrawerContent className="bg-background flex flex-col max-h-[92dvh]">
+        <DrawerHeader className="border-b">
           <div className="flex items-center gap-3">
-            {/* Logo */}
             <Branding.app.Logo className="h-6 w-6" />
-
-            {/* App Name */}
             <DrawerTitle className="text-base font-semibold">
               {Branding.app.name}
             </DrawerTitle>
           </div>
         </DrawerHeader>
-        {/* GRID NAVIGATION */}
-        <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const active = pathname === item.to
 
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => onOpenChange(false)}
-              >
-                <div
-                  className={`
-                    rounded-xl border p-4 flex flex-col items-center justify-center gap-2
-                    text-center cursor-pointer
-                    transition-all duration-150
-                    hover:scale-[1.03] active:scale-[0.97]
-                    ${
-                      active
-                        ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                        : 'bg-muted/40 hover:bg-muted border-border'
-                    }
-                  `}
-                >
-                  {/* ICON */}
-                  <div
-                    className={`
-                      h-10 w-10 flex items-center justify-center rounded-full
-                      ${active ? 'bg-primary-foreground/20' : 'bg-background'}
-                    `}
+        {/* SCROLLABLE CONTENT */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <Accordion type="single" collapsible className="w-full space-y-2">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const hasChildren = item.items && item.items.length > 0
+              const isActive =
+                pathname === item.url ||
+                item.items?.some((sub) => sub.url === pathname)
+
+              if (!hasChildren) {
+                return (
+                  <Link
+                    key={item.title}
+                    to={item.url}
+                    onClick={() => onOpenChange(false)}
+                    className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors ${
+                      pathname === item.url
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-muted'
+                    }`}
                   >
                     <Icon className="h-5 w-5" />
-                  </div>
+                    <span className="font-medium text-sm">{item.title}</span>
+                  </Link>
+                )
+              }
 
-                  {/* LABEL */}
-                  <span className="text-sm font-medium">{item.label}</span>
-                </div>
-              </Link>
-            )
-          })}
+              return (
+                <AccordionItem
+                  value={item.title}
+                  key={item.title}
+                  className="border-none"
+                >
+                  <AccordionTrigger
+                    className={`px-3 py-3 hover:no-underline hover:bg-muted rounded-lg transition-colors ${isActive ? 'text-primary' : ''}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5" />
+                      <span className="font-medium text-sm">{item.title}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-1 pb-2 pl-10 flex flex-col gap-1">
+                    {item.items.map((sub) => (
+                      <Link
+                        key={sub.title}
+                        to={sub.url}
+                        onClick={() => onOpenChange(false)}
+                        className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                          pathname === sub.url
+                            ? 'text-primary font-semibold bg-primary/10'
+                            : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {sub.title}
+                      </Link>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              )
+            })}
+          </Accordion>
         </div>
 
         {/* FOOTER */}
-        <DrawerFooter className="mt-auto">
+        <DrawerFooter className="border-t bg-muted/20">
           <div className="flex flex-col gap-1">
             {bottomItems.map((item) => {
               const Icon = item.icon
-              const active = pathname === item.to
-
+              const active = pathname === item.url
               return (
                 <Link
-                  key={item.to}
-                  to={item.to}
+                  key={item.name}
+                  to={item.url}
                   onClick={() => onOpenChange(false)}
                 >
                   <Button
                     variant={active ? 'secondary' : 'ghost'}
-                    className="w-full justify-start gap-3"
+                    className="w-full justify-start gap-3 h-11"
                   >
                     <Icon className="h-5 w-5" />
-                    {item.label}
+                    {item.name}
                   </Button>
                 </Link>
               )
             })}
           </div>
-
           <DrawerClose asChild>
-            <Button variant="outline" className="w-full mt-3">
+            <Button variant="outline" className="w-full">
               Close
             </Button>
           </DrawerClose>

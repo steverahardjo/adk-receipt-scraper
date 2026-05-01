@@ -1,108 +1,102 @@
 'use client'
 
 import * as React from 'react'
-import {
-  LayoutDashboard,
-  ReceiptText,
-  PlusCircle,
-  BarChart3,
-  Settings2,
-  Wallet,
-  History,
-  CreditCard,
-  PieChart as PieChartIcon,
-} from 'lucide-react'
 
-// 1. Import your LightSwitch component
+import { navItems, bottomItems } from '@/config/Navigation'
 import LightSwitch from '@/components/LightSwitch'
 
 import { NavMain } from '@/components/nav-main'
 import { NavProjects } from '@/components/nav-projects'
-import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
+import { Branding } from '@/config/Branding'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
-  SidebarMenu,
-  SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 
-const data = {
-  user: {
-    name: 'HolyKnight',
-    email: 'user@example.com',
-    avatar: '',
-  },
-  accounts: [
-    {
-      name: 'Personal Wallet',
-      logo: Wallet,
-      plan: 'Main Account',
-    },
-    {
-      name: 'Business Card',
-      logo: CreditCard,
-      plan: 'Visa **** 1234',
-    },
-  ],
-  navMain: [
-    {
-      title: 'Overview',
-      url: '/',
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: 'Expenses',
-      url: '/expenses',
-      icon: ReceiptText,
-      items: [
-        { title: 'All Expenses', url: '/expenses' },
-        { title: 'Add New', url: '/expense_form', icon: PlusCircle },
-        { title: 'Recent History', url: '/history', icon: History },
-      ],
-    },
-    {
-      title: 'Analysis',
-      url: '#',
-      icon: BarChart3,
-      items: [
-        { title: 'Monthly Report', url: '/reports/monthly' },
-        { title: 'Category Breakdown', url: '/reports/categories' },
-      ],
-    },
-  ],
-  quickStats: [
-    { name: 'Budget Plan', url: '/budget', icon: PieChartIcon },
-    { name: 'Settings', url: '/settings', icon: Settings2 },
-  ],
+type Props = React.ComponentProps<typeof Sidebar> & {
+  avatarUrl?: string
+  userName?: string
+}
+
+const user = {
+  name: 'HolyKnight',
+  email: 'user@example.com',
+  avatar: '',
+}
+function SidebarHeaderContent({
+  avatarUrl,
+  userName,
+}: {
+  avatarUrl?: string
+  userName: string
+}) {
+  const { state } = useSidebar()
+  const collapsed = state === 'collapsed'
+
+  return (
+    <SidebarHeader className="space-y-4">
+      {/* LightSwitch */}
+      <div className={collapsed ? 'flex justify-center' : 'flex justify-end'}>
+        <LightSwitch />
+      </div>
+
+      {/* Branding */}
+      <div
+        className={`
+          flex items-center gap-2
+          ${collapsed ? 'justify-center' : ''}
+        `}
+      >
+        <Branding.app.Logo className="h-6 w-6 shrink-0" />
+
+        {!collapsed && (
+          <span className="font-semibold text-sm">{Branding.app.name}</span>
+        )}
+      </div>
+
+      {/* User */}
+      <div className="flex items-center gap-3 px-1">
+        <Avatar className={collapsed ? 'h-8 w-8 mx-auto' : 'h-8 w-8'}>
+          <AvatarImage src={avatarUrl} />
+          <AvatarFallback>{userName.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+
+        {!collapsed && (
+          <div className="text-sm leading-tight">
+            <div className="font-medium">{userName}</div>
+            <div className="text-muted-foreground text-xs">
+              user@example.com
+            </div>
+          </div>
+        )}
+      </div>
+
+      <TeamSwitcher teams={[]} />
+    </SidebarHeader>
+  )
 }
 
 export default function AppSidebar({
+  avatarUrl,
+  userName = 'User',
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: Props) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.accounts} />
-      </SidebarHeader>
+      <SidebarHeaderContent avatarUrl={avatarUrl} userName={userName} />
 
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.quickStats} />
+        <NavMain items={navItems} />
+        <NavProjects projects={bottomItems} />
       </SidebarContent>
 
-      <SidebarFooter>
-        {/* 2. Added the LightSwitch here with some padding/styling */}
-        <SidebarMenu>
-          <SidebarMenuItem className="flex items-center justify-center py-2"></SidebarMenuItem>
-        </SidebarMenu>
-
-        <NavUser user={data.user} />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )

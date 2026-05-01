@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Moon, Sun } from 'lucide-react'
 
@@ -30,26 +29,27 @@ export default function ThemeSwitch() {
 
   return (
     <div className="flex justify-end">
-      <div className="flex items-center gap-2 rounded-lg border px-3 py-2 w-fit">
-        {/* ICON */}
-        {isDark ? (
-          <Moon className="h-4 w-4 text-muted-foreground" />
-        ) : (
-          <Sun className="h-4 w-4 text-muted-foreground" />
-        )}
-
-        {/* LABEL */}
-        <Label htmlFor="theme-mode" className="text-sm">
-          {isDark ? 'Dark' : 'Light'}
-        </Label>
-
-        {/* SWITCH */}
+      <div className="relative">
         <Switch
-          id="theme-mode"
           checked={isDark}
           onCheckedChange={toggleTheme}
           className="h-6 w-11"
         />
+
+        {/* ICON INSIDE */}
+        <span
+          className={`
+            pointer-events-none absolute top-1/2 -translate-y-1/2
+            transition-all duration-200
+            ${isDark ? 'left-[22px]' : 'left-[4px]'}
+          `}
+        >
+          {isDark ? (
+            <Moon className="h-3.5 w-3.5 text-white" />
+          ) : (
+            <Sun className="h-3.5 w-3.5 text-yellow-500" />
+          )}
+        </span>
       </div>
     </div>
   )

@@ -20,6 +20,10 @@ import { DatePickerInput } from './DatePickerInput'
 
 import { TYPES, PAYMENTS, CURRENCIES, TYPE_UI, PAYMENT_UI } from '../types'
 
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return <label className="text-sm font-medium mb-1 block">{children}</label>
+}
+
 export function ExpenseFormCard({
   form,
   onSubmit,
@@ -40,52 +44,51 @@ export function ExpenseFormCard({
         onSend={onOCR}
       />
 
-      <Card className="border shadow-md rounded-2xl">
-        <CardHeader className="flex flex-row justify-between items-center border-b bg-muted/30">
+      <Card className="rounded-2xl shadow-sm border">
+        {/* HEADER */}
+        <CardHeader className="flex flex-row items-center justify-between border-b">
           <div>
-            <CardTitle className="text-2xl font-bold">Add Expense</CardTitle>
+            <CardTitle className="text-xl font-semibold">Add Expense</CardTitle>
             <CardDescription>Scan receipt or enter manually</CardDescription>
           </div>
 
           <OCRButton onOpen={() => setCameraOpen(true)} loading={ocrLoading} />
         </CardHeader>
 
+        {/* CONTENT */}
         <CardContent className="pt-6">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* TITLE */}
             <div>
-              <label className="text-sm font-medium">Title</label>
+              <FieldLabel>Title</FieldLabel>
               <Input
                 {...form.register('title')}
-                placeholder="e.g. Lunch, Grab ride"
-                className="h-11 mt-1"
+                placeholder="Lunch, Grab ride..."
+                className="h-11"
               />
             </div>
 
             {/* CURRENCY + AMOUNT */}
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-sm font-medium">Currency</label>
+                <FieldLabel>Currency</FieldLabel>
                 <select
                   value={values.currency}
                   onChange={(e) =>
                     form.setValue('currency', e.target.value, {
                       shouldDirty: true,
-                      shouldTouch: true,
                     })
                   }
-                  className="w-full h-11 mt-1 border rounded-md px-2"
+                  className="w-full h-11 rounded-md border px-3 bg-background"
                 >
                   {Object.keys(CURRENCIES).map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
+                    <option key={c}>{c}</option>
                   ))}
                 </select>
               </div>
 
               <div className="col-span-2">
-                <label className="text-sm font-medium">Amount</label>
+                <FieldLabel>Amount</FieldLabel>
                 <NumericFormat
                   customInput={Input}
                   value={values.amount}
@@ -96,10 +99,9 @@ export function ExpenseFormCard({
                   onValueChange={(v) =>
                     form.setValue('amount', v.floatValue ?? 0, {
                       shouldDirty: true,
-                      shouldTouch: true,
                     })
                   }
-                  className="h-11 mt-1"
+                  className="h-11"
                 />
               </div>
             </div>
@@ -110,7 +112,6 @@ export function ExpenseFormCard({
               onChange={(d) =>
                 form.setValue('date', d, {
                   shouldDirty: true,
-                  shouldTouch: true,
                 })
               }
               label="Date"
@@ -118,9 +119,9 @@ export function ExpenseFormCard({
 
             {/* CATEGORY */}
             <div>
-              <label className="text-sm font-medium">Category</label>
+              <FieldLabel>Category</FieldLabel>
 
-              <div className="grid grid-cols-3 gap-3 mt-2">
+              <div className="grid grid-cols-3 gap-2 mt-2">
                 {TYPES.map((t) => {
                   const Icon = TYPE_UI[t].icon
                   const active = values.type === t
@@ -130,18 +131,17 @@ export function ExpenseFormCard({
                       key={t}
                       type="button"
                       onClick={() =>
-                        form.setValue('type', t, {
-                          shouldDirty: true,
-                          shouldTouch: true,
-                        })
+                        form.setValue('type', t, { shouldDirty: true })
                       }
                       className={cn(
-                        'p-3 border rounded-xl flex flex-col items-center gap-2 transition',
-                        active ? 'bg-primary text-white' : 'hover:bg-muted',
+                        'p-3 rounded-lg border flex flex-col items-center gap-1.5 text-xs transition',
+                        active
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'hover:bg-muted',
                       )}
                     >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-xs">{t}</span>
+                      <Icon className="w-4 h-4" />
+                      {t}
                     </button>
                   )
                 })}
@@ -150,9 +150,9 @@ export function ExpenseFormCard({
 
             {/* PAYMENT */}
             <div>
-              <label className="text-sm font-medium">Payment</label>
+              <FieldLabel>Payment</FieldLabel>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
                 {PAYMENTS.map((p) => {
                   const Icon = PAYMENT_UI[p].icon
                   const active = values.paymentMethod === p
@@ -164,12 +164,13 @@ export function ExpenseFormCard({
                       onClick={() =>
                         form.setValue('paymentMethod', p, {
                           shouldDirty: true,
-                          shouldTouch: true,
                         })
                       }
                       className={cn(
-                        'h-11 border rounded-xl flex items-center justify-center gap-2 transition',
-                        active ? 'bg-primary text-white' : 'hover:bg-muted',
+                        'h-10 rounded-lg border flex items-center justify-center gap-2 text-sm transition',
+                        active
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'hover:bg-muted',
                       )}
                     >
                       <Icon className="w-4 h-4" />
@@ -184,12 +185,12 @@ export function ExpenseFormCard({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-12"
+              className="w-full h-11 mt-2"
             >
               {isSubmitting ? (
-                <Loader2 className="mr-2 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Aperture className="mr-2" />
+                <Aperture className="mr-2 h-4 w-4" />
               )}
               Add Expense
             </Button>

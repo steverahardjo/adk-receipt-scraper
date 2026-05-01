@@ -11,6 +11,12 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 
+const user = {
+  name: 'HolyKnight',
+  email: 'user@example.com',
+  avatar: '',
+}
+
 export default function BaseLayer({ children }: { children: React.ReactNode }) {
   // Debug: If this logs 'undefined', the file path or export in app-sidebar is wrong.
   console.log('AppSidebar Check:', AppSidebar)
@@ -20,7 +26,7 @@ export default function BaseLayer({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen w-full bg-secondary/20">
         {/* 1. The Sidebar itself */}
         {AppSidebar ? (
-          <AppSidebar />
+          <AppSidebar userName={user.name} avatarUrl={user.avatar} />
         ) : (
           <div className="p-4 text-red-500">Sidebar Missing</div>
         )}
