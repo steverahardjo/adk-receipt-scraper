@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import SignupCard from '@/features/auth/SignUpCard'
-import Filler from '#/components/filler'
+import Filler from '#/components/Filler'
 
 export const Route = createFileRoute('/signup')({
   component: SignupPage,

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Branding } from '@/config/branding'
+import { Branding } from '#/config/Branding'
 
 import {
   Home,
@@ -53,9 +53,7 @@ export default function MobileDrawer({
         <DrawerHeader>
           <div className="flex items-center gap-3">
             {/* Logo */}
-            <div className="h-9 w-9 flex items-center justify-center">
-              {Branding.app.logo}
-            </div>
+            <Branding.app.Logo className="h-6 w-6" />
 
             {/* App Name */}
             <DrawerTitle className="text-base font-semibold">
@@ -63,7 +61,6 @@ export default function MobileDrawer({
             </DrawerTitle>
           </div>
         </DrawerHeader>
-
         {/* GRID NAVIGATION */}
         <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
           {navItems.map((item) => {

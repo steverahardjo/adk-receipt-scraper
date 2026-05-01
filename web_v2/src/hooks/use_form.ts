@@ -54,5 +54,3 @@ export function useExpenseForm() {
     runOCR,
   }
 }
-
-function dummy() {}

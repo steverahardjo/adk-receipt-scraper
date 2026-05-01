@@ -1,4 +1,4 @@
-import { Component, Wallet } from 'lucide-react'
+import { Wallet } from 'lucide-react'
 
 /* ---------------- LOGOS ---------------- */
 

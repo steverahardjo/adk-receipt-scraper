@@ -3,10 +3,9 @@ import { useState } from 'react'
 
 import ExpenseFormPage from '#/features/form/components/ExpenseFormPage'
 import { BaseLayer } from '@/components/BaseLayer'
-import ThemeSwitch from '@/components/light_switch'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
-import { Drawer as MobileDrawer } from '@/components/drawer'
+import Drawer from '#/components/Drawer'
 
 export const Route = createFileRoute('/expense_form')({
   component: ExpenseFormRoute,
@@ -17,11 +16,6 @@ export function ExpenseFormRoute() {
 
   return (
     <BaseLayer>
-      {/* TOP RIGHT ACTION (optional slot inside page) */}
-      <div className="flex justify-end p-4">
-        <ThemeSwitch />
-      </div>
-
       {/* PAGE CONTENT */}
       <main className="p-4 pb-24">
         <ExpenseFormPage />
@@ -37,7 +31,7 @@ export function ExpenseFormRoute() {
       </Button>
 
       {/* YOUR EXISTING DRAWER */}
-      <MobileDrawer open={open} onOpenChange={setOpen} />
+      <Drawer open={open} onOpenChange={setOpen} />
     </BaseLayer>
   )
 }

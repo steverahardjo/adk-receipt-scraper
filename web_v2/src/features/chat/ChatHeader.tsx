@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import ThemeSwitch from '@/components/light_switch'
+import ThemeSwitch from '#/components/LightSwitch'
 import { cn } from '@/lib/utils'
 import type { ChatMode } from './types'
 

@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import MobileDrawer from '../components/drawer'
+import MobileDrawer from '../components/Drawer'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import ThemeSwitch from '../components/light_switch'
+import ThemeSwitch from '../components/LightSwitch'
 
 export const Route = createFileRoute('/')({
   component: Home,

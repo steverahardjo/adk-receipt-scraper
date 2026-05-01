@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Filler() {
   return (
     <section
@@ -12,23 +10,32 @@ export default function Filler() {
         backgroundPosition: 'center',
       }}
     >
-      {/* overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--deneb-blue)]/60 to-[var(--lagoon)]/40" />
+      {/* overlay (theme-aware) */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br
+        from-[var(--deneb-blue)]/40
+        to-[var(--lagoon)]/20
+        dark:from-[var(--deneb-blue)]/70
+        dark:to-[var(--lagoon)]/50"
+      />
 
       {/* content */}
-      <div className="relative z-10 p-12 text-white flex flex-col justify-between w-full">
+      <div className="relative z-10 p-12 flex flex-col justify-between w-full text-foreground dark:text-white">
         <div className="font-bold text-2xl">Deneb</div>
 
         <div className="max-w-md">
           <h1 className="display-title text-5xl mb-6 leading-tight">
             Your financial <br /> North Star.
           </h1>
-          <p className="text-lg opacity-90">
+
+          <p className="text-lg text-muted-foreground dark:text-white/80">
             Clear guidance and calm control over your finances.
           </p>
         </div>
 
-        <div className="text-xs opacity-50">© 2026 Deneb</div>
+        <div className="text-xs text-muted-foreground dark:text-white/50">
+          © 2026 Deneb
+        </div>
       </div>
     </section>
   )

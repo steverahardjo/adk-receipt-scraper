@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, Lock } from 'lucide-react'
-import { Branding } from '@/config/branding'
+import { Branding } from '#/config/Branding'
 import OTPField from '#/features/auth/otp_button'
 
 export default function LoginCard() {

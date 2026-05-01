@@ -1,76 +1,25 @@
 'use client'
 
 import * as React from 'react'
-import { Menu } from 'lucide-react'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
+import AppSidebar from './Sidebar'
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-
-import Drawer from '@/components/drawer'
-import ThemeSwitch from '@/components/light_switch'
-
-/* ---------------- DESKTOP NAV ---------------- */
-
-function DesktopNav() {
+export default function BaseLayer({ children }: { children: React.ReactNode }) {
   return (
-    <nav className="hidden md:flex items-center gap-6 text-sm">
-      <a href="/" className="hover:underline">
-        Dashboard
-      </a>
-      <a href="/expenses" className="hover:underline">
-        Expenses
-      </a>
-      <a href="/settings" className="hover:underline">
-        Settings
-      </a>
-    </nav>
-  )
-}
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-secondary/20">
+        {/* Sidebar (desktop + mobile handled internally) */}
+        <AppSidebar />
 
-/* ---------------- HEADER ---------------- */
-
-function Header({ onOpenDrawer }: { onOpenDrawer: () => void }) {
-  return (
-    <header className="h-14 border-b bg-background flex items-center px-4 justify-between">
-      {/* LEFT */}
-      <div className="font-semibold">My App</div>
-
-      {/* CENTER (desktop nav) */}
-      <DesktopNav />
-
-      {/* RIGHT (desktop utilities) */}
-      <div className="hidden md:flex items-center gap-2">
-        <ThemeSwitch />
+        {/* Content */}
+        <SidebarInset>
+          <main className="p-4 md:p-8">
+            <div className="min-h-[80vh] rounded-[2rem] bg-background border shadow-sm p-6 md:p-8">
+              {children}
+            </div>
+          </main>
+        </SidebarInset>
       </div>
-
-      {/* MOBILE BUTTON ONLY */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="md:hidden"
-        onClick={onOpenDrawer}
-      >
-        <Menu className="w-5 h-5" />
-      </Button>
-    </header>
-  )
-}
-
-/* ---------------- BASE LAYOUT ---------------- */
-
-export function BaseLayer({ children }: { children: React.ReactNode }) {
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* HEADER */}
-      <Header onOpenDrawer={() => setDrawerOpen(true)} />
-
-      {/* DRAWER (mobile only interaction) */}
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-
-      {/* CONTENT */}
-      <main className={cn('flex-1 p-4')}>{children}</main>
-    </div>
+    </SidebarProvider>
   )
 }
