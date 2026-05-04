@@ -1,4 +1,5 @@
-import { useEffect, useRef, type HTMLAttributes } from "react"
+import { useEffect, useRef  } from "react"
+import type {HTMLAttributes} from "react";
 
 import { cn } from "#/lib/utils"
 

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
-import { Moon, Sun } from 'lucide-react'
 
 export default function ThemeSwitch() {
   const [isDark, setIsDark] = useState<boolean | null>(null)
@@ -40,16 +39,9 @@ export default function ThemeSwitch() {
         <span
           className={`
             pointer-events-none absolute top-1/2 -translate-y-1/2
-            transition-all duration-200
-            ${isDark ? 'left-[22px]' : 'left-[4px]'}
+            transition-all duration-200'
           `}
-        >
-          {isDark ? (
-            <Moon className="h-3.5 w-3.5 text-white" />
-          ) : (
-            <Sun className="h-3.5 w-3.5 text-yellow-500" />
-          )}
-        </span>
+        ></span>
       </div>
     </div>
   )

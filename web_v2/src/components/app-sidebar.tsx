@@ -7,7 +7,6 @@ import LightSwitch from '@/components/LightSwitch'
 
 import { NavMain } from '@/components/nav-main'
 import { NavProjects } from '@/components/nav-projects'
-import { TeamSwitcher } from '@/components/team-switcher'
 import { Branding } from '@/config/Branding'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -77,8 +76,6 @@ function SidebarHeaderContent({
           </div>
         )}
       </div>
-
-      <TeamSwitcher teams={[]} />
     </SidebarHeader>
   )
 }

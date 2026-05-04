@@ -1,9 +1,6 @@
 'use client'
 
 import * as React from 'react'
-// Use the exact name from the file.
-// If you used 'export default', this name can be anything,
-// but let's keep it consistent.
 import AppSidebar from './app-sidebar'
 import {
   SidebarProvider,
@@ -18,7 +15,6 @@ const user = {
 }
 
 export default function BaseLayer({ children }: { children: React.ReactNode }) {
-  // Debug: If this logs 'undefined', the file path or export in app-sidebar is wrong.
   console.log('AppSidebar Check:', AppSidebar)
 
   return (

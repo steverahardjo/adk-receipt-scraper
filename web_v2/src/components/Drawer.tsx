@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -14,7 +13,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion' // Ensure you have the shadcn accordion component
+} from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Branding } from '#/config/Branding'
@@ -36,7 +35,7 @@ export default function MobileDrawer({
       <DrawerContent className="bg-background flex flex-col max-h-[92dvh]">
         <DrawerHeader className="border-b">
           <div className="flex items-center gap-3">
-            <Branding.app.Logo className="h-6 w-6" />
+            <Branding.app.Logo className="h-6 w-6 text-primary" />
             <DrawerTitle className="text-base font-semibold">
               {Branding.app.name}
             </DrawerTitle>
@@ -47,6 +46,7 @@ export default function MobileDrawer({
         <div className="flex-1 overflow-y-auto p-4">
           <Accordion type="single" collapsible className="w-full space-y-2">
             {navItems.map((item) => {
+              // MUI Icons are components, so we reference them here
               const Icon = item.icon
               const hasChildren = item.items && item.items.length > 0
               const isActive =
@@ -62,10 +62,11 @@ export default function MobileDrawer({
                     className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors ${
                       pathname === item.url
                         ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-muted'
+                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    <Icon className="h-5 w-5" />
+                    {/* Material Icons standard size is roughly 24px (w-6 h-6) */}
+                    <Icon className="h-6 w-6" />
                     <span className="font-medium text-sm">{item.title}</span>
                   </Link>
                 )
@@ -78,14 +79,16 @@ export default function MobileDrawer({
                   className="border-none"
                 >
                   <AccordionTrigger
-                    className={`px-3 py-3 hover:no-underline hover:bg-muted rounded-lg transition-colors ${isActive ? 'text-primary' : ''}`}
+                    className={`px-3 py-3 hover:no-underline hover:bg-muted rounded-lg transition-colors ${
+                      isActive ? 'text-primary' : 'text-muted-foreground'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-6 w-6" />
                       <span className="font-medium text-sm">{item.title}</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-1 pb-2 pl-10 flex flex-col gap-1">
+                  <AccordionContent className="pt-1 pb-2 pl-12 flex flex-col gap-1">
                     {item.items.map((sub) => (
                       <Link
                         key={sub.title}
@@ -118,20 +121,23 @@ export default function MobileDrawer({
                   key={item.name}
                   to={item.url}
                   onClick={() => onOpenChange(false)}
+                  className="block w-full"
                 >
                   <Button
                     variant={active ? 'secondary' : 'ghost'}
-                    className="w-full justify-start gap-3 h-11"
+                    className={`w-full justify-start gap-3 h-12 ${
+                      active ? 'text-primary' : 'text-muted-foreground'
+                    }`}
                   >
-                    <Icon className="h-5 w-5" />
-                    {item.name}
+                    <Icon className="h-6 w-6" />
+                    <span className="font-medium">{item.name}</span>
                   </Button>
                 </Link>
               )
             })}
           </div>
           <DrawerClose asChild>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full mt-2">
               Close
             </Button>
           </DrawerClose>

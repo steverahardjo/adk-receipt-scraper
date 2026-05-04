@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Mic, Square, Trash2, Play, Pause, Send, RotateCcw } from 'lucide-react'
+import { Mic, Square, Trash2, Send, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LiveWaveform } from '@/components/ui/live-waveform'
 import { appToast } from '@/lib/toast'

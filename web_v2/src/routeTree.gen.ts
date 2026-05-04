@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RecordsRouteImport } from './routes/records'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
 import { Route as ChatbotRouteImport } from './routes/chatbot'
@@ -19,6 +20,11 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordsRoute = RecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
+  '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
+  '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
+  '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -79,16 +88,25 @@ export interface FileRouteTypes {
     | '/chatbot'
     | '/expense_form'
     | '/login'
+    | '/records'
     | '/signup'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chatbot' | '/expense_form' | '/login' | '/signup' | '/api/auth/$'
+  to:
+    | '/'
+    | '/chatbot'
+    | '/expense_form'
+    | '/login'
+    | '/records'
+    | '/signup'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/chatbot'
     | '/expense_form'
     | '/login'
+    | '/records'
     | '/signup'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -98,6 +116,7 @@ export interface RootRouteChildren {
   ChatbotRoute: typeof ChatbotRoute
   Expense_formRoute: typeof Expense_formRoute
   LoginRoute: typeof LoginRoute
+  RecordsRoute: typeof RecordsRoute
   SignupRoute: typeof SignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/records': {
+      id: '/records'
+      path: '/records'
+      fullPath: '/records'
+      preLoaderRoute: typeof RecordsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -154,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatbotRoute: ChatbotRoute,
   Expense_formRoute: Expense_formRoute,
   LoginRoute: LoginRoute,
+  RecordsRoute: RecordsRoute,
   SignupRoute: SignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

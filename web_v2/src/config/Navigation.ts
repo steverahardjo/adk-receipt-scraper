@@ -1,28 +1,36 @@
 import {
-  Home,
-  Receipt,
-  TrendingUp,
-  Sparkles,
-  Settings,
-  User,
-  Wallet,
-} from 'lucide-react'
+  HomeIcon,
+  ChartBarIcon,
+  SparklesIcon,
+  Cog6ToothIcon,
+  UserIcon,
+  WalletIcon,
+  ReceiptPercentIcon,
+} from '@heroicons/react/24/outline'
 
+import type { ElementType } from 'react'
+
+export interface NavItem {
+  title: string
+  url: string
+  // Using ElementType is the safest way to type a React Component
+  // that can be rendered as <Icon />
+  icon: ElementType
+  items?: { title: string; url: string }[]
+}
 export const navItems = [
   {
     title: 'Dashboard',
     url: '/',
-    icon: Home,
+    icon: HomeIcon,
   },
-
-  // Core action: tracking money
   {
     title: 'Transactions',
     url: '/records',
-    icon: Receipt,
+    icon: ReceiptPercentIcon,
     items: [
       { title: 'All Transactions', url: '/records' },
-      { title: 'Add Transaction', url: '/records/new' },
+      { title: 'Add Transaction', url: '/expense_form' },
     ],
   },
 
@@ -30,17 +38,18 @@ export const navItems = [
   {
     title: 'Budgets',
     url: '/budgets',
-    icon: Wallet,
+    icon: WalletIcon,
     items: [
       { title: 'Overview', url: '/budgets' },
       { title: 'Create Budget', url: '/budgets/new' },
     ],
   },
-  // Insights (rename from generic "Analytics")
+
+  // Insights
   {
     title: 'Reports',
     url: '/analytics',
-    icon: TrendingUp,
+    icon: ChartBarIcon,
     items: [
       { title: 'Spending Trends', url: '/analytics/trends' },
       { title: 'Category Breakdown', url: '/analytics/categories' },
@@ -48,11 +57,11 @@ export const navItems = [
     ],
   },
 
-  // Keep this separate mentally (tool, not core nav)
+  // AI Assistant
   {
     title: 'AI Assistant',
     url: '/ai',
-    icon: Sparkles,
+    icon: SparklesIcon,
     items: [
       { title: 'Operation', url: '/ai/operation' },
       { title: 'Reporting', url: '/ai/reporting' },
@@ -62,6 +71,6 @@ export const navItems = [
 ]
 
 export const bottomItems = [
-  { name: 'Settings', url: '/settings', icon: Settings },
-  { name: 'Profile', url: '/profile', icon: User },
+  { name: 'Settings', url: '/settings', icon: Cog6ToothIcon },
+  { name: 'Profile', url: '/profile', icon: UserIcon },
 ]

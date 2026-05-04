@@ -40,7 +40,6 @@ export function NavMain({
         {items.map((item) => {
           const hasChildren = item.items && item.items.length > 0
 
-          // ✅ SIMPLE LINK (no children)
           if (!hasChildren) {
             return (
               <SidebarMenuItem key={item.title}>
