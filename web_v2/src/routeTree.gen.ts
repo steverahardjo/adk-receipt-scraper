@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RecurringRouteImport } from './routes/recurring'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
@@ -22,6 +23,11 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecurringRoute = RecurringRouteImport.update({
+  id: '/recurring',
+  path: '/recurring',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecordsRoute = RecordsRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
+  '/recurring': typeof RecurringRoute
   '/signup': typeof SignupRoute
   '/chatbot/operation': typeof ChatbotOperationRoute
   '/chatbot/planning': typeof ChatbotPlanningRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
+  '/recurring': typeof RecurringRoute
   '/signup': typeof SignupRoute
   '/chatbot/operation': typeof ChatbotOperationRoute
   '/chatbot/planning': typeof ChatbotPlanningRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
+  '/recurring': typeof RecurringRoute
   '/signup': typeof SignupRoute
   '/chatbot/operation': typeof ChatbotOperationRoute
   '/chatbot/planning': typeof ChatbotPlanningRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/expense_form'
     | '/login'
     | '/records'
+    | '/recurring'
     | '/signup'
     | '/chatbot/operation'
     | '/chatbot/planning'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/expense_form'
     | '/login'
     | '/records'
+    | '/recurring'
     | '/signup'
     | '/chatbot/operation'
     | '/chatbot/planning'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/expense_form'
     | '/login'
     | '/records'
+    | '/recurring'
     | '/signup'
     | '/chatbot/operation'
     | '/chatbot/planning'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   Expense_formRoute: typeof Expense_formRoute
   LoginRoute: typeof LoginRoute
   RecordsRoute: typeof RecordsRoute
+  RecurringRoute: typeof RecurringRoute
   SignupRoute: typeof SignupRoute
   ChatbotOperationRoute: typeof ChatbotOperationRoute
   ChatbotPlanningRoute: typeof ChatbotPlanningRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recurring': {
+      id: '/recurring'
+      path: '/recurring'
+      fullPath: '/recurring'
+      preLoaderRoute: typeof RecurringRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/records': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   Expense_formRoute: Expense_formRoute,
   LoginRoute: LoginRoute,
   RecordsRoute: RecordsRoute,
+  RecurringRoute: RecurringRoute,
   SignupRoute: SignupRoute,
   ChatbotOperationRoute: ChatbotOperationRoute,
   ChatbotPlanningRoute: ChatbotPlanningRoute,

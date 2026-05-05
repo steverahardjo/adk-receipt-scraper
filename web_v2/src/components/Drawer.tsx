@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Branding } from '#/config/Branding'
-import { navItems, bottomItems } from '#/config/Navigation'
+import { navItems } from '#/config/Navigation'
 
 export default function MobileDrawer({
   open,
@@ -111,37 +111,7 @@ export default function MobileDrawer({
         </div>
 
         {/* FOOTER */}
-        <DrawerFooter className="border-t bg-muted/20">
-          <div className="flex flex-col gap-1">
-            {bottomItems.map((item) => {
-              const Icon = item.icon
-              const active = pathname === item.url
-              return (
-                <Link
-                  key={item.name}
-                  to={item.url}
-                  onClick={() => onOpenChange(false)}
-                  className="block w-full"
-                >
-                  <Button
-                    variant={active ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start gap-3 h-12 ${
-                      active ? 'text-primary' : 'text-muted-foreground'
-                    }`}
-                  >
-                    <Icon className="h-6 w-6" />
-                    <span className="font-medium">{item.name}</span>
-                  </Button>
-                </Link>
-              )
-            })}
-          </div>
-          <DrawerClose asChild>
-            <Button variant="outline" className="w-full mt-2">
-              Close
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <DrawerFooter className="border-t bg-muted/20" />
       </DrawerContent>
     </Drawer>
   )

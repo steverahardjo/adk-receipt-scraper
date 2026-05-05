@@ -2,11 +2,10 @@
 
 import * as React from 'react'
 
-import { navItems, bottomItems } from '@/config/Navigation'
+import { navItems } from '@/config/Navigation'
 import LightSwitch from '@/components/LightSwitch'
 
 import { NavMain } from '@/components/nav-main'
-import { NavProjects } from '@/components/nav-projects'
 import { Branding } from '@/config/Branding'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -91,7 +90,6 @@ export default function AppSidebar({
 
       <SidebarContent>
         <NavMain items={navItems} />
-        <NavProjects projects={bottomItems} />
       </SidebarContent>
 
       <SidebarRail />

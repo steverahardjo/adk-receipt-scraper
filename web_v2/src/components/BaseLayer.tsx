@@ -7,6 +7,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import NotificationBell from '../features/notifications/NotificationBell'
 
 const user = {
   name: 'HolyKnight',
@@ -31,6 +32,9 @@ export default function BaseLayer({ children }: { children: React.ReactNode }) {
           {/* 2. Added a Header area with a Trigger for mobile accessibility */}
           <header className="flex h-16 shrink-0 items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
+            <div className="ml-auto">
+              <NotificationBell />
+            </div>
           </header>
 
           <main className="p-4 md:p-10 pt-0">
