@@ -29,9 +29,17 @@ export type LiabilityAccount = Account & {
   interestRate?: number
 }
 
-export type NetWorthTrend = {
+export type NetWorthDataPoint = {
   date: string
-  value: number
+  netWorth: number
+  assets: number
+  liabilities: number
+}
+
+export type NetWorthEvent = {
+  date: string
+  label: string
+  type: 'salary' | 'purchase' | 'investment' | 'debt'
 }
 
 export type BudgetSummary = {
@@ -85,15 +93,38 @@ export function generateAccounts(): Account[] {
   ]
 }
 
-export function generateNetWorthTrend(): NetWorthTrend[] {
-  const base = 170_000_000
+export function generateNetWorthData(): NetWorthDataPoint[] {
+  const points: NetWorthDataPoint[] = []
+  const startLiabilities = 62_000_000
+  const startAssets = 232_000_000
+
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(2025, 3 + i, 1)
+    const label = d.toLocaleDateString('en', { month: 'short', year: '2-digit' })
+    const assets = Math.round(startAssets + i * 4_200_000 + (i % 3) * 1_800_000)
+    const liabilities = Math.round(startLiabilities - i * 370_000 - (i % 4) * 500_000)
+    points.push({
+      date: label,
+      netWorth: assets - liabilities,
+      assets,
+      liabilities,
+    })
+  }
+  return points
+}
+
+export function generateNetWorthEvents(): NetWorthEvent[] {
   return [
-    { date: 'Oct', value: base },
-    { date: 'Nov', value: Math.round(base * 1.02) },
-    { date: 'Dec', value: Math.round(base * 1.015) },
-    { date: 'Jan', value: Math.round(base * 1.04) },
-    { date: 'Feb', value: Math.round(base * 1.07) },
-    { date: 'Mar', value: Math.round(base * 1.12) },
+    { date: 'May 25', label: 'Salary', type: 'salary' },
+    { date: 'Jun 25', label: 'Salary', type: 'salary' },
+    { date: 'Jul 25', label: 'Car Service', type: 'purchase' },
+    { date: 'Aug 25', label: 'Salary', type: 'salary' },
+    { date: 'Sep 25', label: 'Bonus', type: 'salary' },
+    { date: 'Oct 25', label: 'Salary', type: 'salary' },
+    { date: 'Nov 25', label: 'Laptop', type: 'purchase' },
+    { date: 'Dec 25', label: 'Stock Buy', type: 'investment' },
+    { date: 'Jan 26', label: 'Salary', type: 'salary' },
+    { date: 'Feb 26', label: 'KPR Payment', type: 'debt' },
   ]
 }
 
@@ -107,4 +138,40 @@ export function generateBudget(): BudgetSummary {
     spentThisMonth: 3_300_000,
     daysLeftInMonth: Math.max(1, daysLeft),
   }
+}
+
+export type CashFlowMonth = {
+  month: string
+  income: number
+  expense: number
+}
+
+export function generateCashFlow(): CashFlowMonth[] {
+  return [
+    { month: 'Nov', income: 8_200_000, expense: 4_100_000 },
+    { month: 'Dec', income: 8_000_000, expense: 4_800_000 },
+    { month: 'Jan', income: 8_500_000, expense: 3_900_000 },
+    { month: 'Feb', income: 8_300_000, expense: 4_200_000 },
+    { month: 'Mar', income: 8_500_000, expense: 3_300_000 },
+  ]
+}
+
+export type CashFlowDay = {
+  day: string
+  income: number
+  expense: number
+}
+
+export function generateCashFlowDays(): CashFlowDay[] {
+  const now = new Date()
+  const days: CashFlowDay[] = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
+    days.push({
+      day: d.toLocaleDateString('en', { weekday: 'short' }),
+      income: Math.round(Math.random() * 2_000_000 + 500_000),
+      expense: Math.round(Math.random() * 800_000 + 100_000),
+    })
+  }
+  return days
 }

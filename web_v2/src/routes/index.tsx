@@ -2,14 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import BaseLayer from '#/components/BaseLayer'
 import NetWorthCard from '../features/dashboard/NetWorthCard'
-import AccountsBar from '../features/dashboard/AccountsBar'
-import InvestmentsCard from '../features/dashboard/InvestmentsCard'
-import BudgetCard from '../features/dashboard/BudgetCard'
-import SpendingChart from '../features/dashboard/SpendingChart'
+import NetWorthLineChart from '../features/dashboard/NetWorthLineChart'
+import CardVisualizer from '../features/dashboard/CardVisualizer'
+import AccountCards from '../features/dashboard/AccountCards'
+import AssetBreakdown from '../features/dashboard/AssetBreakdown'
+import InvestmentPie from '../features/dashboard/InvestmentPie'
+import NewsSummary from '../features/dashboard/NewsSummary'
+import CashFlowChart from '../features/dashboard/CashFlowChart'
+import ExpensePie from '../features/dashboard/ExpensePie'
 import {
   generateAccounts,
-  generateNetWorthTrend,
-  generateBudget,
+  generateNetWorthData,
+  generateNetWorthEvents,
 } from '../features/dashboard/types'
 import { generateEntries } from '../features/records/mock_data'
 
@@ -19,8 +23,8 @@ export const Route = createFileRoute('/')({
 
 function Home() {
   const accounts = useMemo(() => generateAccounts(), [])
-  const trend = useMemo(() => generateNetWorthTrend(), [])
-  const budget = useMemo(() => generateBudget(), [])
+  const trend = useMemo(() => generateNetWorthData(), [])
+  const events = useMemo(() => generateNetWorthEvents(), [])
 
   const thisMonthEntries = useMemo(() => {
     const now = new Date()
@@ -48,16 +52,32 @@ function Home() {
           </p>
         </div>
 
-        <NetWorthCard accounts={accounts} trend={trend} />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-          <AccountsBar accounts={accounts} />
-          <InvestmentsCard accounts={investmentAccounts} />
+        {/* Top: Line chart with overlays */}
+        <div className="relative">
+          <NetWorthLineChart data={trend} events={events} />
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
+            <NetWorthCard accounts={accounts} />
+          </div>
+          <div className="mt-3">
+            <CardVisualizer entries={thisMonthEntries} />
+          </div>
         </div>
 
-        <BudgetCard budget={budget} />
+        {/* Account Cards */}
+        <AccountCards accounts={accounts} />
 
-        <SpendingChart entries={thisMonthEntries} />
+        {/* Middle: Asset Breakdown | News & Summary */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <AssetBreakdown accounts={accounts} />
+          <NewsSummary accounts={accounts} entries={thisMonthEntries} />
+        </div>
+
+        {/* Bottom: Cash Flow Bar | Investment Pie | Expense Pie */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          <CashFlowChart />
+          <InvestmentPie accounts={investmentAccounts} />
+          <ExpensePie entries={thisMonthEntries} />
+        </div>
       </div>
     </BaseLayer>
   )
