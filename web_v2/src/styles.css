@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
@@ -7,143 +7,155 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =========================================================
-   ROOT (LIGHT)
-========================================================= */
+   DESIGN TOKENS — HUMANIST WARM PALETTE
+   Warm creams, earthy accents, soft espresso tones.
+   No cool grays, no AI purple/blue, no clinical teal.
+   ========================================================= */
 :root {
-  /* Brand */
-  --lagoon: #4fd1c5;
-  --lagoon-deep: #2fb5ab;
-  --deneb-blue: #1a365d;
-  --deneb-blue-soft: #2c5282;
+  /* Brand — desaturated earthy accents */
+  --ochre: #c4904a;
+  --ochre-deep: #a8783a;
+  --slate-warm: #3d4f55;
+  --slate-warm-soft: #5a6e75;
 
-  /* Text */
-  --sea-ink: #163a43;
-  --sea-ink-soft: #4a6b73;
+  /* Text — warm espresso */
+  --ink: #2c2420;
+  --ink-soft: #7a706a;
+  --ink-muted: #a69e98;
 
-  /* Backgrounds */
-  --sand: #edf7f5;
-  --foam: #f7fbfa;
-  --bg-base: #eef7f4;
+  /* Backgrounds — warm cream strata */
+  --cream: #f0ece6;
+  --cream-light: #faf8f5;
+  --bg-base: #f5f2ed;
 
-  /* Surfaces */
-  --surface: rgba(255, 255, 255, 0.78);
-  --surface-strong: rgba(255, 255, 255, 0.92);
+  /* Surfaces — warm translucent */
+  --surface: rgba(255, 254, 252, 0.70);
+  --surface-strong: rgba(255, 254, 252, 0.94);
 
-  /* Borders */
-  --line: rgba(26, 54, 93, 0.12);
+  /* Borders — warm transparent */
+  --line: rgba(44, 36, 32, 0.08);
+  --line-strong: rgba(44, 36, 32, 0.14);
 
   /* Accents */
-  --kicker: var(--deneb-blue);
-  --danger: #dc2626;
+  --kicker: var(--ochre);
+  --danger: #b84a3a;
 
-  /* Gradients */
-  --hero-a: rgba(79, 209, 197, 0.28);
-  --hero-b: rgba(26, 54, 93, 0.12);
+  /* Gradients — warm atmosphere */
+  --hero-a: rgba(196, 144, 74, 0.18);
+  --hero-b: rgba(61, 79, 85, 0.08);
 
-  /* Radius */
-  --radius: 0.625rem;
-  --sidebar: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 95.9%);
-  --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* Radius — generous squircle */
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 14px);
+
+  /* Motion tokens */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-organic: cubic-bezier(0.6, 0.04, 0.4, 1);
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 450ms;
+  --duration-reveal: 750ms;
+
+  /* Sidebar (shadcn compat) */
+  --sidebar: #f5f2ed;
+  --sidebar-foreground: #2c2420;
+  --sidebar-primary: #2c2420;
+  --sidebar-primary-foreground: #faf8f5;
+  --sidebar-accent: #ece7e0;
+  --sidebar-accent-foreground: #2c2420;
+  --sidebar-border: #e5dfd8;
+  --sidebar-ring: #c4904a;
 }
 
 /* =========================================================
-   DARK MODE
-========================================================= */
+   DARK MODE — Warm charcoal, amber glow
+   ========================================================= */
 .dark {
-  /* The Bauhaus Primary Palette */
-  --bauhaus-red: #e63946; /* "Kandinsky Red" */
-  --bauhaus-yellow: #d89b00; /* "Itten Yellow" */
-  --bauhaus-blue: #004e98; /* "Stölzl Blue" */
+  --ochre: #d4a85a;
+  --ochre-deep: #c4904a;
+  --slate-warm: #7a8e96;
+  --slate-warm-soft: #5a6e75;
 
-  /* Primary Brand Overrides */
-  --lagoon: var(--bauhaus-yellow);
-  --lagoon-deep: var(--bauhaus-red);
-  --deneb-blue: var(--bauhaus-blue);
+  --ink: #ede8e2;
+  --ink-soft: #9e948c;
+  --ink-muted: #6b635c;
 
-  /* Typography/Ink */
-  --sea-ink: #f1faee; /* Clean Paper White */
-  --sea-ink-soft: #adb5bd; /* Concrete Gray */
+  --cream: #1a1816;
+  --cream-light: #242120;
+  --bg-base: #1c1a18;
 
-  /* Neutrals & Backgrounds (The "Foundry" look) */
-  --sand: #121212; /* Solid Black */
-  --foam: #1a1a1a; /* Graphite */
-  --bg-base: #0f0f0f; /* Deep Charcoal */
+  --surface: rgba(36, 33, 32, 0.82);
+  --surface-strong: rgba(26, 24, 22, 0.96);
 
-  /* Surfaces (Minimalist & Structural) */
-  --surface: rgba(26, 26, 26, 0.85);
-  --surface-strong: rgba(18, 18, 18, 0.98);
+  --line: rgba(237, 232, 226, 0.07);
+  --line-strong: rgba(237, 232, 226, 0.14);
 
-  /* Structural Lines (Hard geometric borders) */
-  --line: rgba(241, 250, 238, 0.1);
+  --kicker: var(--ochre);
+  --danger: #d46a5a;
 
-  /* Accents & Highlights */
-  --kicker: var(--bauhaus-red);
+  --hero-a: rgba(212, 168, 90, 0.08);
+  --hero-b: rgba(122, 142, 150, 0.06);
 
-  /* Gradients (Bauhaus is usually flat, so these are subtle structural shifts) */
-  --hero-a: rgba(230, 57, 70, 0.08); /* Faint Red Tint */
-  --hero-b: rgba(0, 78, 152, 0.12); /* Faint Blue Tint */
-
-  /* Sidebar (Functionalist Grey/Black) */
-  --sidebar: #121212;
-  --sidebar-foreground: #f1faee;
-  --sidebar-primary: var(--bauhaus-red);
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2a2a2a;
-  --sidebar-accent-foreground: var(--bauhaus-yellow);
-  --sidebar-border: #222222;
-  --sidebar-ring: var(--bauhaus-blue);
+  --sidebar: #1c1a18;
+  --sidebar-foreground: #ede8e2;
+  --sidebar-primary: #d4a85a;
+  --sidebar-primary-foreground: #1c1a18;
+  --sidebar-accent: #2d2926;
+  --sidebar-accent-foreground: #ede8e2;
+  --sidebar-border: #2d2926;
+  --sidebar-ring: #c4904a;
 }
+
 /* =========================================================
    TAILWIND THEME BRIDGE
-========================================================= */
+   ========================================================= */
 @theme inline {
   --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--bg-base);
-  --color-foreground: var(--sea-ink);
-
+  --color-foreground: var(--ink);
   --color-card: var(--surface);
-  --color-card-foreground: var(--sea-ink);
-
-  --color-primary: var(--lagoon);
+  --color-card-foreground: var(--ink);
+  --color-surface-strong: var(--surface-strong);
+  --color-ink-muted: var(--ink-muted);
+  --color-primary: var(--ochre);
   --color-primary-foreground: white;
-
-  --color-secondary: var(--deneb-blue);
+  --color-secondary: var(--slate-warm);
   --color-secondary-foreground: white;
-
-  --color-muted: var(--foam);
-  --color-muted-foreground: var(--sea-ink-soft);
-
-  --color-accent: var(--lagoon-deep);
+  --color-muted: var(--cream-light);
+  --color-muted-foreground: var(--ink-soft);
+  --color-accent: var(--ochre-deep);
   --color-accent-foreground: white;
-
   --color-border: var(--line);
-  --color-input: var(--line);
-  --color-ring: var(--lagoon);
+  --color-input: var(--line-strong);
+  --color-ring: var(--ochre);
+  --color-destructive: var(--danger);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
   --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 /* =========================================================
    BASE
-========================================================= */
+   ========================================================= */
 html,
 body,
 #app {
@@ -153,108 +165,168 @@ body,
 body {
   margin: 0;
   font-family: var(--font-sans);
-  color: var(--sea-ink);
-
+  color: var(--ink);
   background-color: var(--bg-base);
   background:
-    radial-gradient(900px 500px at 10% -10%, var(--hero-a), transparent 60%),
-    radial-gradient(800px 500px at 100% -10%, var(--hero-b), transparent 60%),
-    linear-gradient(180deg, var(--foam) 0%, var(--bg-base) 100%);
+    radial-gradient(1100px 600px at 10% -10%, var(--hero-a), transparent 60%),
+    radial-gradient(900px 500px at 100% -10%, var(--hero-b), transparent 60%),
+    linear-gradient(180deg, var(--cream-light) 0%, var(--bg-base) 100%);
 
-  overflow-x: hidden;
-
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* subtle texture */
+/* warm light overlay */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  opacity: 0.18;
-
+  opacity: 0.20;
   background:
-    radial-gradient(
-      circle at 20% 15%,
-      rgba(255, 255, 255, 0.7),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(79, 209, 197, 0.18),
-      transparent 50%
-    );
+    radial-gradient(circle at 15% 12%, rgba(255, 254, 252, 0.70), transparent 40%),
+    radial-gradient(circle at 85% 18%, rgba(196, 144, 74, 0.08), transparent 50%);
 }
 
 /* =========================================================
-   TYPOGRAPHY
-========================================================= */
+   TYPOGRAPHY — Humanist
+   ========================================================= */
 .display-title {
-  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.prose {
+  max-width: 68ch;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.ledger-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 a {
-  color: var(--deneb-blue);
-  text-decoration-color: rgba(26, 54, 93, 0.3);
+  color: var(--ink);
+  text-decoration-color: color-mix(in oklab, var(--ochre) 40%, transparent);
+  text-underline-offset: 2px;
+  transition:
+    color var(--duration-fast) var(--ease-smooth),
+    text-decoration-color var(--duration-fast) var(--ease-smooth);
 }
 
 a:hover {
-  color: var(--lagoon-deep);
+  color: var(--ochre-deep);
+  text-decoration-color: var(--ochre);
 }
 
 code {
-  font-size: 0.9em;
+  font-size: 0.875em;
   border: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface-strong) 82%, white 18%);
+  background: color-mix(in oklab, var(--surface-strong) 80%, var(--cream) 20%);
   border-radius: 6px;
   padding: 2px 6px;
 }
 
+::selection {
+  background: color-mix(in oklab, var(--ochre) 25%, transparent);
+  color: var(--ink);
+}
+
 /* =========================================================
-   LAYOUT
-========================================================= */
+   LAYOUT — Generous, breathing
+   ========================================================= */
 .page-wrap {
-  width: min(1080px, calc(100% - 2rem));
+  width: min(1200px, calc(100% - 3rem));
   margin-inline: auto;
 }
 
+.section-lg {
+  padding-block: clamp(4rem, 8vw, 8rem);
+}
+
+.section-xl {
+  padding-block: clamp(5rem, 10vw, 12rem);
+}
+
 /* =========================================================
-   SURFACES
-========================================================= */
+   SURFACES — Tactile, warm, nested
+   ========================================================= */
 .island-shell {
   border: 1px solid var(--line);
-  background: linear-gradient(160deg, var(--surface-strong), var(--surface));
+  background: linear-gradient(165deg, var(--surface-strong), var(--surface));
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 12px 30px rgba(26, 54, 93, 0.08);
+    0 1px 0 rgba(255, 254, 252, 0.5) inset,
+    0 8px 24px -8px rgba(44, 36, 32, 0.06);
   backdrop-filter: blur(4px);
 }
 
+.island-shell:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 2px;
+}
+
+/* inner core for double-bezel */
+.bezel-inner {
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  box-shadow:
+    0 1px 1px rgba(255, 254, 252, 0.35) inset,
+    0 2px 8px rgba(44, 36, 32, 0.03);
+}
+
 .feature-card {
-  background: linear-gradient(160deg, var(--surface-strong), var(--surface));
-  box-shadow: 0 10px 24px rgba(26, 54, 93, 0.08);
+  background: linear-gradient(165deg, var(--surface-strong), var(--surface));
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px -8px rgba(44, 36, 32, 0.05);
+  transition:
+    transform var(--duration-base) var(--ease-spring),
+    border-color var(--duration-base) var(--ease-smooth),
+    box-shadow var(--duration-base) var(--ease-smooth);
 }
 
 .feature-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--lagoon) 40%, var(--line));
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--ochre) 25%, var(--line));
+  box-shadow: 0 14px 32px -10px rgba(44, 36, 32, 0.08);
+}
+
+/* glass panel — for overlays / floating UI */
+.glass-panel {
+  background: color-mix(in oklab, var(--surface-strong) 55%, transparent);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 0 rgba(255, 254, 252, 0.25) inset,
+    0 24px 48px -14px rgba(44, 36, 32, 0.10);
+}
+
+/* warm paper card — matte, no blur, for content-heavy areas */
+.paper-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 8px rgba(44, 36, 32, 0.03);
 }
 
 /* =========================================================
    NAV
-========================================================= */
+   ========================================================= */
 .nav-link {
   position: relative;
-  color: var(--sea-ink-soft);
+  color: var(--ink-soft);
   text-decoration: none;
 }
 
 .nav-link:hover,
 .nav-link.is-active {
-  color: var(--deneb-blue);
+  color: var(--ink);
 }
 
 .nav-link::after {
@@ -264,12 +336,10 @@ code {
   bottom: -6px;
   width: 100%;
   height: 2px;
-
   transform: scaleX(0);
   transform-origin: left;
-
-  background: linear-gradient(90deg, var(--lagoon), var(--deneb-blue));
-  transition: transform 160ms ease;
+  background: var(--ochre);
+  transition: transform var(--duration-base) var(--ease-smooth);
 }
 
 .nav-link:hover::after,
@@ -278,31 +348,89 @@ code {
 }
 
 /* =========================================================
-   LABELS
-========================================================= */
+   BADGE / EYEBROW
+   ========================================================= */
 .island-kicker {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: var(--kicker);
 }
 
-/* =========================================================
-   MOTION
-========================================================= */
-button,
-.island-shell,
-a {
-  transition:
-    background-color 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  background: color-mix(in oklab, var(--ochre) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ochre) 15%, transparent);
 }
 
+/* =========================================================
+   INTERACTIVE STATES
+   ========================================================= */
+button:not(:disabled),
+a[role='button']:not(:disabled) {
+  cursor: pointer;
+}
+
+.press {
+  transition: transform var(--duration-fast) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+button:active,
+.island-shell:active,
+.paper-card:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: -1px;
+}
+
+/* =========================================================
+   MOTION — Transitions
+   ========================================================= */
+button,
+.island-shell,
+.feature-card,
+.paper-card,
+a {
+  transition:
+    background-color var(--duration-base) var(--ease-smooth),
+    color var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-base) var(--ease-smooth),
+    transform var(--duration-base) var(--ease-spring);
+}
+
+/* =========================================================
+   MOTION — Entry Animations
+   ========================================================= */
 .rise-in {
-  animation: rise-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise-in var(--duration-reveal) var(--ease-smooth) both;
 }
 
 @keyframes rise-in {
@@ -316,27 +444,167 @@ a {
   }
 }
 
+.fade-up {
+  animation: fade-up var(--duration-reveal) var(--ease-out-expo) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-smooth) both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.scale-in {
+  animation: scale-in var(--duration-slow) var(--ease-spring) both;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* stagger children */
+:where(.stagger-children) > * {
+  animation: fade-up var(--duration-reveal) var(--ease-out-expo) both;
+  animation-delay: calc(var(--index, 0) * 70ms);
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* =========================================================
+   LOADING / SKELETON
+   ========================================================= */
+.skeleton {
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--line) 60%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--surface-strong) 60%, transparent),
+    transparent
+  );
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in oklab, var(--cream-light) 40%, transparent);
+}
+
+.empty-state svg {
+  opacity: 0.35;
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+.divider-soft {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--line),
+    transparent
+  );
+}
+
+/* =========================================================
+   SCROLLBAR — Warm, unobtrusive
+   ========================================================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-soft);
+}
+
 /* =========================================================
    FOOTER
-========================================================= */
+   ========================================================= */
 .site-footer {
   border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--foam) 80%, transparent);
+  background: color-mix(in oklab, var(--cream-light) 80%, transparent);
 }
 
 /* =========================================================
    TAILWIND BASE LAYER
-========================================================= */
+   ========================================================= */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   h3 {
     @apply text-2xl font-bold;
   }
 
+  h1, h2, h3, h4, h5 {
+    text-wrap: balance;
+  }
+
   body {
     background-color: var(--bg-base);
-    color: var(--sea-ink);
+    color: var(--ink);
   }
 }

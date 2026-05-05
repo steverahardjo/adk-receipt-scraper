@@ -41,6 +41,7 @@ function generateExpense(): Entry {
     paymentMethod: pick(PAYMENTS),
 
     description: faker.lorem.words(3),
+    documentLink: Math.random() < 0.2 ? faker.image.urlPicsumPhotos() : undefined,
   }
 }
 
@@ -66,6 +67,7 @@ function generateIncome(): Entry {
     source,
 
     description: faker.lorem.words(2),
+    documentLink: Math.random() < 0.15 ? faker.image.urlPicsumPhotos() : undefined,
   }
 }
 

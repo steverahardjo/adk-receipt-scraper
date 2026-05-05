@@ -48,6 +48,7 @@ export const entrySchema = z
     source: z.enum(INCOME_SOURCES).optional(),
 
     description: z.string().optional(),
+    documentLink: z.string().optional(),
   })
 
   // enforce expense rules
@@ -117,7 +118,7 @@ export const INCOME_UI = {
 /* ------------------ helpers ------------------ */
 
 export function formatAmount(entry: Entry) {
-  const symbol = CURRENCIES[entry.currency]
+  const symbol = CURRENCIES[entry.currency as Currency]
   const { sign } = FLOW_UI[entry.flow]
 
   return `${sign}${symbol} ${entry.amount.toLocaleString()}`

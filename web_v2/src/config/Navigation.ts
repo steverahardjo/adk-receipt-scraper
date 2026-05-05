@@ -60,12 +60,12 @@ export const navItems = [
   // AI Assistant
   {
     title: 'AI Assistant',
-    url: '/ai',
+    url: '/chatbot',
     icon: SparklesIcon,
     items: [
-      { title: 'Operation', url: '/ai/operation' },
-      { title: 'Reporting', url: '/ai/reporting' },
-      { title: 'Planning', url: '/ai/planning' },
+      { title: 'Operation', url: '/chatbot/operation' },
+      { title: 'Reporting', url: '/chatbot/reporting' },
+      { title: 'Planning', url: '/chatbot/planning' },
     ],
   },
 ]

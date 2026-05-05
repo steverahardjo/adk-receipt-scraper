@@ -33,8 +33,8 @@ export default function BaseLayer({ children }: { children: React.ReactNode }) {
             <SidebarTrigger className="-ml-1" />
           </header>
 
-          <main className="p-4 md:p-8 pt-0">
-            <div className="min-h-[80vh] rounded-[2rem] bg-background border shadow-sm p-6 md:p-8">
+          <main className="p-4 md:p-10 pt-0">
+            <div className="min-h-[85vh] rounded-[2.5rem] bg-background border p-8 md:p-12">
               {children}
             </div>
           </main>

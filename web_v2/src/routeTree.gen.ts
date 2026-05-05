@@ -13,8 +13,10 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as Expense_formRouteImport } from './routes/expense_form'
-import { Route as ChatbotRouteImport } from './routes/chatbot'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChatbotReportingRouteImport } from './routes/chatbot/reporting'
+import { Route as ChatbotPlanningRouteImport } from './routes/chatbot/planning'
+import { Route as ChatbotOperationRouteImport } from './routes/chatbot/operation'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SignupRoute = SignupRouteImport.update({
@@ -37,14 +39,24 @@ const Expense_formRoute = Expense_formRouteImport.update({
   path: '/expense_form',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChatbotRoute = ChatbotRouteImport.update({
-  id: '/chatbot',
-  path: '/chatbot',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatbotReportingRoute = ChatbotReportingRouteImport.update({
+  id: '/chatbot/reporting',
+  path: '/chatbot/reporting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatbotPlanningRoute = ChatbotPlanningRouteImport.update({
+  id: '/chatbot/planning',
+  path: '/chatbot/planning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatbotOperationRoute = ChatbotOperationRouteImport.update({
+  id: '/chatbot/operation',
+  path: '/chatbot/operation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -55,69 +67,83 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
+  '/chatbot/operation': typeof ChatbotOperationRoute
+  '/chatbot/planning': typeof ChatbotPlanningRoute
+  '/chatbot/reporting': typeof ChatbotReportingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
+  '/chatbot/operation': typeof ChatbotOperationRoute
+  '/chatbot/planning': typeof ChatbotPlanningRoute
+  '/chatbot/reporting': typeof ChatbotReportingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/chatbot': typeof ChatbotRoute
   '/expense_form': typeof Expense_formRoute
   '/login': typeof LoginRoute
   '/records': typeof RecordsRoute
   '/signup': typeof SignupRoute
+  '/chatbot/operation': typeof ChatbotOperationRoute
+  '/chatbot/planning': typeof ChatbotPlanningRoute
+  '/chatbot/reporting': typeof ChatbotReportingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/chatbot'
     | '/expense_form'
     | '/login'
     | '/records'
     | '/signup'
+    | '/chatbot/operation'
+    | '/chatbot/planning'
+    | '/chatbot/reporting'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/chatbot'
     | '/expense_form'
     | '/login'
     | '/records'
     | '/signup'
+    | '/chatbot/operation'
+    | '/chatbot/planning'
+    | '/chatbot/reporting'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
-    | '/chatbot'
     | '/expense_form'
     | '/login'
     | '/records'
     | '/signup'
+    | '/chatbot/operation'
+    | '/chatbot/planning'
+    | '/chatbot/reporting'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ChatbotRoute: typeof ChatbotRoute
   Expense_formRoute: typeof Expense_formRoute
   LoginRoute: typeof LoginRoute
   RecordsRoute: typeof RecordsRoute
   SignupRoute: typeof SignupRoute
+  ChatbotOperationRoute: typeof ChatbotOperationRoute
+  ChatbotPlanningRoute: typeof ChatbotPlanningRoute
+  ChatbotReportingRoute: typeof ChatbotReportingRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -151,18 +177,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Expense_formRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/chatbot': {
-      id: '/chatbot'
-      path: '/chatbot'
-      fullPath: '/chatbot'
-      preLoaderRoute: typeof ChatbotRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chatbot/reporting': {
+      id: '/chatbot/reporting'
+      path: '/chatbot/reporting'
+      fullPath: '/chatbot/reporting'
+      preLoaderRoute: typeof ChatbotReportingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chatbot/planning': {
+      id: '/chatbot/planning'
+      path: '/chatbot/planning'
+      fullPath: '/chatbot/planning'
+      preLoaderRoute: typeof ChatbotPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chatbot/operation': {
+      id: '/chatbot/operation'
+      path: '/chatbot/operation'
+      fullPath: '/chatbot/operation'
+      preLoaderRoute: typeof ChatbotOperationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -177,11 +217,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ChatbotRoute: ChatbotRoute,
   Expense_formRoute: Expense_formRoute,
   LoginRoute: LoginRoute,
   RecordsRoute: RecordsRoute,
   SignupRoute: SignupRoute,
+  ChatbotOperationRoute: ChatbotOperationRoute,
+  ChatbotPlanningRoute: ChatbotPlanningRoute,
+  ChatbotReportingRoute: ChatbotReportingRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

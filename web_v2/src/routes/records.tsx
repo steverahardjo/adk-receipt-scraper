@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { LedgerView } from '../features/records/RecordsTable'
+import Ledger from '../features/records/LedgerPage'
 import { generateEntries } from '../features/records/mock_data'
-
+import BaseLayer from '#/components/BaseLayer'
 export const Route = createFileRoute('/records')({
   loader: async () => {
     return {
@@ -13,5 +13,10 @@ export const Route = createFileRoute('/records')({
 
 function RouteComponent() {
   const { data } = Route.useLoaderData()
-  return <LedgerView data={data} />
+
+  return (
+    <BaseLayer>
+      <Ledger data={data} />
+    </BaseLayer>
+  )
 }
