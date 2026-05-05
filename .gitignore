@@ -1,40 +1,5 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
-.venv
-.env
-agents/.adk/
-.ruff_cache
-/agentops.log
-compose.yaml
-key.json
-
-# Node.js / Vue.js
 node_modules/
-npm-debug.log
-yarn-error.log
-.pnpm-debug.log
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Vite
-.vite/
-*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
 .DS_Store
-
-# Rust
-autocomplete/target/
+dist/
+*.local
+.tanstack/
