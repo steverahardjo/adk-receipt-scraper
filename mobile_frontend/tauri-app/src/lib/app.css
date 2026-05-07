@@ -1,0 +1,236 @@
+/* ============================================================
+   Deneb — Humanist Finance Design System
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Public+Sans:wght@500;600&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Light ───────────────────────────────────────────────── */
+
+:root,
+.theme-ios {
+  /* Primary */
+  --f7-theme-color: #006c50;
+  --f7-theme-color-rgb: 0, 108, 80;
+  --f7-theme-color-shade: #00513b;
+  --f7-theme-color-tint: #008a65;
+
+  /* Inverse primary for dark bg */
+  --f7-inverse-primary: #24e0ab;
+
+  /* Secondary */
+  --f7-secondary-color: #008da3;
+  --f7-secondary-color-rgb: 0, 141, 163;
+
+  /* Surfaces */
+  --f7-page-bg-color: #f9f9fc;
+  --f7-page-text-color: #1a1c1e;
+  --f7-card-bg-color: #ffffff;
+  --f7-card-border-color: rgba(0, 141, 163, 0.1);
+  --f7-list-bg-color: #ffffff;
+  --f7-list-border-color: #e2e2e5;
+  --f7-list-inset-bg-color: transparent;
+
+  --f7-block-strong-bg-color: #ffffff;
+  --f7-block-strong-border-color: #e2e2e5;
+
+  /* Text */
+  --f7-text-color: #1a1c1e;
+  --f7-border-color: #e2e2e5;
+
+  /* Navbar */
+  --f7-navbar-bg-color: rgba(249, 249, 252, 0.92);
+  --f7-navbar-text-color: #1a1c1e;
+  --f7-navbar-link-color: #006c50;
+  --f7-navbar-border-color: rgba(0, 141, 163, 0.08);
+
+  /* Tabbar */
+  --f7-tabbar-bg-color: rgba(249, 249, 252, 0.92);
+  --f7-tabbar-link-color: #6b7b72;
+  --f7-tabbar-link-active-color: #006c50;
+
+  /* Buttons */
+  --f7-button-bg-color: #2ee5af;
+  --f7-button-text-color: #1a1c1e;
+  --f7-button-border-color: transparent;
+  --f7-button-fill-text-color: #1a1c1e;
+  --f7-button-fill-bg-color: #2ee5af;
+  --f7-button-outline-border-color: #008da3;
+  --f7-button-border-radius: 9999px;
+  --f7-button-height: 48px;
+  --f7-button-font-size: 15px;
+  --f7-button-font-weight: 600;
+  --f7-button-padding-horizontal: 24px;
+
+  /* Inputs */
+  --f7-input-bg-color: #f0f9f8;
+  --f7-input-border-color: transparent;
+  --f7-input-text-color: #1a1c1e;
+  --f7-input-border-radius: 8px;
+
+  --f7-label-text-color: #6b7b72;
+  --f7-label-error-color: #ba1a1a;
+
+  /* Search */
+  --f7-searchbar-bg-color: transparent;
+  --f7-searchbar-input-bg-color: #eeeef0;
+
+  /* Misc */
+  --f7-actions-bg-color: #ffffff;
+  --f7-progressbar-bg-color: #e2e2e5;
+  --f7-toggle-border-color: #e2e2e5;
+  --f7-toggle-active-color: #2ee5af;
+
+  /* Panel / Drawer */
+  --f7-panel-bg-color: #ffffff;
+
+  /* Toolbar */
+  --f7-toolbar-bg-color: rgba(249, 249, 252, 0.92);
+  --f7-toolbar-border-color: rgba(0, 141, 163, 0.08);
+
+  /* Typography base */
+  --f7-font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  --f7-label-font-family: 'Public Sans', system-ui, sans-serif;
+
+  /* Safe area */
+  --f7-safe-area-outer: 0px;
+
+  /* Headline sizes */
+  --f7-headline-xl-font-size: 40px;
+  --f7-headline-xl-font-weight: 700;
+  --f7-headline-xl-line-height: 48px;
+  --f7-headline-xl-letter-spacing: -0.02em;
+
+  --f7-headline-lg-font-size: 32px;
+  --f7-headline-lg-font-weight: 700;
+  --f7-headline-lg-line-height: 40px;
+  --f7-headline-lg-letter-spacing: -0.01em;
+
+  --f7-headline-md-font-size: 24px;
+  --f7-headline-md-font-weight: 600;
+  --f7-headline-md-line-height: 32px;
+}
+
+/* ── Dark ────────────────────────────────────────────────── */
+
+.dark,
+.dark .theme-ios {
+  --f7-theme-color: #24e0ab;
+  --f7-theme-color-rgb: 36, 224, 171;
+  --f7-theme-color-shade: #1bc49a;
+  --f7-theme-color-tint: #3cf0bc;
+
+  --f7-secondary-color: #6ed4ec;
+  --f7-secondary-color-rgb: 110, 212, 236;
+
+  --f7-page-bg-color: #1a1c1e;
+  --f7-page-text-color: #f0f0f3;
+  --f7-card-bg-color: #2f3133;
+  --f7-card-border-color: rgba(110, 212, 236, 0.08);
+  --f7-list-bg-color: #2f3133;
+  --f7-list-border-color: #404848;
+  --f7-list-inset-bg-color: transparent;
+
+  --f7-block-strong-bg-color: #2f3133;
+  --f7-block-strong-border-color: #404848;
+
+  --f7-text-color: #f0f0f3;
+  --f7-border-color: #404848;
+
+  --f7-navbar-bg-color: rgba(26, 28, 30, 0.92);
+  --f7-navbar-text-color: #f0f0f3;
+  --f7-navbar-link-color: #24e0ab;
+  --f7-navbar-border-color: rgba(110, 212, 236, 0.08);
+
+  --f7-tabbar-bg-color: rgba(26, 28, 30, 0.92);
+  --f7-tabbar-link-color: #6b7b72;
+  --f7-tabbar-link-active-color: #24e0ab;
+
+  --f7-button-bg-color: #24e0ab;
+  --f7-button-text-color: #1a1c1e;
+  --f7-button-fill-text-color: #1a1c1e;
+  --f7-button-fill-bg-color: #24e0ab;
+  --f7-button-outline-border-color: #6ed4ec;
+
+  --f7-input-bg-color: #2f3133;
+  --f7-input-border-color: transparent;
+  --f7-input-text-color: #f0f0f3;
+
+  --f7-label-text-color: #6b7b72;
+  --f7-label-error-color: #ffb4ab;
+
+  --f7-searchbar-input-bg-color: #404848;
+
+  --f7-actions-bg-color: #2f3133;
+  --f7-progressbar-bg-color: #404848;
+  --f7-toggle-border-color: #404848;
+  --f7-toggle-active-color: #24e0ab;
+
+  --f7-panel-bg-color: #2f3133;
+  --f7-toolbar-bg-color: rgba(26, 28, 30, 0.92);
+  --f7-toolbar-border-color: rgba(110, 212, 236, 0.08);
+}
+
+/* ── Typography overrides ────────────────────────────────── */
+
+:global(.f7-page) {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+}
+
+:global(.f7-label),
+:global(.item-title) {
+  font-family: 'Public Sans', system-ui, sans-serif;
+}
+
+/* ── Card shadow (tonal+ambient) ─────────────────────────── */
+
+:global(.card),
+:global(.block-strong) {
+  box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06), 0 1px 4px rgba(0, 141, 163, 0.04);
+  border-radius: 16px;
+}
+
+/* ── Framing / Root App Background ───────────────────────── */
+
+.dark .f7-page {
+  background-color: #1a1c1e;
+}
+
+/* ── Toast overrides ─────────────────────────────────────── */
+
+:root {
+  --toast-bg-success: #2ee5af;
+  --toast-bg-error: #ba1a1a;
+  --toast-bg-loading: #6b7b72;
+}
+.dark {
+  --toast-bg-success: #24e0ab;
+  --toast-bg-error: #ffb4ab;
+  --toast-bg-loading: #6b7b72;
+}
+
+/* ── Button overrides ────────────────────────────────────── */
+
+:global(.button-fill) {
+  color: var(--f7-button-fill-text-color) !important;
+  font-weight: 600;
+}
+
+:global(.button-outline) {
+  border-width: 1.5px;
+  color: var(--f7-secondary-color) !important;
+  border-color: var(--f7-secondary-color) !important;
+}
+
+/* ── Utility ─────────────────────────────────────────────── */
+
+.f7-page-content {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
