@@ -13,7 +13,6 @@ const config = {
       fallback: "index.html",
     }),
     alias: {
-      $features: "./src/features",
     },
   },
 };

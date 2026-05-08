@@ -25,6 +25,7 @@
     "@tauri-apps/plugin-geolocation": "~2",
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-store": "~2",
     "framework7": "^9.0.4",
     "framework7-svelte": "^9.0.4"
   },

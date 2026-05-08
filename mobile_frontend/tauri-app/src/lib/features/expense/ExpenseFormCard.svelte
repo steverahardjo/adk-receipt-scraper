@@ -1,19 +1,20 @@
 <script lang="ts">
   import { Button } from 'framework7-svelte'
   import { showToast, dismissToast } from '$lib/features/core/toast.svelte'
+  import { TYPES, PAYMENTS, INCOME_SOURCES, CURRENCIES } from '$lib/features/records/types'
 
-  let merchant = $state('')
+  let title = $state('')
   let amount = $state('')
-  let category = $state('')
+  let flow: 'expense' | 'income' = $state('expense')
+  let currency: keyof typeof CURRENCIES = $state('IDR')
   let date = $state(new Date().toISOString().slice(0, 10))
-  let notes = $state('')
+  let type = $state('')
+  let paymentMethod = $state('')
+  let source = $state('')
+  let description = $state('')
   let submitting = $state(false)
 
-  const categories = [
-    'Food & Drinks', 'Transportation', 'Shopping',
-    'Bills & Utilities', 'Entertainment', 'Health',
-    'Education', 'Other',
-  ]
+  let currencyKeys = $derived(Object.keys(CURRENCIES) as (keyof typeof CURRENCIES)[])
 
   function openScanner() {
     showToast({ type: 'success', title: 'QR Scanner', message: 'Point camera at QRIS code', duration: 2000 })
@@ -24,8 +25,16 @@
   }
 
   async function handleSave() {
-    if (!merchant || !amount) {
-      showToast({ type: 'error', title: 'Missing fields', message: 'Merchant and amount are required', duration: 2500 })
+    if (!title || !amount) {
+      showToast({ type: 'error', title: 'Missing fields', message: 'Title and amount are required', duration: 2500 })
+      return
+    }
+    if (flow === 'expense' && (!type || !paymentMethod)) {
+      showToast({ type: 'error', title: 'Missing fields', message: 'Expense needs type and payment method', duration: 2500 })
+      return
+    }
+    if (flow === 'income' && !source) {
+      showToast({ type: 'error', title: 'Missing fields', message: 'Income needs a source', duration: 2500 })
       return
     }
     submitting = true
@@ -33,11 +42,13 @@
     try {
       await new Promise((r) => setTimeout(r, 800))
       dismissToast()
-      showToast({ type: 'success', title: 'Expense added!', duration: 2000 })
-      merchant = ''
+      showToast({ type: 'success', title: 'Entry added!', duration: 2000 })
+      title = ''
       amount = ''
-      category = ''
-      notes = ''
+      type = ''
+      paymentMethod = ''
+      source = ''
+      description = ''
     } catch {
       dismissToast()
       showToast({ type: 'error', title: 'Failed to save', duration: 3000 })
@@ -49,7 +60,7 @@
 
 <div class="card">
   <div class="card-header">
-    <h2 class="card-title">New Expense</h2>
+    <h2 class="card-title">New Entry</h2>
     <div class="card-actions">
       <button class="icon-btn" onclick={openScanner} aria-label="Scan QR">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -58,21 +69,39 @@
       </button>
       <button class="icon-btn" onclick={openCamera} aria-label="Scan Receipt">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" />
+          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="12" r="4" />
         </svg>
       </button>
     </div>
   </div>
 
   <div class="fields">
+    <div class="field-row">
+      <div class="field flex-1">
+        <label class="field-label">Type</label>
+        <div class="flow-switch">
+          <button class="flow-btn" class:active={flow === 'expense'} onclick={() => flow = 'expense'}>Expense</button>
+          <button class="flow-btn" class:active={flow === 'income'} onclick={() => flow = 'income'}>Income</button>
+        </div>
+      </div>
+      <div class="field" style="flex: 0.6">
+        <label class="field-label" for="exp-currency">Currency</label>
+        <select id="exp-currency" class="field-input field-select" bind:value={currency}>
+          {#each currencyKeys as c}
+            <option value={c}>{c} ({CURRENCIES[c]})</option>
+          {/each}
+        </select>
+      </div>
+    </div>
+
     <div class="field">
-      <label class="field-label" for="exp-merchant">Merchant</label>
-      <input id="exp-merchant" class="field-input" type="text" placeholder="e.g. Starbucks" bind:value={merchant} />
+      <label class="field-label" for="exp-title">Title</label>
+      <input id="exp-title" class="field-input" type="text" placeholder="e.g. Starbucks" bind:value={title} />
     </div>
 
     <div class="field-row">
       <div class="field flex-1">
-        <label class="field-label" for="exp-amount">Amount (Rp)</label>
+        <label class="field-label" for="exp-amount">Amount</label>
         <input id="exp-amount" class="field-input" type="number" placeholder="0" bind:value={amount} />
       </div>
       <div class="field flex-1">
@@ -81,24 +110,47 @@
       </div>
     </div>
 
-    <div class="field">
-      <label class="field-label" for="exp-category">Category</label>
-      <select id="exp-category" class="field-input field-select" bind:value={category}>
-        <option value="" disabled>Select category</option>
-        {#each categories as cat}
-          <option value={cat}>{cat}</option>
-        {/each}
-      </select>
-    </div>
+    {#if flow === 'expense'}
+      <div class="field-row">
+        <div class="field flex-1">
+          <label class="field-label" for="exp-type">Category</label>
+          <select id="exp-type" class="field-input field-select" bind:value={type}>
+            <option value="" disabled>Select type</option>
+            {#each TYPES as t}
+              <option value={t}>{t}</option>
+            {/each}
+          </select>
+        </div>
+        <div class="field flex-1">
+          <label class="field-label" for="exp-payment">Payment</label>
+          <select id="exp-payment" class="field-input field-select" bind:value={paymentMethod}>
+            <option value="" disabled>Select method</option>
+            {#each PAYMENTS as p}
+              <option value={p}>{p}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+    {:else}
+      <div class="field">
+        <label class="field-label" for="exp-source">Source</label>
+        <select id="exp-source" class="field-input field-select" bind:value={source}>
+          <option value="" disabled>Select source</option>
+          {#each INCOME_SOURCES as s}
+            <option value={s}>{s}</option>
+          {/each}
+        </select>
+      </div>
+    {/if}
 
     <div class="field">
       <label class="field-label" for="exp-notes">Notes</label>
-      <textarea id="exp-notes" class="field-input field-textarea" placeholder="Optional" rows="2" bind:value={notes}></textarea>
+      <textarea id="exp-notes" class="field-input field-textarea" placeholder="Optional" rows="2" bind:value={description}></textarea>
     </div>
   </div>
 
   <Button fill large round class="save-btn" onclick={handleSave} disabled={submitting}>
-    {submitting ? 'Saving...' : 'Add Expense'}
+    {submitting ? 'Saving...' : 'Save Entry'}
   </Button>
 </div>
 
@@ -127,10 +179,7 @@
   }
   :global(.dark) .card-title { color: #f0f0f3; }
 
-  .card-actions {
-    display: flex;
-    gap: 8px;
-  }
+  .card-actions { display: flex; gap: 8px; }
   .icon-btn {
     width: 38px; height: 38px;
     border: none; border-radius: 10px;
@@ -186,6 +235,34 @@
     height: auto;
     padding: 12px 14px;
     resize: none;
+  }
+
+  .flow-switch {
+    display: flex;
+    border: 1.5px solid rgba(0, 141, 163, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 44px;
+  }
+  .flow-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7b72;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .flow-btn.active {
+    background: #006c50;
+    color: #fff;
+  }
+  :global(.dark) .flow-btn.active {
+    background: #24e0ab;
+    color: #1a1c1e;
   }
 
   :global(.save-btn) {

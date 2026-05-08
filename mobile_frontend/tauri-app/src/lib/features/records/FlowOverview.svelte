@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import type { Transaction } from './types'
+  import type { Entry } from './types'
 
-  let { transactions }: { transactions: Transaction[] } = $props()
+  let { entries }: { entries: Entry[] } = $props()
 
   let LineChart: any = $state(null)
   let PieChart: any = $state(null)
@@ -25,13 +25,12 @@
       d.setDate(d.getDate() - i)
       const key = d.toISOString().slice(0, 10)
       days[key] = { income: 0, expense: 0 }
-      const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     }
-    for (const t of transactions) {
-      const key = t.date.toISOString().slice(0, 10)
+    for (const e of entries) {
+      const key = e.date.toISOString().slice(0, 10)
       if (days[key]) {
-        if (t.flow === 'income') days[key].income += t.amount
-        else days[key].expense += t.amount
+        if (e.flow === 'income') days[key].income += e.amount
+        else days[key].expense += e.amount
       }
     }
     const incomeData: { x: string; y: number }[] = []
@@ -50,15 +49,14 @@
 
   let donutData = $derived.by(() => {
     const byCat: Record<string, number> = {}
-    for (const t of transactions) {
-      if (t.flow === 'expense') {
-        byCat[t.category] = (byCat[t.category] || 0) + t.amount
+    for (const e of entries) {
+      if (e.flow === 'expense' && e.type) {
+        byCat[e.type] = (byCat[e.type] || 0) + e.amount
       }
     }
-    const colors = ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a', '#3d8a7a', '#c97a6b', '#6b7b72']
+    const colors = ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a']
     return Object.entries(byCat)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 6)
       .map(([id, value], i) => ({ id, value, color: colors[i % colors.length] }))
   })
 
@@ -70,29 +68,29 @@
       const key = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
       months[key] = {}
     }
-    for (const t of transactions) {
-      if (t.flow === 'expense') {
-        const key = t.date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+    for (const e of entries) {
+      if (e.flow === 'expense' && e.type) {
+        const key = e.date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
         if (months[key]) {
-          months[key][t.category] = (months[key][t.category] || 0) + t.amount
+          months[key][e.type] = (months[key][e.type] || 0) + e.amount
         }
       }
     }
-    const categories = [...new Set(transactions.filter(t => t.flow === 'expense').map(t => t.category))]
-    const colors = ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a', '#3d8a7a', '#c97a6b', '#6b7b72']
+    const types = [...new Set(entries.filter(e => e.flow === 'expense' && e.type).map(e => e.type!))]
+    const colors = ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a']
     return Object.entries(months).map(([month, cats]) => {
       const item: Record<string, any> = { month }
-      for (const cat of categories) {
-        item[cat] = cats[cat] || 0
+      for (const t of types) {
+        item[t] = cats[t] || 0
       }
       return item
     })
   })
 
-  let barKeys = $derived([...new Set(transactions.filter(t => t.flow === 'expense').map(t => t.category))])
+  let barKeys = $derived([...new Set(entries.filter(e => e.flow === 'expense' && e.type).map(e => e.type!))])
   let barColors = $derived(
     Object.fromEntries(
-      barKeys.map((k, i) => [k, ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a', '#3d8a7a', '#c97a6b', '#6b7b72'][i % 8]])
+      barKeys.map((k, i) => [k, ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a'][i % 5]])
     )
   )
 
@@ -180,32 +178,9 @@
 {/if}
 
 <style>
-  .charts {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .chart-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .chart-title {
-    font-family: 'Public Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: #1a1c1e;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  :global(.dark) .chart-title {
-    color: #f0f0f3;
-  }
-
-  .chart-box {
-    width: 100%;
-  }
+  .charts { display: flex; flex-direction: column; gap: 24px; }
+  .chart-section { display: flex; flex-direction: column; gap: 8px; }
+  .chart-title { font-family: 'Public Sans', sans-serif; font-size: 11px; font-weight: 600; color: #1a1c1e; text-transform: uppercase; letter-spacing: 0.04em; }
+  :global(.dark) .chart-title { color: #f0f0f3; }
+  .chart-box { width: 100%; }
 </style>

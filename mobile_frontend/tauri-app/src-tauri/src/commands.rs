@@ -96,8 +96,8 @@ pub async fn fetch_secure_data(app: AppHandle, key: String) -> Result<Option<Str
         }
     }
 
-    let data = std::fs::read_to_string(&file_path)
-        .map_err(|e| format!("read secure data failed: {e}"))?;
+    let data =
+        std::fs::read_to_string(&file_path).map_err(|e| format!("read secure data failed: {e}"))?;
 
     Ok(Some(data))
 }

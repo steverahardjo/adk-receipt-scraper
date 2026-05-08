@@ -1,17 +1,18 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
-  import LoginForm from '$features/verification/LoginForm.svelte'
-  import SignupForm from '$features/verification/SignupForm.svelte'
-  import OtpVerify from '$features/verification/OtpVerify.svelte'
+  import { showToast } from '$lib/features/core/toast.svelte'
+  import LoginForm from '$lib/features/verification/LoginForm.svelte'
+  import SignupForm from '$lib/features/verification/SignupForm.svelte'
+  import OtpVerify from '$lib/features/verification/OtpVerify.svelte'
 
   type AuthMode = 'login' | 'signup' | 'otp'
 
   let mode = $state<AuthMode>('login')
   let pendingEmail = $state('')
 
-  function onSignupSuccess(email: string) {
-    pendingEmail = email
-    mode = 'otp'
+  function onSignupSuccess(_email: string) {
+    showToast({ type: 'success', title: 'Account created!', duration: 2500 })
+    mode = 'login'
   }
 
   function onLoginSuccess(email: string) {

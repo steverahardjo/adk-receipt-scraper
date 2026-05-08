@@ -1,6 +1,8 @@
 <script lang="ts">
   import { Button, Link } from 'framework7-svelte'
   import { showToast, dismissToast } from '$lib/features/core/toast.svelte'
+  import PasswordField from '$lib/features/core/PasswordField.svelte'
+  import * as api from '$lib/features/core/api'
 
   let { onSuccess, onNavigateSignup }: { onSuccess?: (email: string) => void; onNavigateSignup?: () => void } = $props()
 
@@ -9,13 +11,17 @@
   let emailError = $state('')
   let passwordError = $state('')
   let submitting = $state(false)
+  let validated = $state(false)
+
+  let emailValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
 
   function validate() {
+    validated = true
     let valid = true
     emailError = ''
     passwordError = ''
     if (!email) { emailError = 'Required'; valid = false }
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailError = 'Invalid email'; valid = false }
+    else if (!emailValid) { emailError = 'Invalid email'; valid = false }
     if (!password) { passwordError = 'Required'; valid = false }
     return valid
   }
@@ -29,13 +35,14 @@
     submitting = true
     showToast({ type: 'loading', title: 'Logging in...' })
     try {
-      await new Promise((r) => setTimeout(r, 1200))
+      await api.login(email, password)
       dismissToast()
       showToast({ type: 'success', title: 'Welcome back!', duration: 2000 })
       onSuccess?.(email)
-    } catch {
+    } catch (e) {
       dismissToast()
-      showToast({ type: 'error', title: 'Login failed', message: 'Check your credentials', duration: 3000 })
+      const msg = e instanceof Error ? e.message : 'Login failed'
+      showToast({ type: 'error', title: 'Login failed', message: msg, duration: 3000 })
     } finally {
       submitting = false
     }
@@ -53,23 +60,18 @@
       <label class="field-label" for="login-email">Email</label>
       <div class="input-wrap">
         <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-        <input id="login-email" class="field-input" type="email" placeholder="your@email.com" bind:value={email} />
+        <input id="login-email" class="field-input" type="email" placeholder="your@email.com" bind:value={email} autocomplete="email" />
       </div>
       {#if emailError}
         <p class="field-error">{emailError}</p>
       {/if}
     </div>
 
-    <div class="field">
-      <label class="field-label" for="login-password">Password</label>
-      <div class="input-wrap">
-        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
-        <input id="login-password" class="field-input" type="password" placeholder="Enter password" bind:value={password} />
-      </div>
-      {#if passwordError}
-        <p class="field-error">{passwordError}</p>
-      {/if}
-    </div>
+    <PasswordField bind:value={password} id="login-password" label="Password" placeholder="Enter password" />
+
+    {#if validated && passwordError}
+      <p class="field-error">{passwordError}</p>
+    {/if}
   </div>
 
   <Button fill large round class="submit-btn" onclick={handleLogin} disabled={submitting}>

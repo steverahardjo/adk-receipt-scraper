@@ -1,24 +1,24 @@
-import type { Transaction } from './types'
+import type { Entry } from './types'
 
-const merchants = [
-  { merchant: 'Starbucks', category: 'Food & Drinks', icon: 'food', flow: 'expense' as const, amount: () => 45000 + Math.round(Math.random() * 15000) },
-  { merchant: 'Pertamina', category: 'Transportation', icon: 'transport', flow: 'expense' as const, amount: () => 200000 + Math.round(Math.random() * 200000) },
-  { merchant: 'Indomaret', category: 'Shopping', icon: 'shopping', flow: 'expense' as const, amount: () => 25000 + Math.round(Math.random() * 50000) },
-  { merchant: 'GoPay Top-Up', category: 'E-Wallet', icon: 'wallet', flow: 'expense' as const, amount: () => 50000 + Math.round(Math.random() * 200000) },
-  { merchant: 'PLN', category: 'Bills', icon: 'bill', flow: 'expense' as const, amount: () => 500000 + Math.round(Math.random() * 1000000) },
-  { merchant: 'GoFood', category: 'Food & Drinks', icon: 'food', flow: 'expense' as const, amount: () => 35000 + Math.round(Math.random() * 65000) },
-  { merchant: 'GrabCar', category: 'Transportation', icon: 'transport', flow: 'expense' as const, amount: () => 25000 + Math.round(Math.random() * 75000) },
-  { merchant: 'Tokopedia', category: 'Shopping', icon: 'shopping', flow: 'expense' as const, amount: () => 100000 + Math.round(Math.random() * 900000) },
-  { merchant: 'Salary', category: 'Income', icon: 'income', flow: 'income' as const, amount: () => 8000000 + Math.round(Math.random() * 2000000) },
-  { merchant: 'Freelance', category: 'Income', icon: 'income', flow: 'income' as const, amount: () => 1000000 + Math.round(Math.random() * 3000000) },
-  { merchant: 'Dividend', category: 'Investment', icon: 'investment', flow: 'income' as const, amount: () => 200000 + Math.round(Math.random() * 500000) },
-  { merchant: 'Alfamart', category: 'Shopping', icon: 'shopping', flow: 'expense' as const, amount: () => 15000 + Math.round(Math.random() * 35000) },
-  { merchant: 'Netflix', category: 'Entertainment', icon: 'entertainment', flow: 'expense' as const, amount: () => 180000 },
-  { merchant: 'Telkomsel', category: 'Bills', icon: 'bill', flow: 'expense' as const, amount: () => 100000 + Math.round(Math.random() * 100000) },
-  { merchant: 'BPJS', category: 'Bills', icon: 'bill', flow: 'expense' as const, amount: () => 150000 },
-  { merchant: 'McDonalds', category: 'Food & Drinks', icon: 'food', flow: 'expense' as const, amount: () => 35000 + Math.round(Math.random() * 45000) },
-  { merchant: 'Shopee', category: 'Shopping', icon: 'shopping', flow: 'expense' as const, amount: () => 50000 + Math.round(Math.random() * 500000) },
+const expenseEntries = [
+  { title: 'Starbucks', type: 'Food' as const, amount: () => 45000 + Math.round(Math.random() * 15000) },
+  { title: 'GoFood', type: 'Food' as const, amount: () => 35000 + Math.round(Math.random() * 65000) },
+  { title: 'McDonalds', type: 'Food' as const, amount: () => 35000 + Math.round(Math.random() * 45000) },
+  { title: 'Pertamina', type: 'Transport' as const, amount: () => 200000 + Math.round(Math.random() * 200000) },
+  { title: 'GrabCar', type: 'Transport' as const, amount: () => 25000 + Math.round(Math.random() * 75000) },
+  { title: 'Indomaret', type: 'Shopping' as const, amount: () => 25000 + Math.round(Math.random() * 50000) },
+  { title: 'Tokopedia', type: 'Shopping' as const, amount: () => 100000 + Math.round(Math.random() * 900000) },
+  { title: 'Alfamart', type: 'Shopping' as const, amount: () => 15000 + Math.round(Math.random() * 35000) },
+  { title: 'Shopee', type: 'Shopping' as const, amount: () => 50000 + Math.round(Math.random() * 500000) },
+  { title: 'PLN', type: 'Bills' as const, amount: () => 500000 + Math.round(Math.random() * 1000000) },
+  { title: 'Telkomsel', type: 'Bills' as const, amount: () => 100000 + Math.round(Math.random() * 100000) },
+  { title: 'BPJS', type: 'Bills' as const, amount: () => 150000 },
+  { title: 'Netflix', type: 'Other' as const, amount: () => 180000 },
+  { title: 'GoPay Top-Up', type: 'Other' as const, amount: () => 50000 + Math.round(Math.random() * 200000) },
 ]
+
+const payments = ['Cash', 'Card', 'Transfer', 'E-Wallet'] as const
+const incomeSources = ['Salary', 'Freelance', 'Gift', 'Other'] as const
 
 function randomDate(daysBack: number): Date {
   const d = new Date()
@@ -27,19 +27,44 @@ function randomDate(daysBack: number): Date {
   return d
 }
 
-export function generateTransactions(count = 200): Transaction[] {
-  const result: Transaction[] = []
+const receipts = [
+  'https://placehold.co/400x600/png?text=Receipt+1',
+  'https://placehold.co/400x600/png?text=Receipt+2',
+  'https://placehold.co/400x600/png?text=Receipt+3',
+]
+
+export function generateEntries(count = 200): Entry[] {
+  const result: Entry[] = []
   for (let i = 0; i < count; i++) {
-    const m = merchants[Math.floor(Math.random() * merchants.length)]
-    result.push({
-      id: `tx-${i}`,
-      amount: m.amount(),
-      merchant: m.merchant,
-      category: m.category,
-      categoryIcon: m.icon,
-      flow: m.flow,
-      date: randomDate(60),
-    })
+    const isIncome = Math.random() < 0.15
+    if (isIncome) {
+      const source = incomeSources[Math.floor(Math.random() * incomeSources.length)]
+      result.push({
+        id: `tx-${i}`,
+        title: source === 'Salary' ? 'Monthly Salary' : source === 'Freelance' ? 'Freelance Project' : source === 'Gift' ? 'Birthday Gift' : 'Other Income',
+        amount: source === 'Salary' ? 8000000 + Math.round(Math.random() * 2000000) : source === 'Freelance' ? 1000000 + Math.round(Math.random() * 3000000) : 200000 + Math.round(Math.random() * 500000),
+        currency: 'IDR',
+        date: randomDate(60),
+        flow: 'income',
+        source,
+        description: '',
+      })
+    } else {
+      const e = expenseEntries[Math.floor(Math.random() * expenseEntries.length)]
+      const hasReceipt = Math.random() < 0.2
+      result.push({
+        id: `tx-${i}`,
+        title: e.title,
+        amount: e.amount(),
+        currency: 'IDR',
+        date: randomDate(60),
+        flow: 'expense',
+        type: e.type,
+        paymentMethod: payments[Math.floor(Math.random() * payments.length)],
+        description: '',
+        documentLink: hasReceipt ? receipts[Math.floor(Math.random() * receipts.length)] : undefined,
+      })
+    }
   }
   result.sort((a, b) => b.date.getTime() - a.date.getTime())
   return result

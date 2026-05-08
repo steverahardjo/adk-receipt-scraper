@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { Transaction, Period } from './types'
+  import type { Entry, Period } from './types'
   import { groupByDate } from './types'
   import RecordRow from './RecordRow.svelte'
 
-  let { allTransactions, period, onSelect }: { allTransactions: Transaction[]; period: Period; onSelect?: (t: Transaction) => void } = $props()
+  let { allTransactions, period, onSelect }: { allTransactions: Entry[]; period: Period; onSelect?: (e: Entry) => void } = $props()
 
   const PAGE_SIZE = 20
   let loaded = $state(PAGE_SIZE)
@@ -19,8 +19,8 @@
       'all': 9999,
     }
     const cutoff = cutoffs[period]
-    return allTransactions.filter((t) => {
-      const diff = (now.getTime() - t.date.getTime()) / (1000 * 60 * 60 * 24)
+    return allTransactions.filter((e) => {
+      const diff = (now.getTime() - e.date.getTime()) / (1000 * 60 * 60 * 24)
       return diff <= cutoff
     })
   })
@@ -53,8 +53,8 @@
     {#each grouped as section}
       <div class="section">
         <span class="section-label">{section.label}</span>
-        {#each section.items as tx (tx.id)}
-          <RecordRow {tx} onSelect={(t) => onSelect?.(t)} />
+        {#each section.items as e (e.id)}
+          <RecordRow tx={e} onSelect={(t) => onSelect?.(t)} />
         {/each}
       </div>
     {/each}
