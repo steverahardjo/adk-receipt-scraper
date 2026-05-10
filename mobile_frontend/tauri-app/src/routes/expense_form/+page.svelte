@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/stores'
   import BaseLayer from '$lib/BaseLayer.svelte'
   import ExpenseFormCard from '$lib/features/expense/ExpenseFormCard.svelte'
   import ContextPicker from '$lib/features/core/ContextPicker.svelte'
@@ -7,6 +8,9 @@
   let contextOpen = $state(false)
   let contextTitle = $state('')
   let contextMessage = $state('')
+
+  let scanTitle = $derived($page.url.searchParams.get('merchant') ?? '')
+  let scanAmount = $derived($page.url.searchParams.get('amount') ?? '')
 
   function openContext(title: string, message: string) {
     contextTitle = title
@@ -18,7 +22,7 @@
 <BaseLayer title="Add Expense">
   <div class="page">
     <div use:longpress={{ duration: 500, onLongPress: () => openContext('Add Expense', 'Expense form for recording new transactions. Fill in merchant, amount, date, category, and notes. You can also scan QR codes or use the camera for instant capture.') }}>
-      <ExpenseFormCard />
+      <ExpenseFormCard {scanTitle} {scanAmount} />
     </div>
   </div>
 </BaseLayer>

@@ -3,8 +3,10 @@
   import { showToast, dismissToast } from '$lib/features/core/toast.svelte'
   import { TYPES, PAYMENTS, INCOME_SOURCES, CURRENCIES } from '$lib/features/records/types'
 
-  let title = $state('')
-  let amount = $state('')
+  let { scanTitle = '', scanAmount = '' }: { scanTitle?: string; scanAmount?: string } = $props()
+
+  let title = $state(scanTitle)
+  let amount = $state(scanAmount)
   let flow: 'expense' | 'income' = $state('expense')
   let currency: keyof typeof CURRENCIES = $state('IDR')
   let date = $state(new Date().toISOString().slice(0, 10))

@@ -11,11 +11,17 @@ use tauri_plugin_opener;
 use tauri_plugin_biometric;
 
 mod commands;
+mod qris;
 
 use crate::commands::{
     copy_to_clipboard, fetch_secure_data, greet, notify, open_url, pick_file, read_file,
     save_dialog, save_file,
 };
+
+#[tauri::command]
+fn parse_qris(payload: String) -> Result<qris::QrisData, String> {
+    qris::parse_qris(&payload)
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -43,7 +49,8 @@ pub fn run() {
             save_file,
             open_url,
             copy_to_clipboard,
-            fetch_secure_data
+            fetch_secure_data,
+            parse_qris
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

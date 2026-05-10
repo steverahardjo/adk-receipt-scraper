@@ -1,22 +1,21 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import { goto } from '$app/navigation'
   import { Page, Navbar, NavLeft, NavRight, PageContent, Link, Icon, Button } from 'framework7-svelte'
   import Drawer from '$lib/features/core/Drawer.svelte'
   import { theme } from '$lib/features/core/theme.svelte'
-  import { showToast } from '$lib/features/core/toast.svelte'
-
   let {
     title = '',
     noNavbar = false,
     noDrawer = false,
     navbarRight,
+    onScan,
     children,
   }: {
     title?: string
     noNavbar?: boolean
     noDrawer?: boolean
     navbarRight?: import('svelte').Snippet
+    onScan?: () => void
     children?: import('svelte').Snippet
   } = $props()
 
@@ -28,7 +27,7 @@
   }
 
   function handleScan() {
-    showToast({ type: 'success', title: 'QR Scanner', message: 'Point camera at QRIS code', duration: 2000 })
+    onScan?.()
   }
 </script>
 

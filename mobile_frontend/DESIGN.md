@@ -1,17 +1,20 @@
-# Deneb — Lightweight System Design
+# Deneb — Design System & Architecture
 
-> A daily-use personal finance tracker. Lean visuals, fast interactions, mobile-first.
-> Reduce chart overhead. Keep every function. Add QR-scanning for instant message/expense capture.
+> A daily-use personal finance tracker. Tauri 2 desktop/mobile shell, Svelte 5 reactivity, Framework7 9 UI layer.
 
 ---
 
-### Framework7 + SvelteKit Stack
-- **Framework7 Svelte** provides native-feeling UI components (`f7-page`, `f7-navbar`, `f7-panel`, `f7-list`, `f7-toolbar`, etc.) with built-in iOS/Material themes.
-- **SvelteKit** handles file-based routing, SSR/SSG, and API routes.
-- **Right-side panel** with `cover` effect and `swipe` gesture.
-- Opened via navbar hamburger icon (`f7:menu`) or swipe right-to-left.
-- Auto-closes on link tap (`panel-close` attribute).
-- Persistent across all routes — defined once in `+layout.svelte` inside `<App>`.
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Shell** | Tauri 2 (Rust backend, webview frontend) |
+| **Framework** | SvelteKit 2 (SPA mode, `adapter-static`) |
+| **Reactivity** | Svelte 5 runes (`$state`, `$derived`, `$effect`, `$props`) |
+| **UI Library** | Framework7 9 (iOS theme, components via `framework7-svelte`) |
+| **Charts** | Nivo (lazy-loaded, collapsible by default) |
+| **Bundler** | Vite 6 |
+| **Icons** | Framework7 icons (`f7:` prefixed) + inline SVGs |
 
 ---
 
@@ -20,383 +23,341 @@
 | Principle | Meaning |
 |---|---|
 | **Daily Check-In** | 30-second glance shows net worth, recent spend, upcoming bills. No analysis paralysis. |
-| **Lightweight Visuals** | Replace full nivo charts with inline sparklines, compact stat bars, collapsible panels. One chart at a time, not a dashboard full. |
-| **Zero-Input Capture** | QR scanner + OCR camera = expense entry without typing. Scan a QRIS code → auto-fill merchant & amount. |
-| **Mobile Pocketable** | Every layout works on a phone screen. No horizontal scroll. Thumbs reach all actions. |
+| **Lightweight Visuals** | Collapsible sections, lazy-loaded charts. One chart at a time, not a dashboard full. |
+| **Zero-Input Capture** | Camera + future QR scanner for expense entry without typing. |
+| **Zero-Input Capture** | QRIS/TNG scanner via camera + Rust TLV parser → auto-fills expense form. No typing needed. |
+| **Mobile Pocketable** | Every layout works on a phone screen. Thumbs reach all actions. Safe-area-aware. |
 
 ---
 
-## 2. Architecture Overview
+## 2. Architecture
 
 ```
-┌─ SvelteKit (Svelte 5 + Vite 6) ──────────────────────────┐
-│                                                            │
-│  Routes (file-based)       Layout              Features    │
-│  ────────────────          ──────              ────────   │
-│  /                         +layout.svelte      dashboard/* │
-│  /records                  (f7-page shell)     records/*   │
-│  /recurring                                    recurring/* │
-│  /chat                                          chat/*     │
-│  /expense-form                                 form/*      │
-│  /login | /signup                              auth/*      │
-│                                                            │
-│  UI: Framework7 Svelte (iOS/Material theme)               │
-│  Data: TanStack Query (server) + Svelte forms (client)    │
-│  Charts: Nivo (on-demand, lazy loaded)                    │
-│  Auth: better-auth (email/password + OTP)                 │
-│  Camera: getUserMedia via <video> capture                 │
-└────────────────────────────────────────────────────────────┘
+┌─ SvelteKit 2 (SPA) ──────────────────────────────────┐
+│                                                        │
+│  Routes (file-based)                                   │
+│  ──────────────────                                    │
+│  /                  Dashboard                          │
+│  /records           Transaction ledger                  │
+│  /expense_form      Expense entry                      │
+│  /chatbot           AI assistant (placeholder)          │
+│  /notifications     Notification feed                  │
+│  /lock              Biometric + passcode lock screen    │
+│  /verification      Auth flow (login / signup / OTP)   │
+│                                                        │
+│  UI:   Framework7 9 Svelte (iOS theme)                 │
+│  Nav:  Custom bottom-sheet Drawer + Float bar          │
+│  State: Svelte 5 runes (module-level singletons)       │
+│  Charts: Nivo (on-demand, lazy imported)               │
+│  Auth: Custom login/signup/OTP flow                    │
+│        (no external auth library)                      │
+│  Scanner: jsQR (browser decode) + Rust qris.rs         │
+│           (EMVCo TLV + TNG deeplink parser)            │
+│           → auto-fill expense form                     │
+│                                                        │
+├─ Tauri 2 ────────────────────────────────────────────┤
+│  Plugins: biometric, clipboard-manager, deep-link,     │
+│           geolocation, http, opener, store,            │
+│           notification, fs, dialog                     │
+└────────────────────────────────────────────────────────┘
 ```
 
 ### Component Layers
 
 ```
-Layout Layer    ─►  +layout.svelte (f7-app > f7-view > f7-panel + f7-page shell)
-   │
-Page Layer      ─►  +page.svelte for each route
-   │
-Feature Layer   ─►  src/lib/features/dashboard/ | records/ | recurring/ | chat/ | form/ | notifications/
-   │
-UI Layer        ─►  Framework7 Svelte components (f7-*) + lib/components/*
++layout.svelte         ─►  Toast overlay + DenebApp (f7 App wrapper)
+    │
+DenebApp.svelte        ─►  f7 <App theme="ios"> shell
+    │
+BaseLayer.svelte       ─►  f7 <Page> + Drawer + Navbar + Toolbar + FAB
+    │
+├── Drawer.svelte      ─►  Bottom-sheet nav (Dashboard, Notifications, Records, Chat, Theme toggle)
+├── Navbar             ─►  Title + hamburger → opens Drawer
+├── f7-page-content    ─►  {@render children()} (route content)
+├── Toolbar            ─►  Tab bar: Home / Chat / Add / Records
+└── FAB (optional)     ─►  Floating action button (dashboard, expense form)
 ```
 
 ---
 
-## 3. Core Features & Lightweight Strategy
+## 3. Route Map
 
-### 3.1 Dashboard (+page.svelte) → "Daily Snapshot"
-
-**Current (heavy):** 7 nivo charts in a bento grid — line, pie ×3, bar, donut, stacked bars.
-
-**Lightweight (proposed):**
-
-| Widget | Replacement | Rationale |
-|---|---|---|
-| NetWorthLineChart | Inline sparkline + delta badge | Trend at a glance; full chart only on click |
-| AccountCards donut | Compact account list with mini bar | "Where's my money" in 2 lines |
-| AssetBreakdown | Collapsed by default, expand on tap | Rarely changes day-to-day |
-| CashFlowChart | Stat row (Income / Expense / Net) | Numbers are faster to read than bars |
-| InvestmentPie | Accordion list, no donut | Holdings list is more actionable |
-| ExpensePie | Top-3 categories list + "see all" link | No chart needed for 3 items |
-| NewsSummary | Keep as-is (text + links) | Lightweight by nature |
-
-**Layout (mobile-first):**
-```
-┌─ Snap strip ────────────────────────────────────┐
-│  Net Worth: Rp 187.5M  ▲12%  |  ━━ sparkline ━  │
-│  Cash: Rp 11.5M  |  Invest: Rp 157M             │
-│  Income Rp 8.5M  |  Spend Rp 3.3M  |  Net +5.2M │
-│  ─────────────────────────────────────────────  │
-│  Top Spend: 🥇 Food 35%  🥈 Transport 20%  🥉 Bills 18% │
-├────────────────────────────────────────────────┤
-│  Accounts:  BCA 5.2M  Mandiri 3.1M  Cash 1.8M  │
-│            GoPay 850K  DANA 500K  CC -12.5M     │
-│                                            ↑ tap → │
-├────────────────────────────────────────────────┤
-│  ▽ Asset Breakdown (tap to expand)              │
-│  Liquid ████████████████████ 8%                 │
-│  Stocks ██████████████████████████████████ 45%  │
-│  ...                                           │
-├────────────────────────────────────────────────┤
-│  ▽ Investment Holdings (tap to expand)          │
-│  BBCA 200s  @Rp9,500  +Rp1.5M                  │
-│  BBRI 500s  @Rp5,100  +Rp450K                  │
-│  ...                                           │
-└────────────────────────────────────────────────┘
-```
-
-**Key principle:** Everything collapsed by default. Tap to drill in. No chart loads until opened.
-
-### 3.2 Transaction Records (/records)
-
-Keep as-is — the virtualized table, SummaryBar, and FlowChart (sankey) are already functional and not visual-heavy. The sankey chart can be collapsed by default.
-
-### 3.3 Daily Needs / Recurring (/recurring)
-
-Keep as-is — calendar + card list. Lightweight by design.
-
-### 3.4 AI Chat Assistant (/chat)
-
-Keep as-is — chat UI with preset message forwarding from dashboard news items. Add QR scanner output as new message source (see §5).
-
-### 3.5 Expense Form (/expense-form)
-
-Keep existing OCR camera flow. Add QR IS code parsing as an alternative input method (see §5).
+| Path | Page | Shell | Components |
+|------|------|-------|-----------|
+| `/` | Dashboard | `BaseLayer fab` | WelcomeCard, CashFlowStrip, AccountCards, NewsFeed |
+| `/records` | Records | `BaseLayer noToolbar` | SummaryBar, PeriodFilter, RecordList, RecordDetail, FlowOverview |
+| `/expense_form` | Expense Form | `BaseLayer fab` | ExpenseFormCard |
+| `/chatbot` | Chat | `BaseLayer` | Placeholder |
+| `/notifications` | Notifications | `BaseLayer` | NotificationFeed |
+| `/lock` | Lock Screen | `BaseLayer noToolbar` | Fingerprint, Passcode |
+| `/verification` | Auth | standalone | LoginForm, SignupForm, OtpVerify |
 
 ---
 
-### 7.1 Navigation: Right-Side Drawer (Panel)
+## 4. Navigation
 
-Navigation uses **Framework7's f7-panel component** as a right-side drawer triggered from the navbar:
+### Bottom Toolbar (visible on most pages)
 
-```svelte
-<!-- +layout.svelte -->
-<f7-panel right cover swipe>
-  <f7-page>
-    <f7-list>
-      <f7-list-item link="/"           title="Home"        panel-close icon-f7="house" />
-      <f7-list-item link="/records"    title="Records"     panel-close icon-f7="list_bullet" />
-      <f7-list-item link="/chat"       title="Chat"        panel-close icon-f7="chat_bubble_2" />
-      <f7-list-item link="/expense-form" title="Add Expense" panel-close icon-f7="plus_circle" />
-    </f7-list>
-  </f7-page>
-</f7-panel>
+```
+[ Home ]  [ Chat ]  [ Add ]  [ Records ]
+   house     chat      plus      list
+             bubble   circle    bullet
+             _2       _fill
 ```
 
-- `panel-close` on each item closes the drawer on navigation.
-- Swipe gesture (right-to-left) also opens the drawer.
-- Bottom `f7-toolbar` tab bar remains for quick one-tap switching between main sections.
+- Appears in `BaseLayer.svelte` via `<Toolbar tabbar labels bottom>`.
+- Hidden when `noToolbar` prop is set (records, lock screen).
+- Dashboard & expense form also show a FAB (hamburger) that opens the Drawer.
+
+### Drawer (bottom sheet)
+
+Custom `Drawer.svelte` component — NOT Framework7's built-in panel. Bottom-sheet style with backdrop overlay, spring animation, expandable groups:
+
+- **Dashboard** (`/`)
+- **Notifications** (`/notifications`)
+- **Records** (expandable: View Records, Add Record)
+- **Chat** (`/chatbot`)
+- **Theme toggle** (Light/Dark mode) at the bottom
+
+Opened via hamburger icon in navbar or FAB button. Closes on backdrop tap or item selection.
 
 ---
 
-## 4. Data Flow
+## 5. Routes
+
+### 5.1 Dashboard `/`
 
 ```
-MockData (dev)          Real API (prod)
-    │                        │
-    ▼                        ▼
-  [SvelteKit load] ──► Component data
-                              │
-                              ▼
-                     TanStack Query cache
-                              │
-               ┌──────────────┼──────────────┐
-               ▼              ▼              ▼
-           Dashboard      Records       Chat/Form
+┌─ Notif bell ─ Date chip ─────────────────┐
+│                                          │
+│  WelcomeCard                             │
+│  ┌────────────────────────────────────┐  │
+│  │ Good morning 👋                    │  │
+│  │ Net Worth: Rp 187.5M               │  │
+│  │ Assets Rp 201.7M · Liab Rp 14.2M  │  │
+│  │ Income Rp 8.5M · Spent Rp 3.3M    │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  CashFlowStrip                           │
+│  ┌────────────────────────────────────┐  │
+│  │ Income 8.5M ████████               │  │
+│  │ Expense 3.3M ███                   │  │
+│  │ Net    +5.2M █████                 │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  AccountCards                            │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌───┐ │
+│  │ BCA │ │Mand │ │Cash │ │GoPay│ │DANA│ │
+│  │5.2M │ │3.1M │ │1.8M │ │850K │ │500K│ │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └───┘ │
+│                                          │
+│  NewsFeed (dismissable items)            │
+│  ┌────────────────────────────────────┐  │
+│  │ 📰 Market Update  → dismiss       │  │
+│  │ 📰 12.12 Sale     → dismiss       │  │
+│  └────────────────────────────────────┘  │
+└──────────────────────────────────────────┘
 ```
 
-- **Dev mode:** All data comes from `$lib/mockdata.ts` generators (seeded faker + deterministic ranges). No backend needed.
-- **Prod mode:** SvelteKit `load` functions in `+page.server.ts` / `+layout.server.ts` fetch from API. Components receive same shapes.
-- **Mutating actions:** SvelteKit form actions (`+page.server.ts` actions) + TanStack Query `useMutation` for chat.
+### 5.2 Records `/records`
+
+- SummaryBar (Income / Expense / Net with proportional bar)
+- Collapsible "Flow Overview" — lazy-loaded Nivo charts (line trend, pie categories, bar monthly)
+- Search bar (by merchant or category)
+- Period filter chips: 1W / 1M / 3M / 1Y / All
+- Virtualized transaction list grouped by date (Today / Yesterday / This Week / This Month / Earlier)
+- Infinite scroll via IntersectionObserver
+- Tap row → bottom-sheet RecordDetail
+
+### 5.3 Expense Form `/expense_form`
+
+- Full form: title, amount, date, currency, expense/income toggle, category/payment/source dropdowns, notes
+- Camera button for OCR capture (placeholder)
+- Accepts pre-filled `?merchant=X&amount=Y` from QRIS scanner
+
+### 5.4 Chat `/chatbot`
+
+- Placeholder: "AI Assistant coming soon."
+
+### 5.5 Notifications `/notifications`
+
+- List of mock notifications with type icons (security, payment, investment, alert)
+- Unread indicator styling
+
+### 5.6 Lock Screen `/lock`
+
+- Brand logo + "Deneb" title
+- Fingerprint scan button (pulse glow animation)
+- Divider + 6-digit numeric passcode keypad
+- Hardcoded unlock code: `111111`
+- On success → navigate to `/`
+
+### 5.7 Auth `/verification`
+
+- Three-mode flow: Login ↔ Signup ↔ OTP Verify
+- Login: email + password, Google OAuth button, link to signup
+- Signup: full name, email, password (with strength rules), OTP code send/verify
+- OTP: 6 single-digit inputs with auto-advance, paste support, resend timer
+- Uses `Svelte 5` {#key} + fade transition for mode switching
 
 ---
 
-## 5. QR Code Scanner (New Feature)
+## 6. State Management
 
-### 5.1 Purpose
+Svelte 5 runes throughout — no external state library.
 
-Scan QR codes in two contexts:
-1. **QRIS payment codes** (Indonesia standard) — decode merchant name + amount → auto-fill expense form
-2. **Message QR codes** — encode a pre-written chat prompt → send directly to AI assistant
+| Pattern | Usage |
+|---------|-------|
+| `$state()` | Local component state, reactive singletons |
+| `$derived()` | Computed values (filtered/search results) |
+| `$derived.by()` | Multi-step computations (grouped transactions) |
+| `$effect()` | Side effects (IntersectionObserver, animations, localStorage) |
+| `$props()` / `$bindable()` | Component inputs / two-way bindings |
 
-### 5.2 User Flow
+### Module-level singletons
 
-**Flow A — Scan to Expense:**
-```
-1. User taps QR icon on /expense-form or / (header)
-2. Camera opens (mobile: native camera; desktop: browser <video>)
-3. QR detected → decode → extract { merchant, amount, ref }
-4. Auto-fill expense form merchant + amount fields
-5. User adds category, taps Save
-```
+- **`theme.svelte.ts`** — `createTheme()` factory → `export const theme`. Persists to `localStorage`, respects `prefers-color-scheme`.
+- **`toast.svelte.ts`** — Module-level `$state` for toast state. Exports `showToast()`, `dismissToast()`, `getToastState()`.
+- **`useSignup.svelte.ts`** — Reactive signup state machine (name, email, password, OTP, validation).
 
-**Flow B — Scan to Chat:**
-```
-1. User taps QR icon on /chat or / (header)
-2. Camera opens
-3. QR detected → decode → extract message string
-4. Auto-fill chat input or directly submit to AI
-5. AI responds with contextual answer
-```
+### Data flow
 
-### 5.3 Technical Implementation
-
-```svelte
-<!-- src/lib/features/scanner/types.ts -->
-type ScannableCode = {
-  type: 'qris' | 'message'
-  raw: string
-  merchant?: string
-  amount?: number
-  reference?: string
-  message?: string
-}
-
-<!-- src/lib/features/scanner/ScannerModal.svelte -->
-<!--
-  - Uses getUserMedia for camera access
-  - Renders <f7-panel> or <f7-popup> with <video> overlay
-  - Reads frames via canvas 2D context
-  - Decodes with jsQR or native BarcodeDetector
-  - On decode: closes modal, dispatches to form or chat
--->
-```
-
-### 5.4 Dependencies
-
-- `jsQR` (lightweight, no WASM) for QR decoding, OR
-- Native `BarcodeDetector` API (Chromium-based browsers) with `jsQR` fallback
-
-### 5.5 UI Placement
-
-```
-f7-navbar (in +layout.svelte):
-┌──────────────────────────────────────────────┐
-│  ☰                    ● Notification Bell  │
-│              [📷 Scan QR]                    │
-└──────────────────────────────────────────────┘
-
-Scan QR button visible on all pages via f7-navbar.
-On mobile: f7-toolbar bottom tab bar + QR FAB in center.
-```
+Currently all mock data (inline or generated from `mockdata.ts`). No API integration yet.
 
 ---
 
-## 6. Route Map
+## 7. Design Tokens
 
-| Path | SvelteKit File | Page | Components | Lightweight status |
-|---|---|---|---|---|---|
-| `/` | `+page.svelte` | Dashboard | DailySnapshot, AccountList, CollapsibleAssetBreakdown, CollapsibleInvestments | Charts collapsed by default |
-| `/records` | `records/+page.svelte` | Ledger | SummaryBar, VirtualTable, CollapsibleFlowChart | Already lean |
-| `/recurring` | `recurring/+page.svelte` | Daily Needs | SummaryBar, Calendar, RecurringCards | Already lean |
-| `/chat` | `chat/+page.svelte` | AI Assistant | ChatBar, ChatBubbles, FilePreview, CamInput | Already lean |
-| `/expense-form` | `expense-form/+page.svelte` | Expense Entry | ExpenseFormCard, OCRCamera, QRScanner | Add QR scanner |
-| `/login` | `login/+page.svelte` | Login | LoginCard | Auth only |
-| `/signup` | `signup/+page.svelte` | Sign Up | SignUpCard | Auth only |
+### Color Palette
 
----
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| `--f7-theme-color` | `#006c50` | `#24e0ab` | Primary (dark green / bright green) |
+| `--f7-theme-color-shade` | `#00513b` | `#1bc49a` | Primary pressed |
+| `--f7-theme-color-tint` | `#008a65` | `#3cf0bc` | Primary hover |
+| `--f7-secondary-color` | `#008da3` | `#6ed4ec` | Secondary (teal) |
+| `--f7-page-bg-color` | `#f9f9fc` | `#1a1c1e` | Page background |
+| `--f7-page-text-color` | `#1a1c1e` | `#f0f0f3` | Body text |
+| `--f7-card-bg-color` | `#ffffff` | `#2f3133` | Card surface |
+| `--f7-button-bg-color` | `#2ee5af` | `#24e0ab` | Primary button fill |
+| `--f7-input-bg-color` | `#f0f9f8` | `#2f3133` | Input background |
+| `--f7-tabbar-link-color` | `#6b7b72` | `#6b7b72` | Inactive tab |
+| `--f7-tabbar-link-active-color` | `#006c50` | `#24e0ab` | Active tab |
 
-## 7. Component Tree (Condensed)
+### Semantic colors
 
-```
-f7-app (theme: iOS | MD)
-└── f7-view
-    ├── f7-panel (right cover swipe) ← drawer
-    │   └── f7-page > f7-list
-    │       ├── f7-list-item (Home,     link="/")
-    │       ├── f7-list-item (Records,  link="/records")
-    │       ├── f7-list-item (Chat,     link="/chat")
-    │       └── f7-list-item (Add Expense, link="/expense-form")
-    ├── f7-page (per-route, from +layout.svelte)
-    │   ├── f7-navbar
-    │   │   └── f7-nav-right → f7-link (panel-open="right", icon: menu)
-    │   └── f7-page-content
-    │       └── {@render children()} <!-- Svelte 5 snippet slot -->
-    └── f7-toolbar (bottom tab bar)
-        ├── f7-link (Home,     icon: house,           route: "/")
-        ├── f7-link (Records,  icon: list_bullet,     route: "/records")
-        ├── f7-link (Scan QR,  icon: camera_viewfinder, route: "/scan")
-        ├── f7-link (Chat,     icon: chat_bubble_2,   route: "/chat")
-        └── f7-link (Add,      icon: plus_circle,     route: "/expense-form")
-```
+| Context | Light | Dark |
+|---------|-------|------|
+| Positive/income | `#006c50` | `#24e0ab` |
+| Negative/expense | `#ba1a1a` | `#ffb4ab` |
+| Toast success | `#2ee5af` | `#24e0ab` |
+| Toast error | `#ba1a1a` | `#ffb4ab` |
+| Muted label | `#6b7b72` | `#6b7b72` |
 
-### Layout Component (+layout.svelte)
+### Typography
 
-```svelte
-<f7-app theme="auto">
-  <f7-panel right cover swipe>
-    <f7-page>
-      <f7-list>
-        <f7-list-item link="/" title="Home" panel-close />
-        <f7-list-item link="/records" title="Records" panel-close />
-        <f7-list-item link="/chat" title="Chat" panel-close />
-        <f7-list-item link="/expense-form" title="Add Expense" panel-close />
-      </f7-list>
-    </f7-page>
-  </f7-panel>
+| Font | Weight | Usage |
+|------|--------|-------|
+| **Manrope** | 400, 500, 600, 700 | Headings, values, body text |
+| **Public Sans** | 500, 600 | Labels, subtitles, metadata |
 
-  <f7-view main>
-    <f7-page>
-      <f7-navbar>
-        <f7-nav-right>
-          <f7-link panel-open="right" icon-f7="menu" />
-        </f7-nav-right>
-      </f7-navbar>
-      <f7-page-content>
-        {@render children()}
-      </f7-page-content>
-    </f7-page>
-  </f7-view>
+Sizes:
+- `--f7-headline-xl`: 40px/48px, weight 700, letter-spacing -0.02em
+- `--f7-headline-lg`: 32px/40px, weight 700, letter-spacing -0.01em
+- `--f7-headline-md`: 24px/32px, weight 600
 
-  <f7-toolbar bottom>
-    <f7-link route="/" icon-f7="house" />
-    <f7-link route="/records" icon-f7="list_bullet" />
-    <f7-link route="/scan" icon-f7="camera_viewfinder" />
-    <f7-link route="/chat" icon-f7="chat_bubble_2" />
-    <f7-link route="/expense-form" icon-f7="plus_circle" />
-  </f7-toolbar>
-</f7-app>
-```
-
-### Dashboard (+page.svelte) Component Tree
-
-```svelte
-<f7-page>
-  <f7-navbar title="Dashboard" />
-  <f7-page-content>
-    <DailySnapshot>
-      <NetWorthSparkline />       <!-- compact line, click → f7-popup with full chart -->
-      <CashStatsRow />            <!-- Income | Expense | Net -->
-      <TopSpendRow />             <!-- top 3 categories with mini bar -->
-    </DailySnapshot>
-    <AccountList />               <!-- compact horizontal scroll pills -->
-    <CollapsibleAssetBreakdown /> <!-- f7-accordion, collapsed by default -->
-    <CollapsibleInvestments />    <!-- f7-accordion, holdings list -->
-  </f7-page-content>
-</f7-page>
-```
-
-Changes from current:
-- Remove AccountCards (nivo pie) → AccountList (text pills)
-- Remove NetWorthLineChart standalone → CompactSparkline (small, in DailySnapshot)
-- Remove CashFlowChart → CashStatsRow (text only)
-- Remove ExpensePie → Top-3 spend categories (text + inline bar)
-- Remove InvestmentPie → CollapsibleInvestments (accordion list only)
-- Keep AssetBreakdown but collapsed by default
-- Keep NewsSummary as-is
-- Keep CashFlowStrip → merged into CashStatsRow
-
----
-
-## 8. Colors & Typography (Framework7 Theme)
-
-Lightweight also means no visual bloat — maintain the warm palette but reduce decorative elements. Framework7 CSS variables drive theming.
+### Card styling
 
 ```css
-/* Framework7 theme overrides */
-:root {
-  /* Core tokens (existing, unchanged) */
-  --f7-color-amber: #c4904a;
-  --f7-color-ochre: #c97a6b;
-  --f7-color-sage: #5baa8a;
-  --f7-color-teal: #3d8a7a;
-  --f7-color-sky: #1479d0;
-  --f7-color-navy: #004e8c;
+border-radius: 16px;
+box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06), 0 1px 4px rgba(0, 141, 163, 0.04);
+border: 1px solid rgba(0, 141, 163, 0.08);
+```
 
-  /* Surface */
-  --f7-page-bg-color: #faf8f5;
-  --f7-card-bg-color: #ffffff;
-  --f7-list-item-border-color: #e8e4df;
-  --f7-navbar-bg-color: #ffffff;
+All design tokens defined in `src/lib/app.css` as CSS custom properties on `:root` / `.dark`.
 
-  /* Typography */
-  --f7-font-family: system-ui, -apple-system, sans-serif;
-  /* No serif. No custom font files. System stack = zero load cost. */
-}
+---
+
+## 8. Component Tree
+
+```
+f7-app (theme: ios)
+└── Toast (global overlay, z-index 20000)
+└── f7-view
+    └── f7-page
+        ├── Drawer (bottom-sheet, z-index 13001)
+        │   ├── Dashboard        ─► /
+        │   ├── Notifications    ─► /notifications
+        │   ├── Records (group)
+        │   │   ├── View Records ─► /records
+        │   │   └── Add Record   ─► /expense_form
+        │   ├── Chat             ─► /chatbot
+        │   └── Theme toggle
+        ├── f7-navbar (optional, hidden if fab/noNavbar)
+        │   └── f7-nav-right → Link (hamburger, opens Drawer)
+        ├── f7-page-content
+        │   └── {@render children()} ← route content
+        ├── f7-toolbar bottom (optional, 4 tabs)
+        │   ├── Home    (house icon,      route: /)
+        │   ├── Chat    (chat_bubble_2,   route: /chatbot)
+        │   ├── Add     (plus_circle_fill, route: /expense_form)
+        │   └── Records (list_bullet,     route: /records)
+        └── FAB (optional, right-floating hamburger)
 ```
 
 ---
 
-## 9. Performance Targets
+## 9. Key Files
+
+| Purpose | Path |
+|---------|------|
+| Design tokens & theme | `src/lib/app.css` |
+| Theme state | `src/lib/features/core/theme.svelte.ts` |
+| Toast state | `src/lib/features/core/toast.svelte.ts` |
+| Toast UI | `src/lib/features/core/Toast.svelte` |
+| F7 App wrapper | `src/lib/DenebApp.svelte` |
+| Page shell | `src/lib/BaseLayer.svelte` |
+| Drawer nav | `src/lib/features/core/Drawer.svelte` |
+| Nav config | `src/lib/features/core/types.ts` |
+| F7 init | `src/lib/f7.ts` |
+| Root layout | `src/routes/+layout.svelte` |
+| Dashboard | `src/routes/+page.svelte` |
+| Records | `src/routes/records/+page.svelte` |
+| Expense form | `src/routes/expense_form/+page.svelte` |
+| Chat | `src/routes/chatbot/+page.svelte` |
+| Notifications | `src/routes/notifications/+page.svelte` |
+| Lock screen | `src/routes/lock/+page.svelte` |
+| Auth | `src/routes/verification/+page.svelte` |
+| Dashboard components | `src/lib/features/dashboard/` |
+| Records components | `src/lib/features/records/` |
+| Expense form components | `src/lib/features/expense/` |
+| Auth components | `src/features/verification/` |
+
+---
+
+## 10. Performance Targets
 
 | Metric | Target |
-|---|---|
+|--------|--------|
 | First paint (empty cache) | < 1.5s |
 | Dashboard interactive | < 2s |
 | Chart load (on demand) | < 300ms |
-| QR scan decode | < 500ms |
 | JS bundle (initial) | < 100KB gzipped |
 | Chart libraries (lazy) | Loaded only on expand |
 
+**Note:** Google Fonts (`Manrope` + `Public Sans`) are self-hosted as woff2 in `static/fonts/` and loaded via `@font-face` rules in `app.css`.
+
 ---
 
-## 10. Future Roadmap
+## 11. Future Roadmap
 
-| Phase | Feature | Depends on |
-|---|---|---|
-| P0 | QR scanner (message + expense) | jsQR or BarcodeDetector |
-| P0 | Collapsible dashboard sections | Current dashboard refactor |
-| P1 | Budget progress bar in DailySnapshot | Budget type + calc |
-| P1 | Export to CSV/PDF | records table data |
-| P2 | Push notifications for bill due-dates | Service worker + permission |
-| P2 | Multi-currency / auto-exchange | Exchange rate API |
+| Phase | Feature | Notes |
+|-------|---------|-------|
+| P0 | AI Chat assistant | Replace placeholder |
+| P0 | Real API integration | Replace mock data |
+| P1 | Budget progress | Budget types + calc |
+| P1 | Export CSV/PDF | From records |
+| P1 | Push notifications | Service worker + Tauri notification plugin |
+| P1 | Multi-currency | Exchange rate API |
+| P1 | TNG deeplink handling via tauri-plugin-deep-link | External app opens |
+| P2 | Biometric unlock on desktop | Tauri biometric plugin |
