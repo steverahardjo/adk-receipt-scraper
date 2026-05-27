@@ -1,54 +1,56 @@
 # Changelog
 
-## 2026-05-27
+## 2026-05-27 — Premium Utilitarian Minimalism Refactor
+
+### Design System Overhaul
+- Complete visual redesign: Premium Utilitarian Minimalism (warm monochrome, editorial typography)
+- Replaced Inter with Geist Sans (body/UI) and Geist Mono (labels/metadata)
+- JetBrains Mono retained for financial data/amounts
+- New color palette: warm bone canvas (#FBFBFA), off-black text (#111111), pastel semantic accents
+  - Positive/Income: #346538 (green)
+  - Negative/Expense: #9F2F2D (red)
+  - Information: #1F6C9F (blue)
+  - Warning: #956400 (yellow)
+- Dark mode: warm charcoal (#18181A) with light text (#ECECEC)
+- Cards: 1px #EAEAEA borders, 8-12px radius, minimal shadow (0 1px 3px rgba(0,0,0,0.03))
+- Buttons: 6px radius, no shadow, active: scale(0.98)
+- Period chips: pill-shaped (9999px radius), dark fill on active
+- Float bar: frosted glass with backdrop-blur, subtle border
+- Drawer: 16px top radius bottom sheet with handle, editorial labels
+- Toast: dark background with icon + message, slideDown animation
+- Loading overlay: glass-morphism backdrop with spinner
+- All components refactored: WelcomeCard, CashFlowStrip, AccountPie, RecentTxList, UpcomingBills, CategoryBreakdown, BudgetModal, SummaryBar, PeriodFilter, RecordList, RecordRow, LoginForm, Drawer, ContextPicker, Toast, LoadingOverlay
+
+### Removed
+- Manrope, Public Sans, Inter fonts — replaced with Geist Sans + Geist Mono + JetBrains Mono
+- Green/teal theme colors — replaced with warm monochrome + pastel semantic accents
+- Rounded buttons and cards — now use tight 6-12px radius
+- Heavy box shadows — replaced with 1px structural borders
+- Backdrop blur on navbar/toolbar — replaced with solid/translucent backgrounds
+
+---
+
+## 2026-05-27 — Previous Changes
 
 ### UI/UX
+- Page titles moved from Navbar into page content
+- Navbar buttons grouped in pill container
+- Loading overlay system (glass-morphism + spinner)
+- Font/color consistency fixes
 
-- **Page titles moved from Navbar into page content.** Titles no longer live in the sticky top bar — they render as `28px` Manrope `<h1>` headlines inside the scrollable content area. Spacing refined to `margin: 8px 0 8px` to stay clear of the navbar without wasted gap.
-- **Fixed title/content spacing across all pages.** Removed redundant `padding-top: 8px` from per-page `.page` wrappers (Records, Chat, Notifications) — the title's own bottom margin now handles the gap cleanly.
-
-- **Navbar buttons grouped in a pill container.** Both the notification bell and theme toggle now sit inside a shared `.navbar-actions` pill with a bordered background. Individual buttons are transparent inside — the container provides the visual grouping. Styles consolidated in `BaseLayer.svelte`, redundant per-page CSS removed from dashboard.
-
-- **Loading overlay system added.** New `LoadingOverlay.svelte` (full-screen glass-morphism blur + accent-green spinner) and `loading-overlay.svelte.ts` (reactive `showLoading(msg?)`/`hideLoading()` API). Mounted at root layout.
-
-- **Font/color consistency fixes.**
-  - Lock screen and verification page headings now use `var(--f7-page-text-color)` instead of hardcoded `#000000` / `#ffffff`.
-  - Lock screen subtitle color changed from `#8e8e93` to design-system label color `#6b7b72`.
-
-### Liquid Money (AccountPie) — Donut Chart
-
-- **Legend replaced with interactive center display.** Tapping a donut arc shows the selected account's balance and name in the center. Tap again to deselect. Keyboard accessible.
-- **Center text properly anchored** via `<g transform="translate(90,90)">` with `dominant-baseline="middle"`.
-- **Color-blind friendly palette** — Okabe-Ito accessibility set:
-
-  | Account  | Color  | Hex       |
-  |----------|--------|-----------|
-  | BCA      | Blue   | `#0072B2` |
-  | Mandiri  | Orange | `#E69F00` |
-  | Cash     | Green  | `#009E73` |
-  | GoPay    | Pink   | `#CC79A7` |
-  | DANA     | Sky    | `#56B4E9` |
+### Liquid Money (AccountPie) Donut Chart
+- Interactive center display replacing legend
+- Color-blind friendly Okabe-Ito palette
 
 ### Notifications Page
-
-- **Card restructured.** Removed unnecessary `.page` wrapper div. Card padding increased from `8px` to `16px`. `NotificationFeed` first/last items no longer add redundant padding — the card's own padding handles boundaries.
+- Card restructured
 
 ### Records Page — Flow Charts
-
-- **Nivo React → Pure Svelte/SVG.** The Flow Overview charts never rendered because `<ResponsiveLine>`, `<ResponsivePie>`, `<ResponsiveBar>` are React components that Svelte can't mount. Replaced with 3 native SVG chart components:
-  - `DailyTrend.svelte` — line chart with smooth curves, area fills, responsive via `ResizeObserver`, date labels, grid lines
-  - `CategoryDonut.svelte` — donut with label connector lines, category names, center count
-  - `MonthlyBars.svelte` — stacked bar chart with per-category colors
-- **Tab navigation added.** Single chart shown at a time via pill-style tab bar (Daily / Category / Monthly). Tab preference persisted to `localStorage` (`deneb-flow-tab`).
-- **Removed all dynamic Nivo imports** and `onMount` loading gating — charts render immediately.
+- Nivo React components replaced with pure Svelte/SVG charts
+- Tab navigation added
 
 ### Records Page — Layout
-
-- **Toolbar moved to top.** Search bar, entries count, Clear button, PeriodFilter, and filter icon now sit in a compact top toolbar — no longer scattered throughout the page.
-- **Filter toggle redesigned.** Changed from a large text button to a compact 32×32 icon button in the toolbar.
-- **Filter section moved above SummaryBar** instead of floating in the middle of the list.
+- Toolbar moved to top, filter redesigned
 
 ### Git
-
-- **`.gitignore` corrections.** Fixed non-standard `./` prefixes (→ `/`) on `build` and `src-tauri/gen/`. Updated `src-tauri/.gitignore` from `/gen/schemas` to `/gen/` to ignore the full generated Tauri directory (schemas + Android).
-- **Untracked** 40 previously-committed files under `src-tauri/gen/android/`.
+- .gitignore corrections, untracked generated files

@@ -4,37 +4,17 @@
   import ContextPicker from '$lib/features/core/ContextPicker.svelte'
   import { longpress } from '$lib/features/core/longpress'
 
-  let contextOpen = $state(false)
-  let contextTitle = $state('')
-  let contextMessage = $state('')
-
-  function openContext(title: string, message: string) {
-    contextTitle = title
-    contextMessage = message
-    contextOpen = true
-  }
+  let contextOpen = $state(false), contextTitle = $state(''), contextMessage = $state('')
+  function openContext(t: string, m: string) { contextTitle = t; contextMessage = m; contextOpen = true }
 </script>
 
 <BaseLayer title="Notifications">
   <div use:longpress={{ duration: 500, onLongPress: () => openContext('Notifications', 'Recent notifications including security alerts, payment confirmations, investment updates, and important reminders about your finances.') }}>
-    <div class="card">
-      <NotificationFeed />
-    </div>
+    <div class="card"><NotificationFeed /></div>
   </div>
 </BaseLayer>
-
 <ContextPicker opened={contextOpen} title={contextTitle} message={contextMessage} onClose={() => contextOpen = false} />
 
 <style>
-  .card {
-    background: #ffffff;
-    border: 1px solid rgba(0, 141, 163, 0.08);
-    border-radius: 16px;
-    padding: 16px 20px;
-    box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06);
-  }
-  :global(.dark) .card {
-    background: #2f3133;
-    border-color: rgba(110, 212, 236, 0.08);
-  }
+  .card { background: var(--deneb-surface); border: 1px solid var(--deneb-border); border-radius: 10px; padding: 16px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 </style>

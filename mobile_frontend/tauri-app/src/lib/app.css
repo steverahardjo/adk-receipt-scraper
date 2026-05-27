@@ -1,24 +1,9 @@
 /* ============================================================
-   Deneb — Humanist Finance Design System
+   Deneb — Premium Utilitarian Minimalism Design System
+   Warm monochrome · Editorial typography · Bento grids
    ============================================================ */
 
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/fonts/manrope-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Public Sans';
-  font-style: normal;
-  font-weight: 500 600;
-  font-display: swap;
-  src: url('/fonts/public-sans-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
+/* ── Root / Base ──────────────────────────────────────── */
 
 html, body {
   height: 100%;
@@ -28,116 +13,192 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Light ───────────────────────────────────────────────── */
+/* ── Light — Warm Editorial (Default) ────────────────── */
 
 :root,
 .theme-ios {
-  /* Primary */
-  --f7-theme-color: #006c50;
-  --f7-theme-color-rgb: 0, 108, 80;
-  --f7-theme-color-shade: #00513b;
-  --f7-theme-color-tint: #008a65;
+  /* Accent — dark for buttons / active */
+  --f7-theme-color: #111111;
+  --f7-theme-color-rgb: 17, 17, 17;
+  --f7-theme-color-shade: #000000;
+  --f7-theme-color-tint: #333333;
+  --f7-inverse-primary: #FFFFFF;
 
-  /* Inverse primary for dark bg */
-  --f7-inverse-primary: #24e0ab;
-
-  /* Secondary */
-  --f7-secondary-color: #008da3;
-  --f7-secondary-color-rgb: 0, 141, 163;
+  /* Secondary — muted informational */
+  --f7-secondary-color: #787774;
+  --f7-secondary-color-rgb: 120, 119, 116;
 
   /* Surfaces */
-  --f7-page-bg-color: #f9f9fc;
-  --f7-page-text-color: #1a1c1e;
-  --f7-card-bg-color: #ffffff;
-  --f7-card-border-color: rgba(0, 141, 163, 0.1);
-  --f7-list-bg-color: #ffffff;
-  --f7-list-border-color: #e2e2e5;
+  --f7-page-bg-color: #FBFBFA;
+  --f7-page-text-color: #111111;
+  --f7-card-bg-color: #FFFFFF;
+  --f7-card-border-color: #EAEAEA;
+  --f7-list-bg-color: #FFFFFF;
+  --f7-list-border-color: #F0F0EE;
   --f7-list-inset-bg-color: transparent;
-
-  --f7-block-strong-bg-color: #ffffff;
-  --f7-block-strong-border-color: #e2e2e5;
+  --f7-block-strong-bg-color: #FFFFFF;
+  --f7-block-strong-border-color: #EAEAEA;
 
   /* Text */
-  --f7-text-color: #1a1c1e;
-  --f7-border-color: #e2e2e5;
+  --f7-text-color: #111111;
+  --f7-border-color: #EAEAEA;
 
   /* Navbar */
-  --f7-navbar-bg-color: rgba(249, 249, 252, 0.92);
-  --f7-navbar-text-color: #1a1c1e;
-  --f7-navbar-link-color: #006c50;
-  --f7-navbar-border-color: rgba(0, 141, 163, 0.08);
+  --f7-navbar-bg-color: #FBFBFA;
+  --f7-navbar-text-color: #111111;
+  --f7-navbar-link-color: #111111;
+  --f7-navbar-border-color: transparent;
 
-  /* Tabbar */
-  --f7-tabbar-bg-color: rgba(249, 249, 252, 0.92);
-  --f7-tabbar-link-color: #6b7b72;
-  --f7-tabbar-link-active-color: #006c50;
+  /* Tabbar / Toolbar */
+  --f7-tabbar-bg-color: #FBFBFA;
+  --f7-tabbar-link-color: #B0B0AD;
+  --f7-tabbar-link-active-color: #111111;
+  --f7-toolbar-bg-color: rgba(251, 251, 250, 0.88);
+  --f7-toolbar-border-color: transparent;
 
   /* Buttons */
-  --f7-button-bg-color: #2ee5af;
-  --f7-button-text-color: #1a1c1e;
-  --f7-button-border-color: transparent;
-  --f7-button-fill-text-color: #1a1c1e;
-  --f7-button-fill-bg-color: #2ee5af;
-  --f7-button-outline-border-color: #008da3;
-  --f7-button-border-radius: 9999px;
-  --f7-button-height: 48px;
-  --f7-button-font-size: 15px;
-  --f7-button-font-weight: 600;
-  --f7-button-padding-horizontal: 24px;
+  --f7-button-bg-color: #111111;
+  --f7-button-text-color: #FFFFFF;
+  --f7-button-border-color: #111111;
+  --f7-button-fill-text-color: #FFFFFF;
+  --f7-button-fill-bg-color: #111111;
+  --f7-button-outline-border-color: #EAEAEA;
+  --f7-button-border-radius: 6px;
+  --f7-button-height: 44px;
+  --f7-button-font-size: 14px;
+  --f7-button-font-weight: 500;
+  --f7-button-padding-horizontal: 20px;
 
   /* Inputs */
-  --f7-input-bg-color: #f0f9f8;
-  --f7-input-border-color: transparent;
-  --f7-input-text-color: #1a1c1e;
+  --f7-input-bg-color: #FFFFFF;
+  --f7-input-border-color: #EAEAEA;
+  --f7-input-text-color: #111111;
   --f7-input-border-radius: 8px;
 
-  --f7-label-text-color: #6b7b72;
-  --f7-label-error-color: #ba1a1a;
+  /* Labels */
+  --f7-label-text-color: #787774;
+  --f7-label-error-color: #9F2F2D;
 
   /* Search */
   --f7-searchbar-bg-color: transparent;
-  --f7-searchbar-input-bg-color: #eeeef0;
+  --f7-searchbar-input-bg-color: #F5F5F4;
 
   /* Misc */
-  --f7-actions-bg-color: #ffffff;
-  --f7-progressbar-bg-color: #e2e2e5;
-  --f7-toggle-border-color: #e2e2e5;
-  --f7-toggle-active-color: #2ee5af;
+  --f7-actions-bg-color: #FFFFFF;
+  --f7-progressbar-bg-color: #F0F0EE;
+  --f7-toggle-border-color: #EAEAEA;
+  --f7-toggle-active-color: #111111;
+  --f7-panel-bg-color: #FFFFFF;
 
-  /* Panel / Drawer */
-  --f7-panel-bg-color: #ffffff;
-
-  /* Toolbar */
-  --f7-toolbar-bg-color: rgba(249, 249, 252, 0.92);
-  --f7-toolbar-border-color: rgba(0, 141, 163, 0.08);
-
-  /* Typography base */
-  --f7-font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-  --f7-label-font-family: 'Public Sans', system-ui, sans-serif;
+  /* Typography */
+  --f7-font-family: 'Geist Sans', system-ui, -apple-system, sans-serif;
+  --f7-label-font-family: 'Geist Mono', 'JetBrains Mono', monospace;
 
   /* Safe area */
   --f7-safe-area-outer: 0px;
 
-  /* Headline sizes */
+  /* Headlines */
   --f7-headline-xl-font-size: 28px;
   --f7-headline-xl-font-weight: 700;
-  --f7-headline-xl-line-height: 34px;
+  --f7-headline-xl-line-height: 1.2;
   --f7-headline-xl-letter-spacing: -0.02em;
 
   --f7-headline-lg-font-size: 20px;
   --f7-headline-lg-font-weight: 600;
-  --f7-headline-lg-line-height: 26px;
+  --f7-headline-lg-line-height: 1.3;
   --f7-headline-lg-letter-spacing: -0.01em;
 
   --f7-headline-md-font-size: 17px;
   --f7-headline-md-font-weight: 600;
-  --f7-headline-md-line-height: 22px;
+  --f7-headline-md-line-height: 1.3;
+  --f7-headline-md-letter-spacing: -0.01em;
 }
 
-/* ── Headline utility classes ───────────────────────────── */
+/* ── Dark theme specificity ──────────────────────────── */
+
+.dark,
+.dark .theme-ios {
+  --f7-theme-color: #ECECEC;
+  --f7-theme-color-rgb: 236, 236, 236;
+  --f7-theme-color-shade: #CCCCCC;
+  --f7-theme-color-tint: #FFFFFF;
+  --f7-inverse-primary: #18181A;
+  --f7-secondary-color: #9D9D9F;
+  --f7-secondary-color-rgb: 157, 157, 159;
+  --f7-page-bg-color: #18181A;
+  --f7-page-text-color: #ECECEC;
+  --f7-card-bg-color: #252528;
+  --f7-card-border-color: rgba(255,255,255,0.06);
+  --f7-list-bg-color: #252528;
+  --f7-list-border-color: rgba(255,255,255,0.04);
+  --f7-list-inset-bg-color: transparent;
+  --f7-block-strong-bg-color: #252528;
+  --f7-block-strong-border-color: rgba(255,255,255,0.06);
+  --f7-text-color: #ECECEC;
+  --f7-border-color: rgba(255,255,255,0.06);
+  --f7-navbar-bg-color: #18181A;
+  --f7-navbar-text-color: #ECECEC;
+  --f7-navbar-link-color: #ECECEC;
+  --f7-navbar-border-color: transparent;
+  --f7-tabbar-bg-color: #18181A;
+  --f7-tabbar-link-color: #6F6F72;
+  --f7-tabbar-link-active-color: #ECECEC;
+  --f7-toolbar-bg-color: #18181A;
+  --f7-toolbar-border-color: transparent;
+  --f7-button-bg-color: #ECECEC;
+  --f7-button-text-color: #18181A;
+  --f7-button-fill-text-color: #18181A;
+  --f7-button-fill-bg-color: #ECECEC;
+  --f7-button-outline-border-color: rgba(255,255,255,0.12);
+  --f7-input-bg-color: #252528;
+  --f7-input-border-color: rgba(255,255,255,0.06);
+  --f7-input-text-color: #ECECEC;
+  --f7-label-text-color: #9D9D9F;
+  --f7-label-error-color: #F4A0A1;
+  --f7-searchbar-input-bg-color: #252528;
+  --f7-actions-bg-color: #252528;
+  --f7-progressbar-bg-color: rgba(255,255,255,0.06);
+  --f7-toggle-border-color: rgba(255,255,255,0.12);
+  --f7-toggle-active-color: #ECECEC;
+  --f7-panel-bg-color: #252528;
+}
+
+/* ── Light-only theme override class ─────────────────── */
+
+.theme-light,
+.theme-light .theme-ios {
+  --f7-page-bg-color: #FBFBFA;
+  --f7-page-text-color: #111111;
+  --f7-card-bg-color: #FFFFFF;
+  --f7-card-border-color: #EAEAEA;
+  --f7-list-bg-color: #FFFFFF;
+  --f7-text-color: #111111;
+  --f7-border-color: #EAEAEA;
+  --f7-navbar-bg-color: #FBFBFA;
+  --f7-navbar-text-color: #111111;
+  --f7-tabbar-bg-color: #FBFBFA;
+  --f7-tabbar-link-color: #B0B0AD;
+  --f7-tabbar-link-active-color: #111111;
+  --f7-button-bg-color: #111111;
+  --f7-button-text-color: #FFFFFF;
+  --f7-button-fill-bg-color: #111111;
+  --f7-button-fill-text-color: #FFFFFF;
+  --f7-input-bg-color: #FFFFFF;
+  --f7-input-text-color: #111111;
+  --f7-label-text-color: #787774;
+  --f7-toggle-active-color: #111111;
+  --f7-panel-bg-color: #FFFFFF;
+  --f7-toolbar-bg-color: #FBFBFA;
+}
+
+.dark .f7-page {
+  background-color: #18181A;
+}
+
+/* ── Headline utility classes ──────────────────────────── */
 
 :global(.headline-xl) {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Geist Sans', system-ui, sans-serif;
   font-size: var(--f7-headline-xl-font-size);
   font-weight: var(--f7-headline-xl-font-weight);
   line-height: var(--f7-headline-xl-line-height);
@@ -147,7 +208,7 @@ html, body {
 }
 
 :global(.headline-lg) {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Geist Sans', system-ui, sans-serif;
   font-size: var(--f7-headline-lg-font-size);
   font-weight: var(--f7-headline-lg-font-weight);
   line-height: var(--f7-headline-lg-line-height);
@@ -157,135 +218,207 @@ html, body {
 }
 
 :global(.headline-md) {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Geist Sans', system-ui, sans-serif;
   font-size: var(--f7-headline-md-font-size);
   font-weight: var(--f7-headline-md-font-weight);
   line-height: var(--f7-headline-md-line-height);
+  letter-spacing: var(--f7-headline-md-letter-spacing);
   color: var(--f7-page-text-color);
   margin: 0;
 }
 
 :global(.headline-sm) {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Geist Sans', system-ui, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  line-height: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   color: var(--f7-page-text-color);
   margin: 0;
 }
 
-/* ── Dark ────────────────────────────────────────────────── */
-
-.dark,
-.dark .theme-ios {
-  --f7-theme-color: #24e0ab;
-  --f7-theme-color-rgb: 36, 224, 171;
-  --f7-theme-color-shade: #1bc49a;
-  --f7-theme-color-tint: #3cf0bc;
-
-  --f7-secondary-color: #6ed4ec;
-  --f7-secondary-color-rgb: 110, 212, 236;
-
-  --f7-page-bg-color: #1a1c1e;
-  --f7-page-text-color: #f0f0f3;
-  --f7-card-bg-color: #2f3133;
-  --f7-card-border-color: rgba(110, 212, 236, 0.08);
-  --f7-list-bg-color: #2f3133;
-  --f7-list-border-color: #404848;
-  --f7-list-inset-bg-color: transparent;
-
-  --f7-block-strong-bg-color: #2f3133;
-  --f7-block-strong-border-color: #404848;
-
-  --f7-text-color: #f0f0f3;
-  --f7-border-color: #404848;
-
-  --f7-navbar-bg-color: rgba(26, 28, 30, 0.92);
-  --f7-navbar-text-color: #f0f0f3;
-  --f7-navbar-link-color: #24e0ab;
-  --f7-navbar-border-color: rgba(110, 212, 236, 0.08);
-
-  --f7-tabbar-bg-color: rgba(26, 28, 30, 0.92);
-  --f7-tabbar-link-color: #6b7b72;
-  --f7-tabbar-link-active-color: #24e0ab;
-
-  --f7-button-bg-color: #24e0ab;
-  --f7-button-text-color: #1a1c1e;
-  --f7-button-fill-text-color: #1a1c1e;
-  --f7-button-fill-bg-color: #24e0ab;
-  --f7-button-outline-border-color: #6ed4ec;
-
-  --f7-input-bg-color: #2f3133;
-  --f7-input-border-color: transparent;
-  --f7-input-text-color: #f0f0f3;
-
-  --f7-label-text-color: #6b7b72;
-  --f7-label-error-color: #ffb4ab;
-
-  --f7-searchbar-input-bg-color: #404848;
-
-  --f7-actions-bg-color: #2f3133;
-  --f7-progressbar-bg-color: #404848;
-  --f7-toggle-border-color: #404848;
-  --f7-toggle-active-color: #24e0ab;
-
-  --f7-panel-bg-color: #2f3133;
-  --f7-toolbar-bg-color: rgba(26, 28, 30, 0.92);
-  --f7-toolbar-border-color: rgba(110, 212, 236, 0.08);
-}
-
-/* ── Typography overrides ────────────────────────────────── */
+/* ── Typography overrides ───────────────────────────────── */
 
 :global(.f7-page) {
-  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  font-family: 'Geist Sans', system-ui, -apple-system, sans-serif;
 }
 
 :global(.f7-label),
-:global(.item-title) {
-  font-family: 'Public Sans', system-ui, sans-serif;
+:global(.item-title),
+:global(.item-subtitle) {
+  font-family: 'Geist Mono', 'JetBrains Mono', monospace;
 }
 
-/* ── Card shadow (tonal+ambient) ─────────────────────────── */
+/* ── Card Overrides (editorial, bento) ──────────────────── */
 
 :global(.card),
 :global(.block-strong) {
-  box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06), 0 1px 4px rgba(0, 141, 163, 0.04);
-  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  border-radius: 10px;
+  border: 1px solid var(--f7-card-border-color);
 }
 
-/* ── Framing / Root App Background ───────────────────────── */
+/* ── Button Overrides ───────────────────────────────────── */
 
-.dark .f7-page {
-  background-color: #1a1c1e;
+:global(.button) {
+  border-radius: 6px;
+  font-weight: 500;
+  font-family: 'Geist Sans', system-ui, sans-serif;
+  letter-spacing: 0;
+  transition: transform 0.1s ease;
 }
 
-/* ── Toast overrides ─────────────────────────────────────── */
-
-:root {
-  --toast-bg-success: #2ee5af;
-  --toast-bg-error: #ba1a1a;
-  --toast-bg-loading: #6b7b72;
+:global(.button:active) {
+  transform: scale(0.98);
 }
-.dark {
-  --toast-bg-success: #24e0ab;
-  --toast-bg-error: #ffb4ab;
-  --toast-bg-loading: #6b7b72;
-}
-
-/* ── Button overrides ────────────────────────────────────── */
 
 :global(.button-fill) {
   color: var(--f7-button-fill-text-color) !important;
-  font-weight: 600;
 }
 
 :global(.button-outline) {
-  border-width: 1.5px;
-  color: var(--f7-secondary-color) !important;
-  border-color: var(--f7-secondary-color) !important;
+  border-width: 1px;
+  border-radius: 6px;
 }
 
-/* ── Utility ─────────────────────────────────────────────── */
+/* ── Navbar Overrides ───────────────────────────────────── */
+
+:global(.navbar) {
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+}
+
+:global(.navbar .title) {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ── Toolbar / Tabbar Overrides ─────────────────────────── */
+
+:global(.toolbar) {
+  border-radius: 0;
+  border-top: 1px solid transparent;
+}
+
+:global(.tab-link) {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  font-family: 'Geist Sans', system-ui, sans-serif;
+}
+
+/* ── Input Overrides ────────────────────────────────────── */
+
+:global(.item-input input),
+:global(.item-input textarea),
+:global(.input input) {
+  font-family: 'Geist Sans', system-ui, sans-serif;
+}
+
+/* ── List Overrides ─────────────────────────────────────── */
+
+:global(.list),
+:global(.list-block) {
+  border-radius: 10px;
+}
+
+/* ── Segmented Control ──────────────────────────────────── */
+
+:global(.segmented),
+:global(.segmented a),
+:global(.segmented button),
+:global(.segmented > *) {
+  border-radius: 6px;
+}
+
+/* ── Badge Overrides ────────────────────────────────────── */
+
+:global(.badge) {
+  border-radius: 9999px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+}
+
+/* ── Progress Bar ───────────────────────────────────────── */
+
+:global(.progressbar),
+:global(.progressbar span) {
+  border-radius: 4px;
+}
+
+/* ── Modal/Popover ──────────────────────────────────────── */
+
+:global(.popover),
+:global(.sheet-modal),
+:global(.modal) {
+  border-radius: 12px;
+}
+
+/* ── Toast Colors ───────────────────────────────────────── */
+
+:root {
+  --toast-bg-success: #346538;
+  --toast-bg-error: #9F2F2D;
+  --toast-bg-loading: #787774;
+}
+.dark {
+  --toast-bg-success: #346538;
+  --toast-bg-error: #9F2F2D;
+  --toast-bg-loading: #9D9D9F;
+}
+
+/* ── Semantic Color Tokens ──────────────────────────────── */
+
+:root {
+  --deneb-positive: #346538;
+  --deneb-positive-bg: #EDF3EC;
+  --deneb-negative: #9F2F2D;
+  --deneb-negative-bg: #FDEBEC;
+  --deneb-info: #1F6C9F;
+  --deneb-info-bg: #E1F3FE;
+  --deneb-warning: #956400;
+  --deneb-warning-bg: #FBF3DB;
+  --deneb-text-secondary: #787774;
+  --deneb-text-muted: #B0B0AD;
+  --deneb-border: #EAEAEA;
+  --deneb-divider: #F0F0EE;
+  --deneb-surface: #FFFFFF;
+  --deneb-canvas: #FBFBFA;
+}
+
+.dark {
+  --deneb-positive: #7CCB7E;
+  --deneb-positive-bg: rgba(52, 101, 56, 0.15);
+  --deneb-negative: #F4A0A1;
+  --deneb-negative-bg: rgba(159, 47, 45, 0.15);
+  --deneb-info: #8BC5F0;
+  --deneb-info-bg: rgba(31, 108, 159, 0.15);
+  --deneb-warning: #EDC46A;
+  --deneb-warning-bg: rgba(149, 100, 0, 0.15);
+  --deneb-text-secondary: #9D9D9F;
+  --deneb-text-muted: #6F6F72;
+  --deneb-border: rgba(255,255,255,0.06);
+  --deneb-divider: rgba(255,255,255,0.04);
+  --deneb-surface: #252528;
+  --deneb-canvas: #18181A;
+}
+
+.theme-light {
+  --deneb-positive: #346538;
+  --deneb-positive-bg: #EDF3EC;
+  --deneb-negative: #9F2F2D;
+  --deneb-negative-bg: #FDEBEC;
+  --deneb-info: #1F6C9F;
+  --deneb-info-bg: #E1F3FE;
+  --deneb-text-secondary: #787774;
+  --deneb-text-muted: #B0B0AD;
+  --deneb-border: #EAEAEA;
+  --deneb-divider: #F0F0EE;
+  --deneb-surface: #FFFFFF;
+  --deneb-canvas: #FBFBFA;
+}
+
+/* ── Utility ────────────────────────────────────────────── */
 
 .f7-page-content {
   padding-bottom: env(safe-area-inset-bottom, 0px);

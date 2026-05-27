@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getLoadingState } from './loading-overlay.svelte'
-
   let state = getLoadingState()
 </script>
 
@@ -18,56 +17,41 @@
 
 <style>
   .loading-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 21000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0; z-index: 21000;
+    display: flex; align-items: center; justify-content: center;
     animation: fadeIn 0.2s ease-out;
   }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .loading-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(26, 28, 30, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    position: absolute; inset: 0;
+    background: rgba(251, 251, 250, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
-
+  :global(.dark) .loading-backdrop {
+    background: rgba(24, 24, 26, 0.75);
+  }
   .loading-content {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
   }
-
   .spinner {
-    width: 44px;
-    height: 44px;
-    border: 3px solid rgba(46, 229, 175, 0.2);
-    border-top-color: var(--f7-theme-color, #2ee5af);
+    width: 40px; height: 40px;
+    border: 2.5px solid #F0F0EE;
+    border-top-color: #111111;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  :global(.dark) .spinner {
+    border-color: rgba(255,255,255,0.06);
+    border-top-color: #ECECEC;
   }
-
+  @keyframes spin { to { transform: rotate(360deg); } }
   .loading-msg {
     margin: 0;
-    font-family: 'Public Sans', system-ui, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--f7-page-text-color, #f0f0f3);
+    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--deneb-text-secondary, #787774);
     letter-spacing: 0.01em;
-    opacity: 0.8;
   }
 </style>

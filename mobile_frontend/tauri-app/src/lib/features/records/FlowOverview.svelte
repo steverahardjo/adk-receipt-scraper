@@ -53,8 +53,8 @@
       expenseData.push({ x: label, y: days[k].expense })
     }
     return [
-      { id: 'Income', data: incomeData, color: '#2ee5af' },
-      { id: 'Expenses', data: expenseData, color: '#ff6b6b' },
+      { id: 'Income', data: incomeData, color: 'var(--deneb-positive)' },
+      { id: 'Expenses', data: expenseData, color: 'var(--deneb-negative)' },
     ]
   })
 
@@ -65,7 +65,7 @@
         byCat[e.type] = (byCat[e.type] || 0) + e.amount
       }
     }
-    const colors = ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a']
+    const colors = ['var(--deneb-positive)', 'var(--deneb-info)', 'var(--deneb-warning)', '#FFB800', '#CC79A7']
     return Object.entries(byCat)
       .sort((a, b) => b[1] - a[1])
       .map(([id, value], i) => ({ id, value, color: colors[i % colors.length] }))
@@ -98,7 +98,7 @@
   let barKeys = $derived([...new Set(entries.filter(e => e.flow === 'expense' && e.type).map(e => e.type!))])
   let barColors = $derived(
     Object.fromEntries(
-      barKeys.map((k, i) => [k, ['#2ee5af', '#008da3', '#006c50', '#c4904a', '#5baa8a'][i % 5]])
+      barKeys.map((k, i) => [k, ['var(--deneb-positive)', 'var(--deneb-info)', 'var(--deneb-warning)', '#FFB800', '#CC79A7'][i % 5]])
     )
   )
 
@@ -129,6 +129,13 @@
       <MonthlyBars data={barData} keys={barKeys} colors={barColors} />
     {/if}
   </div>
+{:else}
+  <div class="empty">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+    </svg>
+    <p>No transaction data to show yet</p>
+  </div>
 {/if}
 
 <style>
@@ -137,39 +144,54 @@
   .tabs {
     display: flex;
     gap: 0;
-    padding: 4px;
-    border-radius: 10px;
-    background: rgba(0, 141, 163, 0.04);
+    padding: 3px;
+    border: 1px solid var(--deneb-border);
+    border-radius: 8px;
+    background: var(--deneb-canvas);
     width: fit-content;
   }
-  :global(.dark) .tabs { background: rgba(110, 212, 236, 0.04); }
 
   .tab {
     padding: 6px 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     background: transparent;
-    font-family: 'Public Sans', system-ui, sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 12px;
-    font-weight: 600;
-    color: #6b7b72;
+    font-weight: 500;
+    color: var(--deneb-text-secondary);
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
 
   .tab.active {
-    background: #ffffff;
-    color: #006c50;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    background: #111111;
+    color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   }
   :global(.dark) .tab.active {
-    background: #3a3d3f;
-    color: #24e0ab;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    background: #ECECEC;
+    color: #18181A;
   }
 
   .tab:not(.active):active {
-    background: rgba(0, 141, 163, 0.06);
+    background: var(--deneb-divider);
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 32px 16px;
+    color: var(--deneb-text-muted);
+    text-align: center;
+  }
+  .empty p {
+    margin: 0;
+    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--deneb-text-secondary);
   }
 </style>
