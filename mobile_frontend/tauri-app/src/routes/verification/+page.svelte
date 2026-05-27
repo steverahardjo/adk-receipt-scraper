@@ -98,11 +98,11 @@
     font-size: 22px;
     font-weight: 700;
     margin: 0;
-    color: #000000;
+    color: var(--f7-page-text-color, #1a1c1e);
     letter-spacing: -0.02em;
   }
 
   :global(.dark) .brand h1 {
-    color: #ffffff;
+    color: var(--f7-page-text-color, #f0f0f3);
   }
 </style>

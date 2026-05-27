@@ -35,7 +35,7 @@
   <Drawer opened={drawerOpen} onClose={() => drawerOpen = false} />
 
   {#if !noNavbar}
-    <Navbar {title}>
+    <Navbar>
       {#if currentPath !== '/'}
         <NavLeft>
           <Link onclick={() => history.back()}>
@@ -44,26 +44,31 @@
         </NavLeft>
       {/if}
       <NavRight>
-        {@render navbarRight?.()}
-        <button class="theme-nav-btn" onclick={() => theme.toggle()} aria-label="Toggle theme">
-          {#if theme.current === 'dark'}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-          {:else}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-            </svg>
-          {/if}
-        </button>
+        <div class="navbar-actions">
+          {@render navbarRight?.()}
+          <button class="theme-nav-btn" onclick={() => theme.toggle()} aria-label="Toggle theme">
+            {#if theme.current === 'dark'}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            {:else}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+              </svg>
+            {/if}
+          </button>
+        </div>
       </NavRight>
     </Navbar>
   {/if}
 
   <PageContent>
+    {#if title}
+      <h1 class="page-title">{title}</h1>
+    {/if}
     {@render children?.()}
   </PageContent>
 
@@ -145,11 +150,14 @@
     padding-bottom: 100px;
   }
 
-  :global(.navbar .title) {
+  .page-title {
+    margin: 3px 0 8px;
     font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 28px;
     font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.01em;
+    line-height: 34px;
+    letter-spacing: -0.02em;
+    color: var(--f7-page-text-color);
   }
 
   :global(.navbar .left a) {
@@ -160,17 +168,39 @@
     font-size: 22px;
   }
 
-  :global(.theme-nav-btn) {
-    width: 36px; height: 36px;
-    border: none; border-radius: 10px;
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 3px;
+    border-radius: 12px;
+    background: rgba(0, 141, 163, 0.06);
+    border: 1px solid rgba(0, 141, 163, 0.08);
+  }
+  :global(.dark) .navbar-actions {
+    background: rgba(110, 212, 236, 0.06);
+    border-color: rgba(110, 212, 236, 0.08);
+  }
+
+  :global(.theme-nav-btn),
+  :global(.notif-btn) {
+    position: relative;
+    width: 32px; height: 32px;
+    border: none;
+    border-radius: 9px;
     background: transparent;
-    color: var(--f7-navbar-link-color, #006c50);
+    color: #6b7b72;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
     transition: background 0.1s;
   }
-  :global(.theme-nav-btn:active) {
+  :global(.theme-nav-btn:active),
+  :global(.notif-btn:active) {
     background: rgba(0, 141, 163, 0.1);
+  }
+  :global(.dark .theme-nav-btn:active),
+  :global(.dark .notif-btn:active) {
+    background: rgba(110, 212, 236, 0.1);
   }
 </style>

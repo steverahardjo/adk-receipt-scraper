@@ -214,7 +214,7 @@
 <ContextPicker opened={contextOpen} title={contextTitle} message={contextMessage} onClose={() => contextOpen = false} />
 
 <style>
-  .page { display: flex; flex-direction: column; gap: 16px; padding: 8px 0 16px; }
+  .page { display: flex; flex-direction: column; gap: 16px; padding: 0 0 16px; }
   .page-top { display: flex; align-items: center; justify-content: space-between; }
   .page-sub { font-family: 'Public Sans', sans-serif; font-size: 12px; font-weight: 500; color: #6b7b72; margin: 0; letter-spacing: 0.02em; }
   .clear-btn { background: none; border: none; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #008da3; cursor: pointer; padding: 0; }

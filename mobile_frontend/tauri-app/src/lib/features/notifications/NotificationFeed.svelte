@@ -47,7 +47,8 @@
     border-bottom: 1px solid #e2e2e5;
   }
   :global(.dark) .item { border-color: #404848; }
-  .item:last-child { border-bottom: none; }
+  .item:first-child { padding-top: 0; }
+  .item:last-child { padding-bottom: 0; border-bottom: none; }
 
   .item.unread .title { font-weight: 700; }
 

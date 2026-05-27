@@ -89,21 +89,6 @@
 
   .dash-header { padding: 8px 0 0; }
 
-  :global(.notif-btn) {
-    position: relative;
-    width: 36px; height: 36px;
-    border: none; border-radius: 10px;
-    background: rgba(0, 141, 163, 0.06);
-    color: #6b7b72;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.1s;
-  }
-  :global(.dark) .notif-btn { background: rgba(110, 212, 236, 0.06); color: #6b7b72; }
-  :global(.notif-btn:active) { background: rgba(0, 141, 163, 0.12); }
-  :global(.dark .notif-btn:active) { background: rgba(110, 212, 236, 0.12); }
-
   :global(.notif-dot-nav) {
     position: absolute; top: 6px; right: 6px;
     width: 7px; height: 7px;

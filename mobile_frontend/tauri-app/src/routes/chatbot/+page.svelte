@@ -63,7 +63,7 @@
     align-items: center;
     justify-content: center;
     min-height: calc(100dvh - 180px);
-    padding: 8px 0 16px;
+    padding: 0 0 16px;
   }
 
   .empty {

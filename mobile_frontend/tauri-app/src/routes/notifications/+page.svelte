@@ -16,11 +16,9 @@
 </script>
 
 <BaseLayer title="Notifications">
-  <div class="page">
-    <div use:longpress={{ duration: 500, onLongPress: () => openContext('Notifications', 'Recent notifications including security alerts, payment confirmations, investment updates, and important reminders about your finances.') }}>
-      <div class="card">
-        <NotificationFeed />
-      </div>
+  <div use:longpress={{ duration: 500, onLongPress: () => openContext('Notifications', 'Recent notifications including security alerts, payment confirmations, investment updates, and important reminders about your finances.') }}>
+    <div class="card">
+      <NotificationFeed />
     </div>
   </div>
 </BaseLayer>
@@ -28,12 +26,11 @@
 <ContextPicker opened={contextOpen} title={contextTitle} message={contextMessage} onClose={() => contextOpen = false} />
 
 <style>
-  .page { padding: 8px 0 16px; }
   .card {
     background: #ffffff;
     border: 1px solid rgba(0, 141, 163, 0.08);
     border-radius: 16px;
-    padding: 8px 20px;
+    padding: 16px 20px;
     box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06);
   }
   :global(.dark) .card {
