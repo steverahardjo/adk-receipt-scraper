@@ -84,7 +84,7 @@
     </Link>
   </div>
 
-  <h2 class="form-title">Verify Email</h2>
+  <h2 class="form-title headline-lg">Verify Email</h2>
   <p class="form-subtitle">Enter the 6-digit code sent to<br /><strong>{email}</strong></p>
 
   <div class="otp-row" onpaste={handlePaste}>
@@ -132,11 +132,7 @@
   }
 
   .form-title {
-    font-size: 22px;
-    font-weight: 700;
     margin: 0;
-    color: #000000;
-    text-align: center;
   }
 
   :global(.dark) .form-title {

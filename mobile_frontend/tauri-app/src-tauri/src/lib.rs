@@ -14,7 +14,7 @@ mod commands;
 mod qris;
 
 use crate::commands::{
-    copy_to_clipboard, fetch_secure_data, greet, notify, open_url, pick_file, read_file,
+    copy_to_clipboard, greet, notify, open_url, pick_file, read_file,
     save_dialog, save_file,
 };
 
@@ -49,7 +49,6 @@ pub fn run() {
             save_file,
             open_url,
             copy_to_clipboard,
-            fetch_secure_data,
             parse_qris
         ])
         .run(tauri::generate_context!())

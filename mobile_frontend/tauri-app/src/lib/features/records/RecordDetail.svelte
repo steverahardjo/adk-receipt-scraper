@@ -70,7 +70,7 @@
         {/if}
       </div>
       <div class="header-text">
-        <h2 class="entry-title">{tx.title}</h2>
+        <h2 class="entry-title headline-sm">{tx.title}</h2>
         <span class="category-label">{categoryLabel()}</span>
       </div>
       <p class="amount-main" class:income={tx.flow === 'income'} class:expense={tx.flow === 'expense'}>
@@ -174,11 +174,8 @@
 
   .header-text { display: flex; flex-direction: column; gap: 2px; }
   .entry-title {
-    font-family: 'Manrope', sans-serif;
-    font-size: 18px; font-weight: 700;
-    margin: 0; color: #1a1c1e;
+    margin: 0;
   }
-  :global(.dark) .entry-title { color: #f0f0f3; }
 
   .category-label {
     font-family: 'Public Sans', sans-serif;

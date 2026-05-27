@@ -1,0 +1,12 @@
+[target.aarch64-linux-android]
+linker = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang"
+ar = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
+
+[env]
+ANDROID_NDK_ROOT = "/home/holyknight101/Android/ndk/29.0.13846066"
+ANDROID_NDK = "/home/holyknight101/Android/ndk/29.0.13846066"
+CMAKE_TOOLCHAIN_FILE = "/home/holyknight101/Android/ndk/29.0.13846066/build/cmake/android.toolchain.cmake"
+CC_aarch64_linux_android = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang"
+CXX_aarch64_linux_android = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++"
+AR_aarch64_linux_android = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
+RANLIB_aarch64_linux_android = "/home/holyknight101/Android/ndk/29.0.13846066/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib"

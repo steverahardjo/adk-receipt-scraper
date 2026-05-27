@@ -9,7 +9,7 @@
   import RecentTxList from '$lib/features/dashboard/RecentTxList.svelte'
   import UpcomingBills from '$lib/features/dashboard/UpcomingBills.svelte'
   import ContextPicker from '$lib/features/core/ContextPicker.svelte'
-  import ScannerModal from '$lib/features/scanner/ScannerModal.svelte'
+  import QRScanner from '$lib/features/dashboard/qris/QRScanner.svelte'
   import { longpress } from '$lib/features/core/longpress'
 
   let budgetOpen = $state(false)
@@ -82,7 +82,7 @@
 
 <ContextPicker opened={contextOpen} title={contextTitle} message={contextMessage} onClose={() => contextOpen = false} />
 
-<ScannerModal opened={scannerOpen} onClose={() => scannerOpen = false} />
+<QRScanner opened={scannerOpen} onClose={() => scannerOpen = false} />
 
 <style>
   .dash { display: flex; flex-direction: column; gap: 20px; padding: 0 0 80px; }

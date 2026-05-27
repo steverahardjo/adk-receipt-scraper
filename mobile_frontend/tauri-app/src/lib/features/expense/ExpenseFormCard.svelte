@@ -62,7 +62,7 @@
 
 <div class="card">
   <div class="card-header">
-    <h2 class="card-title">New Entry</h2>
+    <h2 class="card-title headline-md">New Entry</h2>
     <div class="card-actions">
       <button class="icon-btn" onclick={openScanner} aria-label="Scan QR">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -173,13 +173,8 @@
     margin-bottom: 20px;
   }
   .card-title {
-    font-family: 'Manrope', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
     margin: 0;
-    color: #1a1c1e;
   }
-  :global(.dark) .card-title { color: #f0f0f3; }
 
   .card-actions { display: flex; gap: 8px; }
   .icon-btn {

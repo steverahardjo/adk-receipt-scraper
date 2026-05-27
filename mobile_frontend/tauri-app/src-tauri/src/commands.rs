@@ -1,5 +1,4 @@
 use tauri::AppHandle;
-use tauri::Manager;
 use tauri_plugin_clipboard_manager::ClipboardExt;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_notification::NotificationExt;
@@ -63,41 +62,4 @@ pub async fn copy_to_clipboard(app: AppHandle, text: String) -> Result<(), Strin
     app.clipboard()
         .write_text(text)
         .map_err(|e| format!("clipboard write failed: {e}"))
-}
-
-#[tauri::command]
-pub async fn fetch_secure_data(app: AppHandle, key: String) -> Result<Option<String>, String> {
-    let data_dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("path resolve failed: {e}"))?;
-
-    let file_path = data_dir.join(format!("secure_{}", key));
-
-    if !file_path.exists() {
-        return Ok(None);
-    }
-
-    #[cfg(any(target_os = "android", target_os = "ios"))]
-    {
-        let authed = app
-            .biometric()
-            .authenticate(
-                "Authenticate to access secure data",
-                "Security Check",
-                None::<&str>,
-                None::<&str>,
-            )
-            .await
-            .map_err(|e| format!("biometric auth failed: {e}"))?;
-
-        if !authed {
-            return Err("biometric authentication cancelled".into());
-        }
-    }
-
-    let data =
-        std::fs::read_to_string(&file_path).map_err(|e| format!("read secure data failed: {e}"))?;
-
-    Ok(Some(data))
 }

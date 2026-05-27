@@ -57,7 +57,7 @@
     <div class="handle"></div>
 
     <div class="body">
-      <h2 class="title">Daily Budget</h2>
+      <h2 class="title headline-md">Daily Budget</h2>
 
       <div class="ring-wrap">
         <svg width="200" height="200" viewBox="0 0 200 200">
@@ -139,16 +139,7 @@
   }
 
   .title {
-    font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 20px;
-    font-weight: 700;
     margin: 8px 0 0;
-    color: #1a1c1e;
-    letter-spacing: -0.01em;
-  }
-
-  :global(.dark) .title {
-    color: #f0f0f3;
   }
 
   .ring-wrap {

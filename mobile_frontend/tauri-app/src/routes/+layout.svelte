@@ -6,6 +6,7 @@
   import '../lib/app.css';
   import DenebApp from '$lib/DenebApp.svelte';
   import Toast from '$lib/features/core/Toast.svelte';
+  import LoadingOverlay from '$lib/features/core/LoadingOverlay.svelte';
   import { theme } from '$lib/features/core/theme.svelte';
 
   let { children } = $props();
@@ -16,6 +17,7 @@
 </script>
 
 <Toast />
+<LoadingOverlay />
 <DenebApp>
   {@render children()}
 </DenebApp>

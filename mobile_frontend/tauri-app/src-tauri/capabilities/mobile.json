@@ -1,12 +1,8 @@
 {
   "identifier": "mobile-capability",
-  "platforms": [
-    "android",
-    "iOS"
-  ],
-  "windows": [
-    "main"
-  ],
+  "$schema": "mobile-capability",
+  "platforms": ["android", "iOS"],
+  "windows": ["main"],
   "permissions": [
     "core:default",
     "opener:default",
@@ -18,6 +14,7 @@
     "http:default",
     "biometric:default",
     "deep-link:default",
-    "barcode-scanner:default"
+    "barcode-scanner:allow-scan",
+    "barcode-scanner:allow-cancel"
   ]
 }

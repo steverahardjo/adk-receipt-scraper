@@ -16,7 +16,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="form-content">
-  <h2 class="form-title">Create account</h2>
+  <h2 class="form-title headline-lg">Create account</h2>
   <p class="form-subtitle">Secure your account and continue</p>
 
   <div class="fields">
@@ -91,14 +91,7 @@
   }
 
   .form-title {
-    font-size: 22px;
-    font-weight: 700;
     margin: 0;
-    color: #000000;
-  }
-
-  :global(.dark) .form-title {
-    color: #ffffff;
   }
 
   .form-subtitle {

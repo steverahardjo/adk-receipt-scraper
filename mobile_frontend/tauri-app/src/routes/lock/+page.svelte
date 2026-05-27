@@ -3,8 +3,10 @@
   import BaseLayer from '$lib/BaseLayer.svelte'
   import Passcode from '$lib/features/core/Passcode.svelte'
   import Fingerprint from '$lib/features/core/Fingerprint.svelte'
+  import { checkStatus, authenticate } from '@tauri-apps/plugin-biometric'
 
   let fpRef = $state<Fingerprint>(null!)
+  let fpAvailable = $state(true)
 
   function onPasscodeSubmit(code: string) {
     return code === '111111'
@@ -14,13 +16,31 @@
     goto('/')
   }
 
-  function onFingerprintScan() {
+  async function onFingerprintScan() {
     fpRef?.setState('scanning')
-    setTimeout(() => {
+    try {
+      const status = await checkStatus()
+      if (!status.isAvailable) {
+        fpRef?.setState('failure')
+        fpAvailable = false
+        return
+      }
+      await authenticate('Unlock Deneb', {
+        allowDeviceCredential: true,
+        title: 'Unlock Deneb',
+        subtitle: 'Use your fingerprint to continue',
+      })
       fpRef?.setState('success')
       goto('/')
-    }, 600)
+    } catch {
+      fpRef?.setState('failure')
+      setTimeout(() => fpRef?.setState('idle'), 2000)
+    }
   }
+
+  $effect(() => {
+    checkStatus().then(s => { fpAvailable = s.isAvailable }).catch(() => { fpAvailable = false })
+  })
 </script>
 
 <BaseLayer noDrawer>
@@ -31,16 +51,18 @@
         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
       <h1>Deneb</h1>
-      <p>Enter passcode or use Touch ID</p>
+      <p>{fpAvailable ? 'Enter passcode or use Touch ID' : 'Enter passcode to unlock'}</p>
     </div>
 
-    <Fingerprint bind:this={fpRef} onScan={onFingerprintScan} />
+    {#if fpAvailable}
+      <Fingerprint bind:this={fpRef} onScan={onFingerprintScan} />
 
-    <div class="divider">
-      <span></span>
-      <span class="divider-text">or enter passcode</span>
-      <span></span>
-    </div>
+      <div class="divider">
+        <span></span>
+        <span class="divider-text">or enter passcode</span>
+        <span></span>
+      </div>
+    {/if}
 
     <Passcode onSubmit={onPasscodeSubmit} onSuccess={onPasscodeSuccess} />
   </div>

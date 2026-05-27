@@ -17,7 +17,7 @@
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
         </div>
-        <p class="empty-title">AI Assistant</p>
+        <p class="empty-title headline-md">AI Assistant</p>
         <p class="empty-desc">
           {#if contextMessage}
             Tap send to discuss the selected card
@@ -91,13 +91,8 @@
   }
 
   .empty-title {
-    font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 18px;
-    font-weight: 700;
     margin: 0;
-    color: #1a1c1e;
   }
-  :global(.dark) .empty-title { color: #f0f0f3; }
 
   .empty-desc {
     font-family: 'Manrope', system-ui, sans-serif;

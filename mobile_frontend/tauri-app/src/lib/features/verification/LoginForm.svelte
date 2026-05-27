@@ -52,7 +52,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="form-content">
-  <h2 class="form-title">Welcome back</h2>
+  <h2 class="form-title headline-lg">Welcome back</h2>
   <p class="form-subtitle">Enter your details to continue</p>
 
   <div class="fields">
@@ -103,14 +103,7 @@
   }
 
   .form-title {
-    font-size: 22px;
-    font-weight: 700;
     margin: 0;
-    color: #000000;
-  }
-
-  :global(.dark) .form-title {
-    color: #ffffff;
   }
 
   .form-subtitle {

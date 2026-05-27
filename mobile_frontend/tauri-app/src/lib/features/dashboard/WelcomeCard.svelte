@@ -6,14 +6,14 @@
 <div class="card">
   <div class="greeting-section">
     <span class="label">Hello</span>
-    <h2 class="greeting">{greeting}</h2>
+    <h2 class="greeting headline-lg">{greeting}</h2>
   </div>
 
   <div class="net-worth-card">
     <div class="nw-top">
       <div>
         <p class="nw-label">Net Worth</p>
-        <p class="nw-value">Rp 187.500.000</p>
+        <p class="nw-value headline-xl">Rp 187.500.000</p>
       </div>
     </div>
     <div class="nw-breakdown">
@@ -74,16 +74,7 @@
   }
 
   .greeting {
-    font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 24px;
-    font-weight: 700;
     margin: 4px 0 0;
-    color: #1a1c1e;
-    letter-spacing: -0.01em;
-  }
-
-  :global(.dark) .greeting {
-    color: #f0f0f3;
   }
 
   .net-worth-card {
@@ -111,13 +102,9 @@
   }
 
   .nw-value {
-    font-family: 'Manrope', system-ui, sans-serif;
-    font-size: 22px;
-    font-weight: 700;
     color: #1a1c1e;
     margin: 0;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.01em;
   }
 
   :global(.dark) .nw-value {
