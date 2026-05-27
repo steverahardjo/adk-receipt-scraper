@@ -1,10 +1,32 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import type { Entry } from './types'
   import DailyTrend from './DailyTrend.svelte'
   import CategoryDonut from './CategoryDonut.svelte'
   import MonthlyBars from './MonthlyBars.svelte'
 
   let { entries }: { entries: Entry[] } = $props()
+
+  type Tab = 'daily' | 'category' | 'monthly'
+  const TABS: { key: Tab; label: string }[] = [
+    { key: 'daily', label: 'Daily' },
+    { key: 'category', label: 'Category' },
+    { key: 'monthly', label: 'Monthly' },
+  ]
+
+  let activeTab = $state<Tab>('daily')
+
+  onMount(() => {
+    const saved = localStorage.getItem('deneb-flow-tab')
+    if (saved === 'daily' || saved === 'category' || saved === 'monthly') {
+      activeTab = saved
+    }
+  })
+
+  function setTab(key: Tab) {
+    activeTab = key
+    localStorage.setItem('deneb-flow-tab', key)
+  }
 
   let dailyData = $derived.by(() => {
     const days: Record<string, { income: number; expense: number }> = {}
@@ -85,26 +107,69 @@
 
 {#if hasData}
   <div class="charts">
-    <div class="chart-section">
-      <span class="chart-title">Daily Trend</span>
+    <div class="tabs" role="tablist">
+      {#each TABS as t}
+        <button
+          class="tab"
+          class:active={activeTab === t.key}
+          role="tab"
+          aria-selected={activeTab === t.key}
+          onclick={() => setTab(t.key)}
+        >
+          {t.label}
+        </button>
+      {/each}
+    </div>
+
+    {#if activeTab === 'daily'}
       <DailyTrend {dailyData} />
-    </div>
-
-    <div class="chart-section">
-      <span class="chart-title">Spending by Category</span>
+    {:else if activeTab === 'category'}
       <CategoryDonut data={donutData} />
-    </div>
-
-    <div class="chart-section">
-      <span class="chart-title">Monthly Spending</span>
+    {:else if activeTab === 'monthly'}
       <MonthlyBars data={barData} keys={barKeys} colors={barColors} />
-    </div>
+    {/if}
   </div>
 {/if}
 
 <style>
-  .charts { display: flex; flex-direction: column; gap: 24px; }
-  .chart-section { display: flex; flex-direction: column; gap: 8px; }
-  .chart-title { font-family: 'Public Sans', sans-serif; font-size: 11px; font-weight: 600; color: #1a1c1e; text-transform: uppercase; letter-spacing: 0.04em; }
-  :global(.dark) .chart-title { color: #f0f0f3; }
+  .charts { display: flex; flex-direction: column; gap: 16px; }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 4px;
+    border-radius: 10px;
+    background: rgba(0, 141, 163, 0.04);
+    width: fit-content;
+  }
+  :global(.dark) .tabs { background: rgba(110, 212, 236, 0.04); }
+
+  .tab {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7b72;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tab.active {
+    background: #ffffff;
+    color: #006c50;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+  :global(.dark) .tab.active {
+    background: #3a3d3f;
+    color: #24e0ab;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .tab:not(.active):active {
+    background: rgba(0, 141, 163, 0.06);
+  }
 </style>

@@ -120,30 +120,6 @@
 
 <BaseLayer title="Records">
   <div class="page">
-    <div class="page-top">
-      <p class="page-sub">{searched.length} entries</p>
-      {#if hasCustomFilters}
-        <button class="clear-btn" onclick={clearFilters}>Clear</button>
-      {/if}
-    </div>
-
-    <div use:longpress={{ duration: 500, onLongPress: () => openContext('Cash Flow Summary', `Income Rp ${totals.income.toLocaleString('id-ID')}, Expenses Rp ${totals.expense.toLocaleString('id-ID')}, Net ${(totals.income - totals.expense) >= 0 ? '+' : ''}Rp ${(totals.income - totals.expense).toLocaleString('id-ID')}. Type breakdown: ${typeSummary}. Payment methods: ${paymentSummary}.`) }}>
-      <SummaryBar income={totals.income} expense={totals.expense} />
-    </div>
-
-    <button class="flow-toggle" class:open={flowOpen} onclick={() => flowOpen = !flowOpen}>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-      <span>Flow Overview</span>
-    </button>
-
-    {#if flowOpen}
-      <div class="flow-card">
-        <FlowOverview entries={searched} />
-      </div>
-    {/if}
-
     <div class="search-row">
       <div class="search-wrap">
         <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -156,22 +132,27 @@
           bind:value={search}
         />
         {#if search}
-          <button class="search-clear" onclick={() => search = ''}>✕</button>
+          <button class="search-clear" onclick={() => search = ''} aria-label="Clear search">&#10005;</button>
         {/if}
       </div>
     </div>
 
-    <PeriodFilter value={period} onChange={(v) => period = v} />
-
-    <button class="filter-toggle" class:open={filtersOpen} onclick={() => filtersOpen = !filtersOpen}>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="20" y2="12" /><line x1="12" y1="18" x2="20" y2="18" />
-      </svg>
-      <span>More Filters</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </button>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <p class="page-sub">{searched.length} entries</p>
+        {#if hasCustomFilters}
+          <button class="clear-btn" onclick={clearFilters}>Clear</button>
+        {/if}
+      </div>
+      <div class="toolbar-right">
+        <PeriodFilter value={period} onChange={(v) => period = v} />
+        <button class="filter-toggle" class:open={filtersOpen} onclick={() => filtersOpen = !filtersOpen} aria-label="Toggle filters">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="20" y2="12" /><line x1="12" y1="18" x2="20" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
 
     {#if filtersOpen}
       <div class="filter-card">
@@ -203,6 +184,23 @@
       </div>
     {/if}
 
+    <div use:longpress={{ duration: 500, onLongPress: () => openContext('Cash Flow Summary', `Income Rp ${totals.income.toLocaleString('id-ID')}, Expenses Rp ${totals.expense.toLocaleString('id-ID')}, Net ${(totals.income - totals.expense) >= 0 ? '+' : ''}Rp ${(totals.income - totals.expense).toLocaleString('id-ID')}. Type breakdown: ${typeSummary}. Payment methods: ${paymentSummary}.`) }}>
+      <SummaryBar income={totals.income} expense={totals.expense} />
+    </div>
+
+    <button class="flow-toggle" class:open={flowOpen} onclick={() => flowOpen = !flowOpen}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+      <span>Flow Overview</span>
+    </button>
+
+    {#if flowOpen}
+      <div class="flow-card">
+        <FlowOverview entries={searched} />
+      </div>
+    {/if}
+
     <div class="list-card">
       <RecordList allTransactions={searched} {period} onSelect={(t) => selectedTx = t} />
     </div>
@@ -215,36 +213,6 @@
 
 <style>
   .page { display: flex; flex-direction: column; gap: 16px; padding: 0 0 16px; }
-  .page-top { display: flex; align-items: center; justify-content: space-between; }
-  .page-sub { font-family: 'Public Sans', sans-serif; font-size: 12px; font-weight: 500; color: #6b7b72; margin: 0; letter-spacing: 0.02em; }
-  .clear-btn { background: none; border: none; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #008da3; cursor: pointer; padding: 0; }
-
-  .flow-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border: 1px solid rgba(0, 141, 163, 0.08);
-    border-radius: 12px;
-    background: #ffffff;
-    color: #006c50;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    box-shadow: 0 2px 8px rgba(0, 141, 163, 0.04);
-    transition: background 0.1s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  :global(.dark) .flow-toggle { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); color: #24e0ab; }
-  .flow-toggle:active { background: #f0f9f8; }
-  :global(.dark) .flow-toggle:active { background: rgba(36, 224, 171, 0.06); }
-  .flow-toggle svg { transition: transform 0.2s; }
-  .flow-toggle.open svg { transform: rotate(90deg); }
-
-  .flow-card { background: #ffffff; border: 1px solid rgba(0, 141, 163, 0.08); border-radius: 16px; padding: 16px; box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06); }
-  :global(.dark) .flow-card { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); }
 
   .search-row { margin: 0; }
   .search-wrap { position: relative; display: flex; align-items: center; }
@@ -262,25 +230,53 @@
   .search-input::placeholder { color: #aeaeb2; }
   .search-clear { position: absolute; right: 10px; background: none; border: none; color: #aeaeb2; cursor: pointer; font-size: 16px; padding: 4px; line-height: 1; }
 
-  .filter-toggle {
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .toolbar-left {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 0;
-    border: none;
-    background: none;
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-sub {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+    color: #6b7b72; margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .clear-btn {
+    background: none; border: none;
     font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px; font-weight: 600;
+    color: #008da3; cursor: pointer; padding: 0;
+  }
+  :global(.dark) .clear-btn { color: #6ed4ec; }
+
+  .filter-toggle {
+    width: 32px; height: 32px;
+    border: none; border-radius: 8px;
+    background: rgba(0, 141, 163, 0.06);
     color: #6b7b72;
     cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
-  :global(.dark) .filter-toggle { color: #6b7b72; }
-  .filter-toggle svg:last-child { margin-left: auto; transition: transform 0.2s; }
-  .filter-toggle.open svg:last-child { transform: rotate(90deg); }
-  .filter-toggle svg:first-child { color: #006c50; }
-  :global(.dark) .filter-toggle svg:first-child { color: #24e0ab; }
+  :global(.dark) .filter-toggle { background: rgba(110, 212, 236, 0.06); }
+  .filter-toggle.open { background: rgba(0, 141, 163, 0.12); color: #006c50; }
+  :global(.dark) .filter-toggle.open { background: rgba(36, 224, 171, 0.12); color: #24e0ab; }
 
   .filter-card {
     background: #ffffff;
@@ -321,6 +317,33 @@
   .filter-input:focus { border-color: #2ee5af; }
   :global(.dark) .filter-input:focus { border-color: #24e0ab; }
   .filter-input::placeholder { color: #aeaeb2; }
+
+  .flow-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid rgba(0, 141, 163, 0.08);
+    border-radius: 12px;
+    background: #ffffff;
+    color: #006c50;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 141, 163, 0.04);
+    transition: background 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :global(.dark) .flow-toggle { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); color: #24e0ab; }
+  .flow-toggle:active { background: #f0f9f8; }
+  :global(.dark) .flow-toggle:active { background: rgba(36, 224, 171, 0.06); }
+  .flow-toggle svg { transition: transform 0.2s; }
+  .flow-toggle.open svg { transform: rotate(90deg); }
+
+  .flow-card { background: #ffffff; border: 1px solid rgba(0, 141, 163, 0.08); border-radius: 16px; padding: 16px; box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06); }
+  :global(.dark) .flow-card { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); }
 
   .list-card { background: #ffffff; border: 1px solid rgba(0, 141, 163, 0.08); border-radius: 16px; padding: 4px 20px; box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06); }
   :global(.dark) .list-card { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); }
