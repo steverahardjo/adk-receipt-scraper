@@ -72,7 +72,7 @@
   .header-title { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; color: var(--f7-page-text-color); }
   .header-total { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); font-variant-numeric: tabular-nums; }
   .pie-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
-  .pie-wrap svg { color: var(--f7-page-text-color); }
+  .pie-wrap svg { color: var(--f7-page-text-color); width: 100%; max-width: 160px; height: auto; }
   .arc { cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .arc.selected { filter: brightness(1.1) drop-shadow(0 0 4px currentColor); }
 </style>

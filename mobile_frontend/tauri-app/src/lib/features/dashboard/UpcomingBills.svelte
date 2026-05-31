@@ -28,7 +28,7 @@
           <span class="name">{bill.name}</span>
           <span class="due">{dueLabel(bill.due)}</span>
         </div>
-        <span class="amount">Rp {bill.amount.toLocaleString('id-ID')}</span>
+        <span class="amount">Rp {(bill.amount / 1000).toFixed(0)}K</span>
       </div>
     {/each}
   </div>

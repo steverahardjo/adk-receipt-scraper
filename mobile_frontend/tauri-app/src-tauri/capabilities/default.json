@@ -11,6 +11,8 @@
     "notification:default",
     "clipboard-manager:default",
     "geolocation:default",
-    "http:default"
+    "http:default",
+    "barcode-scanner:allow-scan",
+    "barcode-scanner:allow-cancel"
   ]
 }

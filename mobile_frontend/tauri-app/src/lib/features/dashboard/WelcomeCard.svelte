@@ -3,110 +3,76 @@
   let greeting = $derived(hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening')
 </script>
 
-<div class="card">
-  <div class="greeting-section">
-    <span class="label">Hello</span>
-    <h2 class="greeting headline-xl">{greeting}</h2>
-  </div>
+<div class="hero">
+  <span class="eyebrow">{greeting}</span>
+  <h1 class="net-worth">Rp 187.500.000</h1>
+  <p class="hero-label">Net Worth</p>
 
-  <div class="net-worth-card">
-    <div class="nw-top">
-      <p class="nw-label">Net Worth</p>
-      <p class="nw-value">Rp 187.500.000</p>
+  <div class="summary-row">
+    <div class="summary-item income">
+      <span class="summary-num">+8.50M</span>
+      <span class="summary-tag">Income this month</span>
     </div>
-    <div class="nw-breakdown">
-      <div class="nw-item">
-        <span class="nw-dot" style="background: var(--deneb-positive)"></span>
-        <span class="nw-item-label">Assets</span>
-        <span class="nw-item-value plus">Rp 200.000.000</span>
-      </div>
-      <div class="nw-item">
-        <span class="nw-dot" style="background: var(--deneb-negative)"></span>
-        <span class="nw-item-label">Liabilities</span>
-        <span class="nw-item-value minus">-Rp 12.500.000</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="monthly-row">
-    <div class="monthly-item">
-      <span class="monthly-label">Income this month</span>
-      <p class="monthly-value plus">+Rp 8.500.000</p>
-    </div>
-    <div class="monthly-item">
-      <span class="monthly-label">Spent this month</span>
-      <p class="monthly-value minus">-Rp 3.300.000</p>
+    <div class="summary-div"></div>
+    <div class="summary-item expense">
+      <span class="summary-num">-3.30M</span>
+      <span class="summary-tag">Spent this month</span>
     </div>
   </div>
 </div>
 
 <style>
-  .card {
-    background: var(--deneb-surface);
-    border: 1px solid var(--deneb-border);
-    border-radius: 10px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  .hero {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 0 32px 0;
   }
-  .greeting-section { margin-bottom: 20px; }
-  .label {
+  .eyebrow {
     font-family: 'Geist Mono', monospace;
     font-size: 11px; font-weight: 500;
-    color: var(--deneb-text-secondary);
-    letter-spacing: 0.03em;
+    color: var(--deneb-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .greeting { margin: 4px 0 0; }
-
-  .net-worth-card {
-    background: var(--deneb-canvas);
-    border: 1px solid var(--deneb-divider);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-  }
-  .nw-top { margin-bottom: 12px; }
-  .nw-label {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px; font-weight: 500;
-    color: var(--deneb-text-secondary);
-    margin: 0 0 4px;
-    letter-spacing: 0.03em;
-  }
-  .nw-value {
+  .net-worth {
     font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 26px; font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: 38px; font-weight: 700;
+    letter-spacing: -0.03em; line-height: 1.1;
     color: var(--f7-page-text-color);
-    margin: 0;
+    margin: 6px 0 0;
     font-variant-numeric: tabular-nums;
   }
-  .nw-breakdown { display: flex; flex-direction: column; gap: 8px; }
-  .nw-item { display: flex; align-items: center; gap: 8px; }
-  .nw-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .nw-item-label {
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 13px; font-weight: 500;
-    color: var(--deneb-text-secondary); flex: 1;
-  }
-  .nw-item-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .plus { color: var(--deneb-positive); }
-  .minus { color: var(--deneb-negative); }
-
-  .monthly-row { display: flex; gap: 32px; }
-  .monthly-item { flex: 1; }
-  .monthly-label {
-    font-family: 'Geist Sans', system-ui, sans-serif;
+  .hero-label {
+    font-family: 'Geist Mono', monospace;
     font-size: 12px; font-weight: 500;
     color: var(--deneb-text-secondary);
-  }
-  .monthly-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px; font-weight: 600;
+    letter-spacing: 0.04em;
     margin: 4px 0 0;
-    font-variant-numeric: tabular-nums;
+  }
+  .summary-row {
+    display: flex; align-items: center; gap: 32px;
+    margin-top: 28px;
+    padding: 14px 24px;
+    border: 1px solid var(--deneb-border);
+    border-radius: 12px;
+    background: var(--deneb-surface);
+  }
+  .summary-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .summary-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px; font-weight: 600;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  }
+  .summary-item.income .summary-num { color: var(--deneb-positive); }
+  .summary-item.expense .summary-num { color: var(--deneb-negative); }
+  .summary-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px; font-weight: 400;
+    color: var(--deneb-text-muted);
+    letter-spacing: 0.03em;
+  }
+  .summary-div {
+    width: 1px; height: 32px;
+    background: var(--deneb-divider);
+    flex-shrink: 0;
   }
 </style>
