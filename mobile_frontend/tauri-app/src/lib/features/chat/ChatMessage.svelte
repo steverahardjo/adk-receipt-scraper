@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ChatMessage } from './chat'
+  import ChatChart from './ChatChart.svelte'
 
   let { message }: { message: ChatMessage } = $props()
 
@@ -9,13 +10,21 @@
 </script>
 
 <div class="row" class:user={message.role === 'user'}>
-  <div class="bubble" class:user={message.role === 'user'} class:assistant={message.role === 'assistant'}>
+  <div
+    class="bubble"
+    class:user={message.role === 'user'}
+    class:assistant={message.role === 'assistant'}
+    class:wide={!!message.chart}
+  >
     {#if message.status === 'sending'}
       <div class="typing" aria-label="Assistant is typing">
         <span></span><span></span><span></span>
       </div>
     {:else}
       <p class="text">{message.content}</p>
+      {#if message.chart}
+        <div class="chart-wrap"><ChatChart spec={message.chart} /></div>
+      {/if}
       <div class="meta">
         <span>{time}</span>
         {#if message.status === 'error'}<span class="error">Failed</span>{/if}
@@ -36,8 +45,11 @@
   }
   .bubble.user { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); border-bottom-right-radius: 4px; }
   .bubble.assistant { background: var(--deneb-surface); border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); border-bottom-left-radius: 4px; }
+  .bubble.wide { max-width: 100%; width: 100%; }
 
   .text { margin: 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+
+  .chart-wrap { margin-top: 10px; }
 
   .meta {
     display: flex; align-items: center; gap: 8px;

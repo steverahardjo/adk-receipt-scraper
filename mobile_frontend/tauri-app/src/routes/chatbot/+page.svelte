@@ -36,7 +36,7 @@
     try {
       const history = messages.filter((m) => m.id !== placeholder.id)
       const reply = await sendChat(history, contextMessage || undefined)
-      messages = messages.map((m) => (m.id === placeholder.id ? { ...m, content: reply, status: 'sent' } : m))
+      messages = messages.map((m) => (m.id === placeholder.id ? { ...m, content: reply.content, chart: reply.chart, status: 'sent' } : m))
     } catch {
       messages = messages.map((m) => (m.id === placeholder.id ? { ...m, content: 'Something went wrong. Please try again.', status: 'error' } : m))
     } finally {
