@@ -44,9 +44,8 @@
     display: flex;
     gap: 12px;
     padding: 14px 0;
-    border-bottom: 1px solid #e2e2e5;
+    border-bottom: 1px solid var(--deneb-divider);
   }
-  :global(.dark) .item { border-color: #404848; }
   .item:first-child { padding-top: 0; }
   .item:last-child { padding-bottom: 0; border-bottom: none; }
 
@@ -58,35 +57,30 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; margin-top: 2px;
   }
-  .icon-wrap.security { background: rgba(0, 141, 163, 0.1); color: #008da3; }
-  .icon-wrap.payment { background: rgba(46, 229, 175, 0.12); color: #006c50; }
-  .icon-wrap.investment { background: rgba(0, 108, 80, 0.1); color: #006c50; }
-  .icon-wrap.alert { background: rgba(186, 26, 26, 0.08); color: #ba1a1a; }
-  :global(.dark) .icon-wrap.security { color: #6ed4ec; background: rgba(110, 212, 236, 0.1); }
-  :global(.dark) .icon-wrap.payment { color: #24e0ab; background: rgba(36, 224, 171, 0.1); }
-  :global(.dark) .icon-wrap.investment { color: #24e0ab; background: rgba(36, 224, 171, 0.08); }
-  :global(.dark) .icon-wrap.alert { color: #ffb4ab; background: rgba(255, 180, 171, 0.08); }
+  .icon-wrap.security { background: var(--deneb-info-bg); color: var(--deneb-info); }
+  .icon-wrap.payment { background: var(--deneb-positive-bg); color: var(--deneb-positive); }
+  .icon-wrap.investment { background: var(--deneb-positive-bg); color: var(--deneb-positive); }
+  .icon-wrap.alert { background: var(--deneb-negative-bg); color: var(--deneb-negative); }
 
   .body { flex: 1; min-width: 0; }
   .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .title {
-    font-family: 'Manrope', system-ui, sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 14px; font-weight: 600;
-    color: #1a1c1e; margin: 0;
+    color: var(--f7-page-text-color); margin: 0;
   }
-  :global(.dark) .title { color: #f0f0f3; }
   .time {
-    font-family: 'Public Sans', system-ui, sans-serif;
+    font-family: 'Geist Mono', monospace;
     font-size: 11px; font-weight: 500;
-    color: #6b7b72; white-space: nowrap;
+    color: var(--deneb-text-secondary); white-space: nowrap;
   }
   .desc {
-    font-family: 'Manrope', system-ui, sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 13px; font-weight: 400;
-    color: #6b7b72; margin: 3px 0 0; line-height: 1.3;
+    color: var(--deneb-text-secondary); margin: 3px 0 0; line-height: 1.3;
   }
   .empty {
-    text-align: center; font-size: 14px; color: #6b7b72;
+    text-align: center; font-size: 14px; color: var(--deneb-text-secondary);
     padding: 32px 0; margin: 0;
   }
 </style>

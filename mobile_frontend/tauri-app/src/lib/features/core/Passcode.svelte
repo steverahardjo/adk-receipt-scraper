@@ -7,7 +7,7 @@
     onSuccess,
   }: {
     length?: number
-    onSubmit?: (code: string) => boolean
+    onSubmit?: (code: string) => boolean | Promise<boolean>
     onSuccess?: () => void
   } = $props()
 
@@ -27,7 +27,7 @@
   }
 
   async function checkCode(code: string) {
-    const ok = onSubmit?.(code) ?? false
+    const ok = (await onSubmit?.(code)) ?? false
     if (ok) {
       result = 'success'
       await tick()

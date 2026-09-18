@@ -4,7 +4,7 @@
   import { drawerNavItems } from './types'
   import { theme } from './theme.svelte'
 
-  let { opened = false, onClose }: { opened?: boolean; onClose?: () => void } = $props()
+  let { opened = false, onClose, onOpenSecurity }: { opened?: boolean; onClose?: () => void; onOpenSecurity?: () => void } = $props()
 
   let pathname = $derived($page.url.pathname)
   let expanded = $state<Set<string>>(new Set())
@@ -99,6 +99,12 @@
     <div class="divider-row"><div class="divider-line"></div></div>
 
     <div class="footer">
+      <button class="nav-item theme-item" onclick={() => { onClose?.(); onOpenSecurity?.() }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span>Security</span>
+      </button>
       <button class="nav-item theme-item" onclick={() => theme.toggle()}>
         {#if theme.current === 'dark'}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

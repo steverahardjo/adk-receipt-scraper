@@ -3,35 +3,43 @@
   import BaseLayer from '$lib/BaseLayer.svelte'
   import Passcode from '$lib/features/core/Passcode.svelte'
   import Fingerprint from '$lib/features/core/Fingerprint.svelte'
-  import { checkStatus, authenticate } from '@tauri-apps/plugin-biometric'
+  import { lock } from '$lib/features/core/lock.svelte'
 
-  let fpRef = $state<Fingerprint>(null!), fpAvailable = $state(true)
+  let fpRef = $state<Fingerprint>(null!)
 
-  function onPasscodeSubmit(code: string) { return code === '111111' }
-  function onPasscodeSuccess() { goto('/') }
+  let showBiometric = $derived(lock.biometricEnabled && lock.biometricAvailable)
+
+  function onPasscodeSubmit(code: string) {
+    return lock.verifyPasscode(code)
+  }
+
+  function onPasscodeSuccess() {
+    lock.unlock()
+    goto('/')
+  }
 
   async function onFingerprintScan() {
-    fpRef?.setState('scanning')
-    try {
-      const status = await checkStatus()
-      if (!status.isAvailable) { fpRef?.setState('failure'); fpAvailable = false; return }
-      await authenticate('Unlock Deneb', { allowDeviceCredential: true, title: 'Unlock Deneb', subtitle: 'Use your fingerprint to continue' })
-      fpRef?.setState('success'); goto('/')
-    } catch { fpRef?.setState('failure'); setTimeout(() => fpRef?.setState('idle'), 2000) }
+    const ok = await lock.tryBiometric()
+    if (ok) {
+      fpRef?.setState('success')
+      setTimeout(() => { lock.unlock(); goto('/') }, 350)
+    } else {
+      fpRef?.setState('failure')
+      setTimeout(() => fpRef?.setState('idle'), 2000)
+    }
   }
-  $effect(() => { checkStatus().then(s => { fpAvailable = s.isAvailable }).catch(() => { fpAvailable = false }) })
 </script>
 
-<BaseLayer noDrawer>
+<BaseLayer noNavbar noDrawer>
   <div class="lock-screen">
     <div class="brand">
       <svg class="logo" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
       <h1>Deneb</h1>
-      <p>{fpAvailable ? 'Enter passcode or use Touch ID' : 'Enter passcode to unlock'}</p>
+      <p>{showBiometric ? 'Enter passcode or use biometrics' : 'Enter passcode to unlock'}</p>
     </div>
-    {#if fpAvailable}
+    {#if showBiometric}
       <Fingerprint bind:this={fpRef} onScan={onFingerprintScan} />
       <div class="divider"><span></span><span class="divider-text">or enter passcode</span><span></span></div>
     {/if}
@@ -42,8 +50,7 @@
 <style>
   .lock-screen { display: flex; flex-direction: column; align-items: center; padding-top: 48px; }
   .brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 32px; }
-  .logo { color: #111111; margin-bottom: 4px; }
-  :global(.dark) .logo { color: #ECECEC; }
+  .logo { color: var(--f7-page-text-color); margin-bottom: 4px; }
   .brand h1 { font-size: 28px; font-weight: 700; margin: 0; color: var(--f7-page-text-color); letter-spacing: -0.02em; }
   .brand p { font-size: 15px; color: var(--deneb-text-secondary); margin: 0; }
   .divider { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 240px; margin: 24px 0; }

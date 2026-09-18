@@ -1,15 +1,72 @@
 <script lang="ts">
+  import { onMount, tick } from 'svelte'
   import { page } from '$app/stores'
   import BaseLayer from '$lib/BaseLayer.svelte'
+  import ChatMessage from '$lib/features/chat/ChatMessage.svelte'
+  import ChatComposer from '$lib/features/chat/ChatComposer.svelte'
+  import ChatSuggestions from '$lib/features/chat/ChatSuggestions.svelte'
+  import { sendChat } from '$lib/features/chat/chat'
+  import type { ChatMessage as ChatMsg } from '$lib/features/chat/chat'
+  import { readValue, writeValue } from '$lib/features/core/storage'
 
+  let input = $state('')
+  let messages = $state<ChatMsg[]>([])
+  let loading = $state(false)
+  let anchor = $state<HTMLDivElement | null>(null)
   let contextMessage = $derived($page.url.searchParams.get('context') ?? '')
-  let input = $state(contextMessage)
-  let sent = $state(!!contextMessage)
+
+  function uid() {
+    return globalThis.crypto?.randomUUID?.() ?? `m-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  }
+
+  async function scrollToEnd() {
+    await tick()
+    anchor?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }
+
+  async function send(text: string) {
+    const trimmed = text.trim()
+    if (!trimmed || loading) return
+    input = ''
+    messages = [...messages, { id: uid(), role: 'user', content: trimmed, createdAt: Date.now(), status: 'sent' }]
+    const placeholder: ChatMsg = { id: uid(), role: 'assistant', content: '', createdAt: Date.now(), status: 'sending' }
+    messages = [...messages, placeholder]
+    loading = true
+    scrollToEnd()
+    try {
+      const history = messages.filter((m) => m.id !== placeholder.id)
+      const reply = await sendChat(history, contextMessage || undefined)
+      messages = messages.map((m) => (m.id === placeholder.id ? { ...m, content: reply, status: 'sent' } : m))
+    } catch {
+      messages = messages.map((m) => (m.id === placeholder.id ? { ...m, content: 'Something went wrong. Please try again.', status: 'error' } : m))
+    } finally {
+      loading = false
+      await writeValue('chat-history', messages)
+      scrollToEnd()
+    }
+  }
+
+  onMount(async () => {
+    const saved = await readValue<ChatMsg[]>('chat-history')
+    if (saved?.length) messages = saved.filter((m) => m.status !== 'sending')
+    if (contextMessage) {
+      await send(contextMessage)
+    } else if (messages.length === 0) {
+      messages = [{
+        id: uid(),
+        role: 'assistant',
+        content: 'Hi! Ask me anything about your finances — spending, budgets, or where to save.',
+        createdAt: Date.now(),
+        status: 'sent',
+      }]
+    }
+    scrollToEnd()
+  })
 </script>
 
 <BaseLayer title="Chat" noDrawer>
   <div class="page">
-    {#if !sent}
+    {#if messages.length === 0}
       <div class="empty">
         <div class="empty-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -17,55 +74,57 @@
           </svg>
         </div>
         <p class="empty-title headline-md">AI Assistant</p>
-        <p class="empty-desc">
-          {#if contextMessage}
-            Tap send to discuss the selected card
-          {:else}
-            Ask anything about your finances
-          {/if}
-        </p>
+        <p class="empty-desc">Ask anything about your finances</p>
+        <div class="suggestions"><ChatSuggestions onPick={(t) => send(t)} /></div>
       </div>
     {:else}
       <div class="chat-area">
-        <div class="bubble user">
-          <div class="bubble-text">{contextMessage || input}</div>
-        </div>
-        <div class="bubble ai">
-          <div class="bubble-text">
-            {contextMessage ? 'Looking at your data...' : 'I hear you.'} What would you like to know?
-          </div>
-        </div>
+        {#each messages as message (message.id)}
+          <ChatMessage {message} />
+        {/each}
       </div>
     {/if}
+    <div bind:this={anchor} class="anchor"></div>
   </div>
 
   <div class="input-bar">
-    <input class="input-field" type="text" placeholder="Ask about your finances..."
-      bind:value={input}
-      onkeydown={(e) => { if (e.key === 'Enter' && input.trim()) sent = true }} />
-    <button class="send-btn" disabled={!input.trim()} onclick={() => { if (input.trim()) sent = true }}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
-      </svg>
-    </button>
+    <ChatComposer bind:value={input} disabled={loading} onsubmit={() => send(input)} />
   </div>
 </BaseLayer>
 
 <style>
-  .page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100dvh - 200px); padding: 0 0 16px; }
-  .empty { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-  .empty-icon { width: 56px; height: 56px; border-radius: 12px; background: var(--deneb-canvas); border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 8px 16px 96px;
+  }
+
+  .empty {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    padding-bottom: 40px;
+  }
+  .empty-icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: var(--deneb-canvas); border: 1px solid var(--deneb-border);
+    color: var(--f7-page-text-color);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+  }
   .empty-title { margin: 0; }
-  .empty-desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; color: var(--deneb-text-secondary); margin: 0; max-width: 240px; }
-  .chat-area { width: 100%; display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
-  .bubble { max-width: 85%; padding: 14px 16px; border-radius: 10px; }
-  .bubble.user { align-self: flex-end; background: #111111; color: #FFFFFF; border-bottom-right-radius: 2px; }
-  :global(.dark) .bubble.user { background: #ECECEC; color: #18181A; }
-  .bubble.ai { align-self: flex-start; background: var(--deneb-canvas); border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); border-bottom-left-radius: 2px; }
-  .bubble-text { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.4; }
+  .empty-desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; color: var(--deneb-text-secondary); margin: 0; }
+  .suggestions { margin-top: 16px; }
+
+  .chat-area { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+  .anchor { height: 1px; }
+
   .input-bar {
     position: fixed; left: 0; right: 0; bottom: 0;
-    display: flex; align-items: center; gap: 8px;
     padding: 10px 16px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     background: rgba(251, 251, 250, 0.95);
@@ -74,23 +133,4 @@
     z-index: 100;
   }
   :global(.dark) .input-bar { background: rgba(24, 24, 26, 0.95); }
-  .input-field {
-    flex: 1; height: 44px; padding: 0 16px;
-    border: 1px solid var(--deneb-border); border-radius: 8px;
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 14px; color: var(--f7-page-text-color);
-    background: var(--deneb-surface); outline: none;
-    transition: border-color 0.15s; box-sizing: border-box;
-  }
-  .input-field:focus { border-color: var(--deneb-text-secondary); }
-  .input-field::placeholder { color: var(--deneb-text-muted); }
-  .send-btn {
-    width: 44px; height: 44px; border: none; border-radius: 8px;
-    background: #111111; color: #FFFFFF;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: opacity 0.15s, transform 0.1s;
-  }
-  :global(.dark) .send-btn { background: #ECECEC; color: #18181A; }
-  .send-btn:disabled { opacity: 0.35; }
-  .send-btn:active { transform: scale(0.95); }
 </style>

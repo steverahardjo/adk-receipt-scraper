@@ -1,23 +1,18 @@
 <script lang="ts">
-  import type { Entry, Period } from './types'
+  import type { Entry } from './types'
   import { groupByDate } from './types'
   import RecordRow from './RecordRow.svelte'
 
-  let { allTransactions, period, onSelect }: { allTransactions: Entry[]; period: Period; onSelect?: (e: Entry) => void } = $props()
+  let { allTransactions, onSelect }: { allTransactions: Entry[]; onSelect?: (e: Entry) => void } = $props()
   const PAGE_SIZE = 20
   let loaded = $state(PAGE_SIZE), sentinel = $state<HTMLDivElement | null>(null)
 
-  let filtered = $derived.by(() => {
-    const now = new Date()
-    const cutoffs: Record<Period, number> = { '1w': 7, '1m': 30, '3m': 90, '1y': 365, 'all': 9999 }
-    return allTransactions.filter(e => (now.getTime() - e.date.getTime()) / 86400000 <= cutoffs[period])
-  })
-  let visible = $derived(filtered.slice(0, loaded)), grouped = $derived(groupByDate(visible))
-  let hasMore = $derived(loaded < filtered.length)
+  let visible = $derived(allTransactions.slice(0, loaded)), grouped = $derived(groupByDate(visible))
+  let hasMore = $derived(loaded < allTransactions.length)
 
   $effect(() => {
     if (!sentinel) return
-    const obs = new IntersectionObserver((entries) => { if (entries[0].isIntersecting && hasMore) loaded = Math.min(loaded + PAGE_SIZE, filtered.length) }, { rootMargin: '200px' })
+    const obs = new IntersectionObserver((entries) => { if (entries[0].isIntersecting && hasMore) loaded = Math.min(loaded + PAGE_SIZE, allTransactions.length) }, { rootMargin: '200px' })
     obs.observe(sentinel); return () => obs.disconnect()
   })
 </script>

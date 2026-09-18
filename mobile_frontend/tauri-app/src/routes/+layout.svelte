@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   import '$lib/f7';
   import 'framework7/css/bundle';
   import 'framework7-icons/css/framework7-icons.css';
@@ -20,16 +22,30 @@
   import Toast from '$lib/features/core/Toast.svelte';
   import LoadingOverlay from '$lib/features/core/LoadingOverlay.svelte';
   import { theme } from '$lib/features/core/theme.svelte';
+  import { lock } from '$lib/features/core/lock.svelte';
 
   let { children } = $props();
 
   onMount(() => {
     theme.init();
+    lock.init();
+  });
+
+  $effect(() => {
+    if (!lock.ready) return;
+    const path = $page.url.pathname;
+    if (lock.enabled && lock.locked && path !== '/lock') {
+      goto('/lock');
+    } else if ((!lock.enabled || !lock.locked) && path === '/lock') {
+      goto('/');
+    }
   });
 </script>
 
 <Toast />
 <LoadingOverlay />
 <DenebApp>
-  {@render children()}
+  {#if lock.ready}
+    {@render children()}
+  {/if}
 </DenebApp>

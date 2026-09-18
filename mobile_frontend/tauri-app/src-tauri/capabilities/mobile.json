@@ -1,6 +1,6 @@
 {
   "identifier": "mobile-capability",
-  "$schema": "mobile-capability",
+  "$schema": "../gen/schemas/mobile-schema.json",
   "platforms": ["android", "iOS"],
   "windows": ["main"],
   "permissions": [
@@ -12,6 +12,7 @@
     "clipboard-manager:default",
     "geolocation:default",
     "http:default",
+    "store:default",
     "biometric:default",
     "deep-link:default",
     "barcode-scanner:allow-scan",

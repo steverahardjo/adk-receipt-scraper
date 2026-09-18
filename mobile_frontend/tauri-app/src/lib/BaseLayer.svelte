@@ -2,6 +2,7 @@
   import { page } from '$app/stores'
   import { Page, Navbar, NavLeft, NavTitle, NavRight, PageContent, Link, Icon } from 'framework7-svelte'
   import Drawer from '$lib/features/core/Drawer.svelte'
+  import SecuritySheet from '$lib/features/core/SecuritySheet.svelte'
   import { theme } from '$lib/features/core/theme.svelte'
   let {
     title = '',
@@ -20,6 +21,7 @@
   } = $props()
 
   let drawerOpen = $state(false)
+  let securityOpen = $state(false)
   let currentPath = $derived($page.url.pathname)
 
   function openDrawer() { drawerOpen = true }
@@ -27,7 +29,7 @@
 </script>
 
 <Page>
-  <Drawer opened={drawerOpen} onClose={() => drawerOpen = false} />
+  <Drawer opened={drawerOpen} onClose={() => drawerOpen = false} onOpenSecurity={() => securityOpen = true} />
 
   {#if !noNavbar}
     <Navbar innerClass="nav-custom">
@@ -82,6 +84,8 @@
       </button>
     </div>
   {/if}
+
+  <SecuritySheet opened={securityOpen} onClose={() => securityOpen = false} />
 </Page>
 
 <style>

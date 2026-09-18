@@ -14,7 +14,7 @@ mod commands;
 mod qris;
 
 use crate::commands::{
-    copy_to_clipboard, greet, notify, open_url, pick_file, read_file,
+    copy_to_clipboard, notify, open_url, pick_file, read_file,
     save_dialog, save_file,
 };
 
@@ -41,7 +41,6 @@ pub fn run() {
 
     builder
         .invoke_handler(tauri::generate_handler![
-            greet,
             notify,
             pick_file,
             save_dialog,

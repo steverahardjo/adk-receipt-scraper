@@ -8,10 +8,12 @@
   import RangeSlider from '$lib/features/records/RangeSlider.svelte'
   import ContextPicker from '$lib/features/core/ContextPicker.svelte'
   import { longpress } from '$lib/features/core/longpress'
-  import { generateEntries } from '$lib/features/records/mockdata'
+  import { getEntries } from '$lib/features/records/store.svelte'
   import type { Period, Entry } from '$lib/features/records/types'
 
-  let entries = $state(generateEntries(200))
+  const PERIOD_DAYS: Record<Period, number> = { '1w': 7, '1m': 30, '3m': 90, '1y': 365, all: 9999 }
+
+  let entries = $derived(getEntries())
   let period = $state<Period>('1m'), search = $state('')
   let flowOpen = $state(false), selectedTx = $state<Entry | null>(null), filtersOpen = $state(false)
   let dateFrom = $state(''), dateTo = $state('')
@@ -20,12 +22,14 @@
   let searchQuery = $derived(search.toLowerCase())
 
   let searched = $derived.by(() => {
-    let result = entries
+    const now = Date.now()
+    let result = entries.filter(e => (now - e.date.getTime()) / 86400000 <= PERIOD_DAYS[period])
     if (searchQuery) result = result.filter(e => e.title.toLowerCase().includes(searchQuery) || (e.type || '').toLowerCase().includes(searchQuery) || (e.source || '').toLowerCase().includes(searchQuery) || (e.paymentMethod || '').toLowerCase().includes(searchQuery))
     if (dateFrom) result = result.filter(e => e.date >= new Date(dateFrom))
     if (dateTo) { const to = new Date(dateTo); to.setHours(23, 59, 59, 999); result = result.filter(e => e.date <= to) }
     if (amountMin > 0) result = result.filter(e => e.amount >= amountMin)
-    if (amountMax !== null && amountMax < maxAmount) result = result.filter(e => e.amount <= amountMax)
+    const max = amountMax
+    if (max !== null && max < maxAmount) result = result.filter(e => e.amount <= max)
     return result
   })
 
@@ -108,7 +112,7 @@
       <span>Flow Overview</span>
     </button>
     {#if flowOpen}<div class="flow-card"><FlowOverview entries={searched} /></div>{/if}
-    <div class="list-card"><RecordList allTransactions={searched} {period} onSelect={(t) => selectedTx = t} /></div>
+    <div class="list-card"><RecordList allTransactions={searched} onSelect={(t) => selectedTx = t} /></div>
   </div>
 </BaseLayer>
 

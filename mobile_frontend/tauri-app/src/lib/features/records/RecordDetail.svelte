@@ -34,6 +34,10 @@
     if (tx.flow === 'income') return tx.source || 'Income'
     return tx.type || 'Expense'
   }
+
+  function isImage(link: string) {
+    return link.startsWith('data:image/') || /\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(link)
+  }
 </script>
 
 {#if visible && tx}
@@ -112,14 +116,20 @@
         </div>
       {/if}
       {#if tx.documentLink}
-        <div class="detail-row doc-row">
+        <div class="doc-section">
           <span class="detail-label">Payment Proof</span>
-          <a class="doc-link" href={tx.documentLink} target="_blank" rel="noopener noreferrer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            <span>Download</span>
-          </a>
+          {#if isImage(tx.documentLink)}
+            <a class="doc-preview" href={tx.documentLink} target="_blank" rel="noopener noreferrer">
+              <img src={tx.documentLink} alt="Payment proof" />
+            </a>
+          {:else}
+            <a class="doc-link" href={tx.documentLink} target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Download</span>
+            </a>
+          {/if}
         </div>
       {/if}
     </div>
@@ -138,20 +148,18 @@
   .sheet {
     position: fixed; left: 0; right: 0; bottom: 0;
     z-index: 14001;
-    background: #fff;
+    background: var(--deneb-surface);
     border-radius: 20px 20px 0 0;
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
     box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
   }
-  :global(.dark) .sheet { background: #1c1c1e; }
   .sheet.show { transform: translateY(0); }
 
   .handle {
     width: 40px; height: 5px; border-radius: 3px;
-    background: #d1d1d6; margin: 10px auto 6px;
+    background: var(--deneb-border); margin: 10px auto 6px;
   }
-  :global(.dark) .handle { background: #48484a; }
 
   .header {
     display: flex;
@@ -167,10 +175,8 @@
     border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
   }
-  .icon-lg.income { background: rgba(46, 229, 175, 0.12); color: #006c50; }
-  .icon-lg.expense { background: rgba(186, 26, 26, 0.06); color: #ba1a1a; }
-  :global(.dark) .icon-lg.income { color: #24e0ab; background: rgba(36, 224, 171, 0.1); }
-  :global(.dark) .icon-lg.expense { color: #ffb4ab; background: rgba(255, 180, 171, 0.06); }
+  .icon-lg.income { background: var(--deneb-positive-bg); color: var(--deneb-positive); }
+  .icon-lg.expense { background: var(--deneb-negative-bg); color: var(--deneb-negative); }
 
   .header-text { display: flex; flex-direction: column; gap: 2px; }
   .entry-title {
@@ -178,20 +184,18 @@
   }
 
   .category-label {
-    font-family: 'Public Sans', sans-serif;
-    font-size: 13px; font-weight: 500; color: #6b7b72;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px; font-weight: 500; color: var(--deneb-text-secondary);
   }
 
   .amount-main {
-    font-family: 'Manrope', sans-serif;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 28px; font-weight: 700;
     margin: 4px 0 0;
     font-variant-numeric: tabular-nums;
   }
-  .amount-main.income { color: #006c50; }
-  .amount-main.expense { color: #ba1a1a; }
-  :global(.dark) .amount-main.income { color: #24e0ab; }
-  :global(.dark) .amount-main.expense { color: #ffb4ab; }
+  .amount-main.income { color: var(--deneb-positive); }
+  .amount-main.expense { color: var(--deneb-negative); }
 
   .details {
     padding: 8px 24px 24px;
@@ -203,41 +207,38 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #f2f2f7;
+    border-bottom: 1px solid var(--deneb-divider);
   }
-  :global(.dark) .detail-row { border-color: #2c2c2e; }
   .detail-row:last-child { border-bottom: none; }
-
-  .doc-row { border-bottom: none; padding-bottom: 0; }
 
   .doc-link {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 8px 14px;
-    border: 1px solid rgba(0, 141, 163, 0.15);
+    border: 1px solid var(--deneb-border);
     border-radius: 10px;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: #006c50;
+    color: var(--deneb-info);
     text-decoration: none;
     transition: background 0.1s;
   }
-  :global(.dark) .doc-link { color: #24e0ab; border-color: rgba(110, 212, 236, 0.15); }
-  .doc-link:active { background: rgba(0, 141, 163, 0.06); }
+  .doc-link:active { background: var(--deneb-divider); }
+
+  .doc-section { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+  .doc-preview { display: block; border-radius: 10px; overflow: hidden; border: 1px solid var(--deneb-border); }
+  .doc-preview img { display: block; width: 100%; max-height: 220px; object-fit: cover; }
 
   .detail-label {
-    font-family: 'Public Sans', sans-serif;
-    font-size: 14px; font-weight: 500; color: #6b7b72;
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px; font-weight: 500; color: var(--deneb-text-secondary);
   }
   .detail-value {
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px; font-weight: 600; color: #1a1c1e;
+    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-size: 14px; font-weight: 600; color: var(--f7-page-text-color);
   }
-  :global(.dark) .detail-value { color: #f0f0f3; }
-  .detail-value.income { color: #006c50; }
-  .detail-value.expense { color: #ba1a1a; }
-  :global(.dark) .detail-value.income { color: #24e0ab; }
-  :global(.dark) .detail-value.expense { color: #ffb4ab; }
+  .detail-value.income { color: var(--deneb-positive); }
+  .detail-value.expense { color: var(--deneb-negative); }
 </style>

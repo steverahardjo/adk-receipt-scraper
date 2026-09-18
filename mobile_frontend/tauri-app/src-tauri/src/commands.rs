@@ -1,13 +1,10 @@
-use tauri::AppHandle;
+use std::path::{Path, PathBuf};
+
+use tauri::{AppHandle, Manager};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_notification::NotificationExt;
 use tauri_plugin_opener::OpenerExt;
-
-#[tauri::command]
-pub fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 #[tauri::command]
 pub async fn notify(app: AppHandle, title: String, body: String) -> Result<(), String> {
@@ -38,15 +35,48 @@ pub async fn save_dialog(
     Ok(path.map(|p| p.to_string()))
 }
 
+/// Resolve a caller-supplied relative path against the app data directory.
+/// Rejects absolute paths and any path that escapes the directory (e.g. `..`).
+fn resolve_in_app_dir(app: &AppHandle, path: &str) -> Result<PathBuf, String> {
+    let base = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("app data dir unavailable: {e}"))?;
+    std::fs::create_dir_all(&base).map_err(|e| format!("create app data dir failed: {e}"))?;
+    let base = base
+        .canonicalize()
+        .map_err(|e| format!("resolve app data dir failed: {e}"))?;
+
+    let requested = Path::new(path);
+    if requested.is_absolute() {
+        return Err("absolute paths are not allowed".into());
+    }
+    let file_name = requested
+        .file_name()
+        .ok_or_else(|| "invalid file name".to_string())?;
+    let parent = requested.parent().unwrap_or_else(|| Path::new(""));
+
+    let parent_dir = base.join(parent);
+    std::fs::create_dir_all(&parent_dir).map_err(|e| format!("create directory failed: {e}"))?;
+    let parent_dir = parent_dir
+        .canonicalize()
+        .map_err(|e| format!("resolve path failed: {e}"))?;
+
+    if !parent_dir.starts_with(&base) {
+        return Err("path escapes app data directory".into());
+    }
+    Ok(parent_dir.join(file_name))
+}
+
 #[tauri::command]
-pub async fn read_file(_app: AppHandle, path: String) -> Result<String, String> {
-    let path = std::path::PathBuf::from(&path);
+pub async fn read_file(app: AppHandle, path: String) -> Result<String, String> {
+    let path = resolve_in_app_dir(&app, &path)?;
     std::fs::read_to_string(&path).map_err(|e| format!("read failed: {e}"))
 }
 
 #[tauri::command]
-pub async fn save_file(_app: AppHandle, path: String, contents: String) -> Result<(), String> {
-    let path = std::path::PathBuf::from(&path);
+pub async fn save_file(app: AppHandle, path: String, contents: String) -> Result<(), String> {
+    let path = resolve_in_app_dir(&app, &path)?;
     std::fs::write(&path, &contents).map_err(|e| format!("write failed: {e}"))
 }
 

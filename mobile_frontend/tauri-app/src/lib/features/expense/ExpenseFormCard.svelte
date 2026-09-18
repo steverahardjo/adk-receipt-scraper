@@ -2,6 +2,10 @@
   import { Button } from 'framework7-svelte'
   import { showToast, dismissToast } from '$lib/features/core/toast.svelte'
   import { TYPES, PAYMENTS, INCOME_SOURCES, CURRENCIES } from '$lib/features/records/types'
+  import type { Entry } from '$lib/features/records/types'
+  import { addEntry } from '$lib/features/records/store.svelte'
+  import AttachmentField from './AttachmentField.svelte'
+  import ReceiptScanner from './ReceiptScanner.svelte'
 
   let { scanTitle = '', scanAmount = '' }: { scanTitle?: string; scanAmount?: string } = $props()
 
@@ -14,7 +18,9 @@
   let paymentMethod = $state('')
   let source = $state('')
   let description = $state('')
+  let documentLink = $state('')
   let submitting = $state(false)
+  let scannerOpen = $state(false)
 
   let currencyKeys = $derived(Object.keys(CURRENCIES) as (keyof typeof CURRENCIES)[])
 
@@ -23,7 +29,23 @@
   }
 
   function openCamera() {
-    showToast({ type: 'success', title: 'Receipt Camera', message: 'Take a photo of your receipt', duration: 2000 })
+    scannerOpen = true
+  }
+
+  function applyReceipt(result: { title: string; amount: string; date: string; description: string; image: string }) {
+    if (result.title) title = result.title
+    if (result.amount) amount = result.amount
+    if (result.date) date = result.date
+    if (result.description) description = result.description
+    if (result.image) documentLink = result.image
+    showToast({ type: 'success', title: 'Receipt scanned', message: 'Review the details below', duration: 2000 })
+  }
+
+  function entryDate(value: string): Date {
+    const now = new Date()
+    const [y, m, d] = value.split('-').map(Number)
+    if (!y || !m || !d) return now
+    return new Date(y, m - 1, d, now.getHours(), now.getMinutes(), now.getSeconds())
   }
 
   async function handleSave() {
@@ -42,7 +64,21 @@
     submitting = true
     showToast({ type: 'loading', title: 'Saving...' })
     try {
-      await new Promise((r) => setTimeout(r, 800))
+      await new Promise((r) => setTimeout(r, 400))
+      const entry: Entry = {
+        id: globalThis.crypto?.randomUUID?.() ?? `tx-${Date.now()}`,
+        title: title.trim(),
+        amount: Number(amount),
+        currency,
+        date: entryDate(date),
+        flow,
+        type: flow === 'expense' ? (type as Entry['type']) : undefined,
+        paymentMethod: flow === 'expense' ? (paymentMethod as Entry['paymentMethod']) : undefined,
+        source: flow === 'income' ? (source as Entry['source']) : undefined,
+        description: description.trim() || undefined,
+        documentLink: documentLink || undefined,
+      }
+      addEntry(entry)
       dismissToast()
       showToast({ type: 'success', title: 'Entry added!', duration: 2000 })
       title = ''
@@ -51,6 +87,7 @@
       paymentMethod = ''
       source = ''
       description = ''
+      documentLink = ''
     } catch {
       dismissToast()
       showToast({ type: 'error', title: 'Failed to save', duration: 3000 })
@@ -149,6 +186,8 @@
       <label class="field-label" for="exp-notes">Notes</label>
       <textarea id="exp-notes" class="field-input field-textarea" placeholder="Optional" rows="2" bind:value={description}></textarea>
     </div>
+
+    <AttachmentField bind:value={documentLink} />
   </div>
 
   <Button fill large round class="save-btn" onclick={handleSave} disabled={submitting}>
@@ -156,15 +195,16 @@
   </Button>
 </div>
 
+<ReceiptScanner opened={scannerOpen} onClose={() => scannerOpen = false} onResult={applyReceipt} />
+
 <style>
   .card {
-    background: #ffffff;
-    border: 1px solid rgba(0, 141, 163, 0.08);
+    background: var(--deneb-surface);
+    border: 1px solid var(--deneb-border);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 2px 16px rgba(0, 141, 163, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   }
-  :global(.dark) .card { background: #2f3133; border-color: rgba(110, 212, 236, 0.08); }
 
   .card-header {
     display: flex;
@@ -180,15 +220,14 @@
   .icon-btn {
     width: 38px; height: 38px;
     border: none; border-radius: 10px;
-    background: rgba(0, 141, 163, 0.06);
-    color: #008da3;
+    background: var(--deneb-info-bg);
+    color: var(--deneb-info);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
     transition: background 0.1s;
   }
-  :global(.dark) .icon-btn { color: #6ed4ec; background: rgba(110, 212, 236, 0.06); }
-  .icon-btn:active { background: rgba(0, 141, 163, 0.12); }
+  .icon-btn:active { background: var(--deneb-divider); }
 
   .fields { display: flex; flex-direction: column; gap: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
@@ -196,33 +235,31 @@
   .flex-1 { flex: 1; }
 
   .field-label {
-    font-family: 'Public Sans', sans-serif;
-    font-size: 12px; font-weight: 600;
-    color: #6b7b72; letter-spacing: 0.02em;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    color: var(--deneb-text-secondary); letter-spacing: 0.02em;
   }
 
   .field-input {
     width: 100%;
     height: 44px;
     padding: 0 14px;
-    border: 1.5px solid transparent;
+    border: 1px solid var(--deneb-border);
     border-radius: 10px;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 15px;
-    color: #1a1c1e;
-    background: #f0f9f8;
+    color: var(--f7-page-text-color);
+    background: var(--deneb-canvas);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
   }
-  :global(.dark) .field-input { background: #2f3133; color: #f0f0f3; }
-  .field-input:focus { border-color: #2ee5af; }
-  :global(.dark) .field-input:focus { border-color: #24e0ab; }
-  .field-input::placeholder { color: #aeaeb2; }
+  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input::placeholder { color: var(--deneb-text-muted); }
 
   .field-select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b7b72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23787774' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 36px;
@@ -236,7 +273,7 @@
 
   .flow-switch {
     display: flex;
-    border: 1.5px solid rgba(0, 141, 163, 0.15);
+    border: 1px solid var(--deneb-border);
     border-radius: 10px;
     overflow: hidden;
     height: 44px;
@@ -245,21 +282,17 @@
     flex: 1;
     border: none;
     background: transparent;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Geist Sans', system-ui, sans-serif;
     font-size: 14px;
     font-weight: 600;
-    color: #6b7b72;
+    color: var(--deneb-text-secondary);
     cursor: pointer;
     transition: background 0.1s, color 0.1s;
     -webkit-tap-highlight-color: transparent;
   }
   .flow-btn.active {
-    background: #006c50;
-    color: #fff;
-  }
-  :global(.dark) .flow-btn.active {
-    background: #24e0ab;
-    color: #1a1c1e;
+    background: var(--f7-page-text-color);
+    color: var(--f7-page-bg-color);
   }
 
   :global(.save-btn) {

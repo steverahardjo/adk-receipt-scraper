@@ -50,9 +50,9 @@
 <div class="bars-wrap">
   <svg viewBox="0 0 {w} {h}" width={w} height={h} preserveAspectRatio="xMidYMid meet">
     {#each gridLines as v}
-      <line x1={margin.left} y1={yScale(v)} x2={w - margin.right} y2={yScale(v)} stroke="var(--f7-border-color, #e2e2e5)" stroke-width="1" stroke-dasharray="4 4" />
+      <line x1={margin.left} y1={yScale(v)} x2={w - margin.right} y2={yScale(v)} stroke="var(--deneb-divider)" stroke-width="1" stroke-dasharray="4 4" />
       <text x={margin.left - 6} y={yScale(v)} text-anchor="end" dominant-baseline="middle"
-            font-family="Public Sans, sans-serif" font-size="10" fill="#6b7b72">
+            font-family="Geist Mono, monospace" font-size="10" fill="var(--deneb-text-secondary)">
         {v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`}
       </text>
     {/each}
@@ -61,10 +61,10 @@
       {@const x = margin.left + mi * barGap + (barGap - barW) / 2}
       {#each barStack(month) as seg (seg.key)}
         <rect x={x} y={seg.y} width={barW} height={seg.height}
-              fill={colors[seg.key] || '#6b7b72'} rx="2.5" />
+              fill={colors[seg.key] || 'var(--deneb-text-secondary)'} rx="2.5" />
       {/each}
       <text x={x + barW / 2} y={h - 8} text-anchor="middle"
-            font-family="Public Sans, sans-serif" font-size="9" fill="#6b7b72">
+            font-family="Geist Mono, monospace" font-size="9" fill="var(--deneb-text-secondary)">
         {month.month ?? mi}
       </text>
     {/each}
