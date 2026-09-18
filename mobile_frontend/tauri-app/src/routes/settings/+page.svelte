@@ -10,6 +10,7 @@
     { href: '/settings/connections', label: 'Connections', desc: 'Banks, investments, services' },
     { href: '/settings/notifications', label: 'Notifications', desc: 'Alerts and reminders' },
     { href: '/settings/security', label: 'Security', desc: 'Authentication, sessions, privacy' },
+    { href: '/settings/ai', label: 'AI Models', desc: 'Providers, models, defaults' },
     { href: '/settings/data', label: 'Data', desc: 'Import, export, backup' },
     { href: '/settings/about', label: 'About', desc: 'Version, legal, support' },
   ]

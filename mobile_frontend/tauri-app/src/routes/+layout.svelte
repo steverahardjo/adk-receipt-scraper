@@ -28,6 +28,7 @@
   import { categories } from '$lib/features/settings/categories.svelte';
   import { connections } from '$lib/features/settings/connections.svelte';
   import { sessions } from '$lib/features/settings/sessions.svelte';
+  import { ai } from '$lib/features/settings/ai/ai.svelte';
 
   let { children } = $props();
 
@@ -39,6 +40,7 @@
     categories.init();
     connections.init();
     sessions.init();
+    ai.init();
   });
 
   $effect(() => {
