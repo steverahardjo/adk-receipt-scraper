@@ -77,3 +77,27 @@ export async function removeValue(key: string): Promise<void> {
     }
   }
 }
+
+export async function clearAll(): Promise<void> {
+  if (typeof localStorage !== 'undefined') {
+    try {
+      const keys: string[] = []
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key?.startsWith(PREFIX)) keys.push(key)
+      }
+      keys.forEach((key) => localStorage.removeItem(key))
+    } catch {
+      /* unavailable */
+    }
+  }
+  const store = await getStore()
+  if (store) {
+    try {
+      await store.clear()
+      await store.save()
+    } catch {
+      /* unavailable */
+    }
+  }
+}

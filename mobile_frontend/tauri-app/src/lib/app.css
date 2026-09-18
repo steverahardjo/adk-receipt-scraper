@@ -423,3 +423,26 @@ html, body {
 .f7-page-content {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* ── Density preference ─────────────────────────────────── */
+
+.density-compact .page,
+.density-compact .settings-page {
+  gap: 12px !important;
+}
+
+.density-compact .row,
+.density-compact .nav-item {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+/* ── Chart animation preference ─────────────────────────── */
+
+html.no-chart-anim .bar-fill,
+html.no-chart-anim .arc,
+html.no-chart-anim .donut-wrap circle,
+html.no-chart-anim .chart-wrap * {
+  transition: none !important;
+  animation: none !important;
+}

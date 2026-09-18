@@ -23,12 +23,22 @@
   import LoadingOverlay from '$lib/features/core/LoadingOverlay.svelte';
   import { theme } from '$lib/features/core/theme.svelte';
   import { lock } from '$lib/features/core/lock.svelte';
+  import { profile } from '$lib/features/profile/profile.svelte';
+  import { settings } from '$lib/features/settings/settings.svelte';
+  import { categories } from '$lib/features/settings/categories.svelte';
+  import { connections } from '$lib/features/settings/connections.svelte';
+  import { sessions } from '$lib/features/settings/sessions.svelte';
 
   let { children } = $props();
 
   onMount(() => {
     theme.init();
     lock.init();
+    profile.init();
+    settings.init();
+    categories.init();
+    connections.init();
+    sessions.init();
   });
 
   $effect(() => {

@@ -1,32 +1,54 @@
 export type Theme = 'light' | 'dark'
+export type ThemeMode = 'system' | 'light' | 'dark'
 
 function createTheme() {
+  let mode = $state<ThemeMode>('system')
   let current = $state<Theme>('light')
+  let media: MediaQueryList | null = null
 
-  function init() {
-    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('deneb-theme') : null
-    if (stored === 'light' || stored === 'dark') {
-      current = stored
-    } else if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      current = 'dark'
-    }
-    apply(current)
+  function resolve(): Theme {
+    if (mode === 'system') return media?.matches ? 'dark' : 'light'
+    return mode
   }
 
-  function apply(theme: Theme) {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    document.documentElement.style.colorScheme = theme
+  function apply() {
+    current = resolve()
+    document.documentElement.classList.toggle('dark', current === 'dark')
+    document.documentElement.style.colorScheme = current
+  }
+
+  function init() {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('deneb-theme-mode')
+      if (stored === 'system' || stored === 'light' || stored === 'dark') {
+        mode = stored
+      } else {
+        const legacy = localStorage.getItem('deneb-theme')
+        if (legacy === 'light' || legacy === 'dark') mode = legacy
+      }
+    }
+    if (typeof window !== 'undefined') {
+      media = window.matchMedia('(prefers-color-scheme: dark)')
+      media.addEventListener('change', () => { if (mode === 'system') apply() })
+    }
+    apply()
+  }
+
+  function setMode(next: ThemeMode) {
+    mode = next
+    localStorage.setItem('deneb-theme-mode', next)
+    apply()
   }
 
   function toggle() {
-    current = current === 'light' ? 'dark' : 'light'
-    localStorage.setItem('deneb-theme', current)
-    apply(current)
+    setMode(current === 'light' ? 'dark' : 'light')
   }
 
   return {
+    get mode() { return mode },
     get current() { return current },
     init,
+    setMode,
     toggle,
   }
 }

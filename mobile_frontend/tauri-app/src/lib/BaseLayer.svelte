@@ -1,8 +1,11 @@
 <script lang="ts">
   import { page } from '$app/stores'
+  import { goto } from '$app/navigation'
   import { Page, Navbar, NavLeft, NavTitle, NavRight, PageContent, Link, Icon } from 'framework7-svelte'
   import Drawer from '$lib/features/core/Drawer.svelte'
   import SecuritySheet from '$lib/features/core/SecuritySheet.svelte'
+  import Avatar from '$lib/features/profile/Avatar.svelte'
+  import { profile } from '$lib/features/profile/profile.svelte'
   import { theme } from '$lib/features/core/theme.svelte'
   let {
     title = '',
@@ -45,6 +48,7 @@
       {/if}
       <NavRight>
         <div class="navbar-right-group">
+          <Avatar image={profile.value.avatar} initials={profile.initials} size={30} onclick={() => goto('/profile')} />
           {@render navbarRight?.()}
           <button class="theme-btn" onclick={() => theme.toggle()} aria-label="Toggle theme">
             {#if theme.current === 'dark'}
