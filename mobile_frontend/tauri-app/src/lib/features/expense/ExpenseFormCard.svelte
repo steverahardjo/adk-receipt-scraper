@@ -246,7 +246,7 @@
     padding: 0 14px;
     border: 1px solid var(--deneb-border);
     border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 15px;
     color: var(--f7-page-text-color);
     background: var(--deneb-canvas);
@@ -282,7 +282,7 @@
     flex: 1;
     border: none;
     background: transparent;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 14px;
     font-weight: 600;
     color: var(--deneb-text-secondary);

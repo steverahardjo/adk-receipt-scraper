@@ -4,6 +4,7 @@
   import { Page, Navbar, NavLeft, NavTitle, NavRight, PageContent, Link, Icon } from 'framework7-svelte'
   import Drawer from '$lib/features/core/Drawer.svelte'
   import SecuritySheet from '$lib/features/core/SecuritySheet.svelte'
+  import TabBar from '$lib/features/core/TabBar.svelte'
   import Avatar from '$lib/features/profile/Avatar.svelte'
   import { profile } from '$lib/features/profile/profile.svelte'
   import { theme } from '$lib/features/core/theme.svelte'
@@ -12,14 +13,12 @@
     noNavbar = false,
     noDrawer = false,
     navbarRight,
-    onScan,
     children,
   }: {
     title?: string
     noNavbar?: boolean
     noDrawer?: boolean
     navbarRight?: import('svelte').Snippet
-    onScan?: () => void
     children?: import('svelte').Snippet
   } = $props()
 
@@ -28,7 +27,11 @@
   let currentPath = $derived($page.url.pathname)
 
   function openDrawer() { drawerOpen = true }
-  function handleScan() { onScan?.() }
+
+  function goBack() {
+    if (typeof window !== 'undefined' && window.history.length > 1) history.back()
+    else goto('/')
+  }
 </script>
 
 <Page>
@@ -38,7 +41,7 @@
     <Navbar innerClass="nav-custom">
       <NavLeft>
         {#if currentPath !== '/'}
-          <Link onclick={() => history.back()} class="nav-back-link">
+          <Link onclick={goBack}>
             <Icon ios="f7:chevron_left" />
           </Link>
         {/if}
@@ -74,19 +77,7 @@
   </PageContent>
 
   {#if !noDrawer}
-    <div class="float-bar">
-      <button class="float-btn" onclick={handleScan} aria-label="Scan QR">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 7V5a2 2 0 012-2h2" /><path d="M17 3h2a2 2 0 012 2v2" /><path d="M21 17v2a2 2 0 01-2 2h-2" /><path d="M7 21H5a2 2 0 01-2-2v-2" /><rect x="7" y="7" width="10" height="10" rx="2" />
-        </svg>
-      </button>
-      <div class="float-divider"></div>
-      <button class="float-btn" onclick={openDrawer} aria-label="Menu">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
-    </div>
+    <TabBar onMore={openDrawer} />
   {/if}
 
   <SecuritySheet opened={securityOpen} onClose={() => securityOpen = false} />
@@ -95,70 +86,33 @@
 <style>
   :global(.nav-custom) {
     --f7-navbar-height: 52px;
-  }
-  :global(.nav-custom .navbar-inner) {
     padding: 0 16px;
+    background: var(--deneb-chrome-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    backdrop-filter: blur(20px) saturate(1.6);
+    border-bottom: 1px solid var(--deneb-rule);
   }
   :global(.nav-custom .title) {
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 17px;
+    font-family: var(--deneb-serif);
+    font-size: 18px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
+    color: var(--deneb-ink);
   }
   :global(.nav-back-link) {
     margin-right: 8px;
-  }
-
-  .float-bar {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
-    z-index: 10000;
-    display: flex;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
     align-items: center;
-    gap: 0;
-    padding: 4px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid #EAEAEA;
   }
-  :global(.dark) .float-bar {
-    background: rgba(37, 37, 40, 0.8);
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-
-  .float-btn {
-    width: 42px; height: 42px;
-    border: none; border-radius: 8px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    background: transparent;
-    color: #111111;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.1s, transform 0.1s;
-  }
-  :global(.dark) .float-btn { color: #ECECEC; }
-  .float-btn:active {
-    background: rgba(0,0,0,0.05);
-    transform: scale(0.95);
-  }
-  :global(.dark) .float-btn:active {
-    background: rgba(255,255,255,0.06);
-  }
-
-  .float-divider {
-    width: 1px; height: 24px;
-    background: #EAEAEA;
-    flex-shrink: 0;
-  }
-  :global(.dark) .float-divider { background: rgba(255,255,255,0.08); }
 
   :global(.page-content) {
     padding-top: calc(var(--f7-navbar-height, 52px) + env(safe-area-inset-top, 0px));
-    padding-bottom: 100px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+  :global(.page.has-tabbar .page-content) {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   }
 
   .navbar-right-group {
@@ -170,22 +124,18 @@
   :global(.theme-btn),
   :global(.notif-btn) {
     position: relative;
-    width: 34px; height: 34px;
-    border: none; border-radius: 8px;
+    width: 44px; height: 44px;
+    border: none; border-radius: var(--deneb-radius-sm);
     background: transparent;
-    color: var(--deneb-text-secondary, #787774);
+    color: var(--deneb-text-secondary);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.1s, transform 0.1s;
+    transition: background var(--deneb-dur-fast) var(--deneb-ease), transform var(--deneb-dur-fast) var(--deneb-ease);
   }
   :global(.theme-btn:active),
   :global(.notif-btn:active) {
-    background: rgba(0,0,0,0.04);
-    transform: scale(0.95);
-  }
-  :global(.dark .theme-btn:active),
-  :global(.dark .notif-btn:active) {
-    background: rgba(255,255,255,0.05);
+    background: var(--deneb-surface-2);
+    transform: scale(0.94);
   }
 </style>

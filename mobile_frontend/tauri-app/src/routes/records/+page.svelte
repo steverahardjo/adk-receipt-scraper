@@ -127,7 +127,7 @@
   .search-input {
     width: 100%; height: 44px; padding: 0 36px 0 40px;
     border: 1px solid var(--deneb-border); border-radius: 8px;
-    font-family: 'Geist Sans', sans-serif; font-size: 14px;
+    font-family: var(--deneb-sans); font-size: 14px;
     color: var(--f7-page-text-color); background: var(--deneb-surface); outline: none;
     transition: border-color 0.15s; box-sizing: border-box;
   }
@@ -169,9 +169,9 @@
   .filter-row { display: flex; gap: 12px; }
   .filter-field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
   .filter-label { font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 400; color: var(--deneb-text-secondary); }
-  .filter-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--deneb-border); border-radius: 8px; font-family: 'Geist Sans', sans-serif; font-size: 14px; color: var(--f7-page-text-color); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
+  .filter-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--deneb-border); border-radius: 8px; font-family: var(--deneb-sans); font-size: 14px; color: var(--f7-page-text-color); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
   .filter-input:focus { border-color: var(--deneb-text-secondary); }
-  .flow-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 1px solid var(--deneb-border); border-radius: 10px; background: var(--deneb-surface); color: var(--f7-page-text-color); font-family: 'Geist Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: transform 0.1s; -webkit-tap-highlight-color: transparent; }
+  .flow-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 1px solid var(--deneb-border); border-radius: 10px; background: var(--deneb-surface); color: var(--f7-page-text-color); font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: transform 0.1s; -webkit-tap-highlight-color: transparent; }
   .flow-toggle:active { transform: scale(0.98); }
   .flow-toggle svg { transition: transform 0.2s; }
   .flow-toggle.open svg { transform: rotate(90deg); }

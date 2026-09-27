@@ -31,6 +31,10 @@
     bind:value
     rows="1"
     placeholder="Ask about your finances..."
+    enterkeyhint="send"
+    autocomplete="off"
+    autocapitalize="sentences"
+    aria-label="Message"
     onkeydown={keydown}
     oninput={autosize}
     {disabled}
@@ -51,27 +55,27 @@
     max-height: 120px;
     padding: 12px 16px;
     border: 1px solid var(--deneb-border);
-    border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 14px;
+    border-radius: var(--deneb-radius-lg);
+    font-family: var(--deneb-sans);
+    font-size: 16px;
     line-height: 1.4;
-    color: var(--f7-page-text-color);
+    color: var(--deneb-ink);
     background: var(--deneb-surface);
     outline: none;
     resize: none;
     box-sizing: border-box;
-    transition: border-color 0.15s;
+    transition: border-color var(--deneb-dur-fast) var(--deneb-ease), box-shadow var(--deneb-dur-fast) var(--deneb-ease);
   }
-  textarea:focus { border-color: var(--f7-page-text-color); }
+  textarea:focus { border-color: var(--deneb-accent); box-shadow: 0 0 0 3px var(--deneb-accent-bg); }
   textarea::placeholder { color: var(--deneb-text-muted); }
 
   .send {
     width: 44px; height: 44px; flex-shrink: 0;
-    border: none; border-radius: 10px;
-    background: var(--f7-page-text-color); color: var(--f7-page-bg-color);
+    border: none; border-radius: 50%;
+    background: var(--deneb-accent); color: var(--deneb-accent-text);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.15s, transform 0.1s;
+    transition: opacity var(--deneb-dur-fast) var(--deneb-ease), transform var(--deneb-dur-fast) var(--deneb-ease);
     -webkit-tap-highlight-color: transparent;
   }
   .send:disabled { opacity: 0.35; cursor: default; }

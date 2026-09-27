@@ -39,24 +39,25 @@
 
   .bubble {
     max-width: 82%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    padding: 10px 14px;
+    border-radius: var(--deneb-radius-lg);
+    font-family: var(--deneb-sans);
   }
-  .bubble.user { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); border-bottom-right-radius: 4px; }
-  .bubble.assistant { background: var(--deneb-surface); border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); border-bottom-left-radius: 4px; }
+  .bubble.user { background: var(--deneb-accent); color: var(--deneb-accent-text); border-bottom-right-radius: 6px; }
+  .bubble.assistant { background: var(--deneb-surface); border: 1px solid var(--deneb-border); color: var(--deneb-ink); border-bottom-left-radius: 6px; }
   .bubble.wide { max-width: 100%; width: 100%; }
 
-  .text { margin: 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .text { margin: 0; font-size: 15px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
 
   .chart-wrap { margin-top: 10px; }
 
   .meta {
     display: flex; align-items: center; gap: 8px;
     margin-top: 4px;
-    font-family: 'Geist Mono', monospace; font-size: 10px;
+    font-family: var(--deneb-mono); font-size: 10px;
     opacity: 0.55;
   }
+  .bubble.user .meta { opacity: 0.75; }
   .meta .error { color: var(--deneb-negative); opacity: 1; }
 
   .typing { display: flex; align-items: center; gap: 4px; padding: 4px 2px; }

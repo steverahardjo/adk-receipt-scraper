@@ -35,5 +35,5 @@
 </SettingsGroup>
 
 <style>
-  .empty { padding: 24px 16px; text-align: center; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; color: var(--deneb-text-secondary); }
+  .empty { padding: 24px 16px; text-align: center; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-text-secondary); }
 </style>

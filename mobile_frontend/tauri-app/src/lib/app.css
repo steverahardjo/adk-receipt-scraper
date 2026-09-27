@@ -1,6 +1,7 @@
 /* ============================================================
-   Deneb — Premium Utilitarian Minimalism Design System
-   Warm monochrome · Editorial typography · Bento grids
+   Deneb — iOS design system
+   iPhone system colors · SF Pro / Inter · frosted chrome
+   Single source of truth: every feature inherits from here.
    ============================================================ */
 
 /* ── Root / Base ──────────────────────────────────────── */
@@ -10,434 +11,498 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: var(--deneb-canvas);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+  font-optical-sizing: auto;
 }
 
-/* ── Light — Warm Editorial (Default) ────────────────── */
+/* ── Light — iOS (Default) ───────────────────────────── */
 
 :root,
 .theme-ios {
-  /* Accent — dark for buttons / active */
-  --f7-theme-color: #111111;
-  --f7-theme-color-rgb: 17, 17, 17;
-  --f7-theme-color-shade: #000000;
-  --f7-theme-color-tint: #333333;
-  --f7-inverse-primary: #FFFFFF;
-
-  /* Secondary — muted informational */
-  --f7-secondary-color: #787774;
-  --f7-secondary-color-rgb: 120, 119, 116;
-
-  /* Surfaces */
-  --f7-page-bg-color: #FBFBFA;
-  --f7-page-text-color: #111111;
-  --f7-card-bg-color: #FFFFFF;
-  --f7-card-border-color: #EAEAEA;
-  --f7-list-bg-color: #FFFFFF;
-  --f7-list-border-color: #F0F0EE;
-  --f7-list-inset-bg-color: transparent;
-  --f7-block-strong-bg-color: #FFFFFF;
-  --f7-block-strong-border-color: #EAEAEA;
-
-  /* Text */
-  --f7-text-color: #111111;
-  --f7-border-color: #EAEAEA;
-
-  /* Navbar */
-  --f7-navbar-bg-color: #FBFBFA;
-  --f7-navbar-text-color: #111111;
-  --f7-navbar-link-color: #111111;
-  --f7-navbar-border-color: transparent;
-
-  /* Tabbar / Toolbar */
-  --f7-tabbar-bg-color: #FBFBFA;
-  --f7-tabbar-link-color: #B0B0AD;
-  --f7-tabbar-link-active-color: #111111;
-  --f7-toolbar-bg-color: rgba(251, 251, 250, 0.88);
-  --f7-toolbar-border-color: transparent;
-
-  /* Buttons */
-  --f7-button-bg-color: #111111;
-  --f7-button-text-color: #FFFFFF;
-  --f7-button-border-color: #111111;
-  --f7-button-fill-text-color: #FFFFFF;
-  --f7-button-fill-bg-color: #111111;
-  --f7-button-outline-border-color: #EAEAEA;
-  --f7-button-border-radius: 6px;
-  --f7-button-height: 44px;
-  --f7-button-font-size: 14px;
-  --f7-button-font-weight: 500;
-  --f7-button-padding-horizontal: 20px;
-
-  /* Inputs */
-  --f7-input-bg-color: #FFFFFF;
-  --f7-input-border-color: #EAEAEA;
-  --f7-input-text-color: #111111;
-  --f7-input-border-radius: 8px;
+  /* System backgrounds */
+  --deneb-canvas: #F2F2F7;          /* systemGroupedBackground */
+  --deneb-surface: #FFFFFF;          /* secondarySystemGroupedBackground */
+  --deneb-surface-2: #F2F2F7;        /* systemGray6 */
+  --deneb-surface-raised: #FFFFFF;
 
   /* Labels */
-  --f7-label-text-color: #787774;
-  --f7-label-error-color: #9F2F2D;
+  --deneb-ink: #000000;              /* label */
+  --deneb-text-secondary: rgba(60, 60, 67, 0.60);  /* secondaryLabel */
+  --deneb-text-muted: rgba(60, 60, 67, 0.30);      /* tertiaryLabel */
 
-  /* Search */
+  /* Separators / fills */
+  --deneb-border: #E5E5EA;           /* systemGray5 */
+  --deneb-border-strong: #D1D1D6;    /* systemGray4 */
+  --deneb-divider: #E5E5EA;
+  --deneb-rule: rgba(60, 60, 67, 0.14);
+
+  /* Accent */
+  --deneb-accent: #007AFF;           /* systemBlue */
+  --deneb-accent-bg: rgba(0, 122, 255, 0.12);
+  --deneb-accent-text: #FFFFFF;
+
+  /* Semantic — iOS accessible variants (WCAG-safe as text) */
+  --deneb-positive: #248A3D;         /* systemGreen (accessible) */
+  --deneb-positive-bg: rgba(52, 199, 89, 0.15);
+  --deneb-negative: #D70015;         /* systemRed (accessible) */
+  --deneb-negative-bg: rgba(255, 59, 48, 0.15);
+  --deneb-info: #0040DD;             /* systemBlue (accessible) */
+  --deneb-info-bg: rgba(0, 122, 255, 0.15);
+  --deneb-warning: #C93400;          /* systemOrange (accessible) */
+  --deneb-warning-bg: rgba(255, 149, 0, 0.15);
+
+  /* Type — SF Pro on Apple, Inter elsewhere */
+  --deneb-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --deneb-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'Geist Mono', Menlo, monospace;
+  /* Deprecated: serif retired. Alias kept for legacy component refs. */
+  --deneb-serif: var(--deneb-sans);
+
+  /* Radii */
+  --deneb-radius-xs: 6px;
+  --deneb-radius-sm: 10px;
+  --deneb-radius-md: 12px;
+  --deneb-radius-lg: 18px;
+  --deneb-radius-sheet: 16px;
+  --deneb-radius-pill: 9999px;
+
+  /* Space (4pt base) */
+  --deneb-space-1: 4px;
+  --deneb-space-2: 8px;
+  --deneb-space-3: 12px;
+  --deneb-space-4: 16px;
+  --deneb-space-5: 20px;
+  --deneb-space-6: 24px;
+  --deneb-space-8: 32px;
+
+  /* Elevation — neutral, subtle (iOS) */
+  --deneb-shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.04);
+  --deneb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.05);
+  --deneb-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05), 0 12px 30px rgba(0, 0, 0, 0.08);
+  --deneb-shadow-lg: 0 -2px 8px rgba(0, 0, 0, 0.04), 0 -18px 48px rgba(0, 0, 0, 0.12);
+
+  /* Motion */
+  --deneb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --deneb-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --deneb-dur-fast: 120ms;
+  --deneb-dur: 220ms;
+
+  /* Frosted chrome */
+  --deneb-chrome-bg: rgba(242, 242, 247, 0.82);
+  --deneb-chrome-tab-bg: rgba(255, 255, 255, 0.85);
+
+  /* ── Framework7 variable bridge ── */
+  --f7-theme-color: #007AFF;
+  --f7-theme-color-rgb: 0, 122, 255;
+  --f7-theme-color-shade: #0062CC;
+  --f7-theme-color-tint: #3395FF;
+  --f7-inverse-primary: #FFFFFF;
+
+  --f7-secondary-color: rgba(60, 60, 67, 0.60);
+  --f7-secondary-color-rgb: 60, 60, 67;
+
+  --f7-page-bg-color: #F2F2F7;
+  --f7-page-text-color: #000000;
+  --f7-card-bg-color: #FFFFFF;
+  --f7-card-border-color: #E5E5EA;
+  --f7-card-border-radius: 12px;
+  --f7-list-bg-color: #FFFFFF;
+  --f7-list-border-color: #E5E5EA;
+  --f7-list-inset-bg-color: transparent;
+  --f7-block-strong-bg-color: #FFFFFF;
+  --f7-block-strong-border-color: #E5E5EA;
+
+  --f7-text-color: #000000;
+  --f7-border-color: #E5E5EA;
+
+  --f7-navbar-bg-color: #F2F2F7;
+  --f7-navbar-text-color: #000000;
+  --f7-navbar-link-color: #007AFF;
+  --f7-navbar-border-color: transparent;
+  --f7-navbar-height: 52px;
+
+  --f7-tabbar-bg-color: #FFFFFF;
+  --f7-tabbar-link-color: #8E8E93;
+  --f7-tabbar-link-active-color: #007AFF;
+  --f7-toolbar-bg-color: rgba(255, 255, 255, 0.85);
+  --f7-toolbar-border-color: #C6C6C8;
+
+  --f7-button-bg-color: #007AFF;
+  --f7-button-text-color: #FFFFFF;
+  --f7-button-border-color: #007AFF;
+  --f7-button-fill-text-color: #FFFFFF;
+  --f7-button-fill-bg-color: #007AFF;
+  --f7-button-outline-border-color: #C6C6C8;
+  --f7-button-border-radius: 10px;
+  --f7-button-height: 48px;
+  --f7-button-font-size: 15px;
+  --f7-button-font-weight: 600;
+  --f7-button-padding-horizontal: 20px;
+
+  --f7-input-bg-color: #FFFFFF;
+  --f7-input-border-color: #E5E5EA;
+  --f7-input-text-color: #000000;
+  --f7-input-border-radius: 10px;
+
+  --f7-label-text-color: rgba(60, 60, 67, 0.60);
+  --f7-label-error-color: #FF3B30;
+
   --f7-searchbar-bg-color: transparent;
-  --f7-searchbar-input-bg-color: #F5F5F4;
+  --f7-searchbar-input-bg-color: #E5E5EA;
 
-  /* Misc */
   --f7-actions-bg-color: #FFFFFF;
-  --f7-progressbar-bg-color: #F0F0EE;
-  --f7-toggle-border-color: #EAEAEA;
-  --f7-toggle-active-color: #111111;
+  --f7-progressbar-bg-color: #E5E5EA;
+  --f7-toggle-border-color: #E5E5EA;
+  --f7-toggle-active-color: #34C759;
   --f7-panel-bg-color: #FFFFFF;
 
-  /* Typography */
-  --f7-font-family: 'Geist Sans', system-ui, -apple-system, sans-serif;
-  --f7-label-font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+  --f7-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --f7-label-font-family: ui-monospace, 'SF Mono', 'Geist Mono', monospace;
 
-  /* Safe area */
   --f7-safe-area-outer: 0px;
 
-  /* Headlines */
+  /* Type scale (headline tokens used by F7) */
   --f7-headline-xl-font-size: 28px;
   --f7-headline-xl-font-weight: 700;
-  --f7-headline-xl-line-height: 1.2;
+  --f7-headline-xl-line-height: 1.15;
   --f7-headline-xl-letter-spacing: -0.02em;
 
-  --f7-headline-lg-font-size: 20px;
+  --f7-headline-lg-font-size: 21px;
   --f7-headline-lg-font-weight: 600;
-  --f7-headline-lg-line-height: 1.3;
-  --f7-headline-lg-letter-spacing: -0.01em;
+  --f7-headline-lg-line-height: 1.25;
+  --f7-headline-lg-letter-spacing: -0.02em;
 
   --f7-headline-md-font-size: 17px;
   --f7-headline-md-font-weight: 600;
   --f7-headline-md-line-height: 1.3;
-  --f7-headline-md-letter-spacing: -0.01em;
+  --f7-headline-md-letter-spacing: -0.015em;
 }
 
-/* ── Dark theme specificity ──────────────────────────── */
+/* ── Dark — iOS ──────────────────────────────────────── */
 
 .dark,
 .dark .theme-ios {
-  --f7-theme-color: #ECECEC;
-  --f7-theme-color-rgb: 236, 236, 236;
-  --f7-theme-color-shade: #CCCCCC;
-  --f7-theme-color-tint: #FFFFFF;
-  --f7-inverse-primary: #18181A;
-  --f7-secondary-color: #9D9D9F;
-  --f7-secondary-color-rgb: 157, 157, 159;
-  --f7-page-bg-color: #18181A;
-  --f7-page-text-color: #ECECEC;
-  --f7-card-bg-color: #252528;
-  --f7-card-border-color: rgba(255,255,255,0.06);
-  --f7-list-bg-color: #252528;
-  --f7-list-border-color: rgba(255,255,255,0.04);
+  --deneb-canvas: #000000;
+  --deneb-surface: #1C1C1E;
+  --deneb-surface-2: #2C2C2E;
+  --deneb-surface-raised: #2C2C2E;
+
+  --deneb-ink: #FFFFFF;
+  --deneb-text-secondary: rgba(235, 235, 245, 0.60);
+  --deneb-text-muted: rgba(235, 235, 245, 0.30);
+
+  --deneb-border: #38383A;
+  --deneb-border-strong: #48484A;
+  --deneb-divider: #38383A;
+  --deneb-rule: rgba(235, 235, 245, 0.14);
+
+  --deneb-accent: #0A84FF;
+  --deneb-accent-bg: rgba(10, 132, 255, 0.18);
+  --deneb-accent-text: #FFFFFF;
+
+  --deneb-positive: #30D158;
+  --deneb-positive-bg: rgba(48, 209, 88, 0.18);
+  --deneb-negative: #FF453A;
+  --deneb-negative-bg: rgba(255, 69, 58, 0.18);
+  --deneb-info: #0A84FF;
+  --deneb-info-bg: rgba(10, 132, 255, 0.18);
+  --deneb-warning: #FF9F0A;
+  --deneb-warning-bg: rgba(255, 159, 10, 0.18);
+
+  --deneb-shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.40);
+  --deneb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --deneb-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.50), 0 14px 34px rgba(0, 0, 0, 0.55);
+  --deneb-shadow-lg: 0 -2px 8px rgba(0, 0, 0, 0.40), 0 -18px 48px rgba(0, 0, 0, 0.60);
+
+  --deneb-chrome-bg: rgba(0, 0, 0, 0.72);
+  --deneb-chrome-tab-bg: rgba(28, 28, 30, 0.85);
+
+  --f7-theme-color: #0A84FF;
+  --f7-theme-color-rgb: 10, 132, 255;
+  --f7-theme-color-shade: #0060DF;
+  --f7-theme-color-tint: #3395FF;
+  --f7-inverse-primary: #000000;
+  --f7-secondary-color: rgba(235, 235, 245, 0.60);
+  --f7-secondary-color-rgb: 235, 235, 245;
+  --f7-page-bg-color: #000000;
+  --f7-page-text-color: #FFFFFF;
+  --f7-card-bg-color: #1C1C1E;
+  --f7-card-border-color: #38383A;
+  --f7-list-bg-color: #1C1C1E;
+  --f7-list-border-color: #38383A;
   --f7-list-inset-bg-color: transparent;
-  --f7-block-strong-bg-color: #252528;
-  --f7-block-strong-border-color: rgba(255,255,255,0.06);
-  --f7-text-color: #ECECEC;
-  --f7-border-color: rgba(255,255,255,0.06);
-  --f7-navbar-bg-color: #18181A;
-  --f7-navbar-text-color: #ECECEC;
-  --f7-navbar-link-color: #ECECEC;
+  --f7-block-strong-bg-color: #1C1C1E;
+  --f7-block-strong-border-color: #38383A;
+  --f7-text-color: #FFFFFF;
+  --f7-border-color: #38383A;
+  --f7-navbar-bg-color: #000000;
+  --f7-navbar-text-color: #FFFFFF;
+  --f7-navbar-link-color: #0A84FF;
   --f7-navbar-border-color: transparent;
-  --f7-tabbar-bg-color: #18181A;
-  --f7-tabbar-link-color: #6F6F72;
-  --f7-tabbar-link-active-color: #ECECEC;
-  --f7-toolbar-bg-color: #18181A;
-  --f7-toolbar-border-color: transparent;
-  --f7-button-bg-color: #ECECEC;
-  --f7-button-text-color: #18181A;
-  --f7-button-fill-text-color: #18181A;
-  --f7-button-fill-bg-color: #ECECEC;
-  --f7-button-outline-border-color: rgba(255,255,255,0.12);
-  --f7-input-bg-color: #252528;
-  --f7-input-border-color: rgba(255,255,255,0.06);
-  --f7-input-text-color: #ECECEC;
-  --f7-label-text-color: #9D9D9F;
-  --f7-label-error-color: #F4A0A1;
-  --f7-searchbar-input-bg-color: #252528;
-  --f7-actions-bg-color: #252528;
-  --f7-progressbar-bg-color: rgba(255,255,255,0.06);
-  --f7-toggle-border-color: rgba(255,255,255,0.12);
-  --f7-toggle-active-color: #ECECEC;
-  --f7-panel-bg-color: #252528;
+  --f7-tabbar-bg-color: #1C1C1E;
+  --f7-tabbar-link-color: #8E8E93;
+  --f7-tabbar-link-active-color: #0A84FF;
+  --f7-toolbar-bg-color: rgba(28, 28, 30, 0.85);
+  --f7-toolbar-border-color: #38383A;
+  --f7-button-bg-color: #0A84FF;
+  --f7-button-text-color: #FFFFFF;
+  --f7-button-fill-text-color: #FFFFFF;
+  --f7-button-fill-bg-color: #0A84FF;
+  --f7-button-outline-border-color: #48484A;
+  --f7-input-bg-color: #1C1C1E;
+  --f7-input-border-color: #38383A;
+  --f7-input-text-color: #FFFFFF;
+  --f7-label-text-color: rgba(235, 235, 245, 0.60);
+  --f7-label-error-color: #FF453A;
+  --f7-searchbar-input-bg-color: #2C2C2E;
+  --f7-actions-bg-color: #1C1C1E;
+  --f7-progressbar-bg-color: #38383A;
+  --f7-toggle-border-color: #38383A;
+  --f7-toggle-active-color: #30D158;
+  --f7-panel-bg-color: #1C1C1E;
 }
 
-/* ── Light-only theme override class ─────────────────── */
+/* ── Light-only override class ───────────────────────── */
 
 .theme-light,
 .theme-light .theme-ios {
-  --f7-page-bg-color: #FBFBFA;
-  --f7-page-text-color: #111111;
+  --f7-page-bg-color: #F2F2F7;
+  --f7-page-text-color: #000000;
   --f7-card-bg-color: #FFFFFF;
-  --f7-card-border-color: #EAEAEA;
+  --f7-card-border-color: #E5E5EA;
   --f7-list-bg-color: #FFFFFF;
-  --f7-text-color: #111111;
-  --f7-border-color: #EAEAEA;
-  --f7-navbar-bg-color: #FBFBFA;
-  --f7-navbar-text-color: #111111;
-  --f7-tabbar-bg-color: #FBFBFA;
-  --f7-tabbar-link-color: #B0B0AD;
-  --f7-tabbar-link-active-color: #111111;
-  --f7-button-bg-color: #111111;
+  --f7-text-color: #000000;
+  --f7-border-color: #E5E5EA;
+  --f7-navbar-bg-color: #F2F2F7;
+  --f7-navbar-text-color: #000000;
+  --f7-tabbar-bg-color: #FFFFFF;
+  --f7-tabbar-link-color: #8E8E93;
+  --f7-tabbar-link-active-color: #007AFF;
+  --f7-button-bg-color: #007AFF;
   --f7-button-text-color: #FFFFFF;
-  --f7-button-fill-bg-color: #111111;
+  --f7-button-fill-bg-color: #007AFF;
   --f7-button-fill-text-color: #FFFFFF;
   --f7-input-bg-color: #FFFFFF;
-  --f7-input-text-color: #111111;
-  --f7-label-text-color: #787774;
-  --f7-toggle-active-color: #111111;
+  --f7-input-text-color: #000000;
+  --f7-label-text-color: rgba(60, 60, 67, 0.60);
+  --f7-toggle-active-color: #34C759;
   --f7-panel-bg-color: #FFFFFF;
-  --f7-toolbar-bg-color: #FBFBFA;
+  --f7-toolbar-bg-color: #F2F2F7;
 }
 
-.dark .f7-page {
-  background-color: #18181A;
+/* ── Typography ──────────────────────────────────────── */
+
+.f7-page {
+  font-family: var(--deneb-sans);
+  color: var(--deneb-ink);
 }
 
-/* ── Headline utility classes ──────────────────────────── */
-
-:global(.headline-xl) {
-  font-family: 'Geist Sans', system-ui, sans-serif;
-  font-size: var(--f7-headline-xl-font-size);
-  font-weight: var(--f7-headline-xl-font-weight);
-  line-height: var(--f7-headline-xl-line-height);
-  letter-spacing: var(--f7-headline-xl-letter-spacing);
-  color: var(--f7-page-text-color);
+.headline-xl,
+.headline-lg,
+.headline-md {
+  font-family: var(--deneb-sans);
+  color: var(--deneb-ink);
   margin: 0;
 }
-
-:global(.headline-lg) {
-  font-family: 'Geist Sans', system-ui, sans-serif;
-  font-size: var(--f7-headline-lg-font-size);
-  font-weight: var(--f7-headline-lg-font-weight);
-  line-height: var(--f7-headline-lg-line-height);
-  letter-spacing: var(--f7-headline-lg-letter-spacing);
-  color: var(--f7-page-text-color);
-  margin: 0;
+.headline-xl { font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+.headline-lg { font-size: 21px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+.headline-md { font-size: 17px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
+.headline-sm {
+  font-family: var(--deneb-sans);
+  font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+  color: var(--deneb-ink); margin: 0;
 }
 
-:global(.headline-md) {
-  font-family: 'Geist Sans', system-ui, sans-serif;
-  font-size: var(--f7-headline-md-font-size);
-  font-weight: var(--f7-headline-md-font-weight);
-  line-height: var(--f7-headline-md-line-height);
-  letter-spacing: var(--f7-headline-md-letter-spacing);
-  color: var(--f7-page-text-color);
-  margin: 0;
+.f7-label,
+.item-title,
+.item-subtitle {
+  font-family: var(--deneb-mono);
 }
 
-:global(.headline-sm) {
-  font-family: 'Geist Sans', system-ui, sans-serif;
-  font-size: 15px;
+/* ── iOS utility classes (adopt in features) ─────────── */
+
+.d-eyebrow {
+  font-family: var(--deneb-mono);
+  font-size: 11px;
   font-weight: 600;
-  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--deneb-text-secondary);
+}
+
+.d-section-label {
+  font-family: var(--deneb-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--deneb-text-secondary);
+}
+
+.d-amount {
+  font-family: var(--deneb-mono);
+  font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
-  color: var(--f7-page-text-color);
-  margin: 0;
 }
 
-/* ── Typography overrides ───────────────────────────────── */
-
-:global(.f7-page) {
-  font-family: 'Geist Sans', system-ui, -apple-system, sans-serif;
+.d-serif {
+  font-family: var(--deneb-sans);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-:global(.f7-label),
-:global(.item-title),
-:global(.item-subtitle) {
-  font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+.d-card {
+  background: var(--deneb-surface);
+  border: 1px solid var(--deneb-border);
+  border-radius: var(--deneb-radius-md);
+  box-shadow: var(--deneb-shadow-sm);
 }
 
-/* ── Card Overrides (editorial, bento) ──────────────────── */
+.d-divider { height: 1px; background: var(--deneb-rule); }
 
-:global(.card),
-:global(.block-strong) {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-  border-radius: 10px;
-  border: 1px solid var(--f7-card-border-color);
+.d-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--deneb-radius-pill);
+  font-family: var(--deneb-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.d-pill--positive { color: var(--deneb-positive); background: var(--deneb-positive-bg); }
+.d-pill--negative { color: var(--deneb-negative); background: var(--deneb-negative-bg); }
+.d-pill--warning { color: var(--deneb-warning); background: var(--deneb-warning-bg); }
+.d-pill--info { color: var(--deneb-info); background: var(--deneb-info-bg); }
+
+.d-press {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--deneb-dur-fast) var(--deneb-ease), opacity var(--deneb-dur-fast) var(--deneb-ease);
+}
+.d-press:active { transform: scale(0.98); opacity: 0.9; }
+
+/* Tap targets never below 44pt */
+.d-tappable { min-width: 44px; min-height: 44px; }
+
+/* ── Card Overrides (iOS grouped surfaces) ───────────── */
+
+.card,
+.block-strong {
+  box-shadow: var(--deneb-shadow-sm);
+  border-radius: var(--deneb-radius-md);
+  border: 1px solid var(--deneb-border);
+  background: var(--deneb-surface);
 }
 
-/* ── Button Overrides ───────────────────────────────────── */
+/* ── Button Overrides ────────────────────────────────── */
 
-:global(.button) {
-  border-radius: 6px;
-  font-weight: 500;
-  font-family: 'Geist Sans', system-ui, sans-serif;
+.button {
+  border-radius: var(--deneb-radius-sm);
+  font-weight: 600;
+  font-family: var(--deneb-sans);
   letter-spacing: 0;
-  transition: transform 0.1s ease;
+  transition: transform var(--deneb-dur-fast) var(--deneb-ease), opacity var(--deneb-dur-fast) var(--deneb-ease);
 }
+.button:active { transform: scale(0.98); }
+.button-fill { color: var(--f7-button-fill-text-color) !important; }
+.button-outline { border-width: 1px; border-radius: var(--deneb-radius-sm); }
 
-:global(.button:active) {
-  transform: scale(0.98);
-}
+/* ── Navbar Overrides ────────────────────────────────── */
 
-:global(.button-fill) {
-  color: var(--f7-button-fill-text-color) !important;
-}
+.navbar { border-radius: 0; border-bottom: 1px solid transparent; }
 
-:global(.button-outline) {
-  border-width: 1px;
-  border-radius: 6px;
-}
+/* ── Toolbar / Tabbar Overrides ─────────────────────── */
 
-/* ── Navbar Overrides ───────────────────────────────────── */
-
-:global(.navbar) {
-  border-radius: 0;
-  border-bottom: 1px solid transparent;
-}
-
-:global(.navbar .title) {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* ── Toolbar / Tabbar Overrides ─────────────────────────── */
-
-:global(.toolbar) {
-  border-radius: 0;
-  border-top: 1px solid transparent;
-}
-
-:global(.tab-link) {
+.toolbar { border-radius: 0; border-top: 1px solid var(--f7-toolbar-border-color); }
+.tab-link {
   font-size: 10px;
   letter-spacing: 0.02em;
-  font-family: 'Geist Sans', system-ui, sans-serif;
+  font-family: var(--deneb-sans);
 }
 
-/* ── Input Overrides ────────────────────────────────────── */
+/* ── Input Overrides ────────────────────────────────── */
 
-:global(.item-input input),
-:global(.item-input textarea),
-:global(.input input) {
-  font-family: 'Geist Sans', system-ui, sans-serif;
+.item-input input,
+.item-input textarea,
+.input input {
+  font-family: var(--deneb-sans);
 }
 
-/* ── List Overrides ─────────────────────────────────────── */
+/* ── List Overrides ─────────────────────────────────── */
 
-:global(.list),
-:global(.list-block) {
-  border-radius: 10px;
+.list,
+.list-block { border-radius: var(--deneb-radius-md); }
+.list ul {
+  border-radius: var(--deneb-radius-md);
 }
 
-/* ── Segmented Control ──────────────────────────────────── */
+/* ── Segmented Control ──────────────────────────────── */
 
-:global(.segmented),
-:global(.segmented a),
-:global(.segmented button),
-:global(.segmented > *) {
-  border-radius: 6px;
-}
+.segmented,
+.segmented a,
+.segmented button,
+.segmented > * { border-radius: var(--deneb-radius-sm); }
 
-/* ── Badge Overrides ────────────────────────────────────── */
+/* ── Badge Overrides ────────────────────────────────── */
 
-:global(.badge) {
-  border-radius: 9999px;
-  font-family: 'Geist Mono', monospace;
+.badge {
+  border-radius: var(--deneb-radius-pill);
+  font-family: var(--deneb-mono);
   font-size: 10px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
 }
 
-/* ── Progress Bar ───────────────────────────────────────── */
+/* ── Progress Bar ───────────────────────────────────── */
 
-:global(.progressbar),
-:global(.progressbar span) {
-  border-radius: 4px;
+.progressbar,
+.progressbar span { border-radius: 3px; }
+
+/* ── Modal / Sheet / Popover ────────────────────────── */
+
+.popover,
+.sheet-modal,
+.modal { border-radius: var(--deneb-radius-sheet) var(--deneb-radius-sheet) 0 0; }
+.sheet-modal { background: var(--deneb-surface); }
+
+/* ── Focus visibility (a11y) ────────────────────────── */
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--deneb-accent);
+  outline-offset: 2px;
+  border-radius: var(--deneb-radius-xs);
 }
 
-/* ── Modal/Popover ──────────────────────────────────────── */
-
-:global(.popover),
-:global(.sheet-modal),
-:global(.modal) {
-  border-radius: 12px;
-}
-
-/* ── Toast Colors ───────────────────────────────────────── */
+/* ── Toast Colors ───────────────────────────────────── */
 
 :root {
-  --toast-bg-success: #346538;
-  --toast-bg-error: #9F2F2D;
-  --toast-bg-loading: #787774;
+  --toast-bg-success: #248A3D;
+  --toast-bg-error: #D70015;
+  --toast-bg-loading: #5A5A5F;
 }
 .dark {
-  --toast-bg-success: #346538;
-  --toast-bg-error: #9F2F2D;
-  --toast-bg-loading: #9D9D9F;
+  --toast-bg-success: #30D158;
+  --toast-bg-error: #FF453A;
+  --toast-bg-loading: #8E8E93;
 }
 
-/* ── Semantic Color Tokens ──────────────────────────────── */
+/* ── Utility ────────────────────────────────────────── */
 
-:root {
-  --deneb-positive: #346538;
-  --deneb-positive-bg: #EDF3EC;
-  --deneb-negative: #9F2F2D;
-  --deneb-negative-bg: #FDEBEC;
-  --deneb-info: #1F6C9F;
-  --deneb-info-bg: #E1F3FE;
-  --deneb-warning: #956400;
-  --deneb-warning-bg: #FBF3DB;
-  --deneb-text-secondary: #787774;
-  --deneb-text-muted: #B0B0AD;
-  --deneb-border: #EAEAEA;
-  --deneb-divider: #F0F0EE;
-  --deneb-surface: #FFFFFF;
-  --deneb-canvas: #FBFBFA;
-}
+.f7-page-content { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
-.dark {
-  --deneb-positive: #7CCB7E;
-  --deneb-positive-bg: rgba(52, 101, 56, 0.15);
-  --deneb-negative: #F4A0A1;
-  --deneb-negative-bg: rgba(159, 47, 45, 0.15);
-  --deneb-info: #8BC5F0;
-  --deneb-info-bg: rgba(31, 108, 159, 0.15);
-  --deneb-warning: #EDC46A;
-  --deneb-warning-bg: rgba(149, 100, 0, 0.15);
-  --deneb-text-secondary: #9D9D9F;
-  --deneb-text-muted: #6F6F72;
-  --deneb-border: rgba(255,255,255,0.06);
-  --deneb-divider: rgba(255,255,255,0.04);
-  --deneb-surface: #252528;
-  --deneb-canvas: #18181A;
-}
-
-.theme-light {
-  --deneb-positive: #346538;
-  --deneb-positive-bg: #EDF3EC;
-  --deneb-negative: #9F2F2D;
-  --deneb-negative-bg: #FDEBEC;
-  --deneb-info: #1F6C9F;
-  --deneb-info-bg: #E1F3FE;
-  --deneb-text-secondary: #787774;
-  --deneb-text-muted: #B0B0AD;
-  --deneb-border: #EAEAEA;
-  --deneb-divider: #F0F0EE;
-  --deneb-surface: #FFFFFF;
-  --deneb-canvas: #FBFBFA;
-}
-
-/* ── Utility ────────────────────────────────────────────── */
-
-.f7-page-content {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* ── Density preference ─────────────────────────────────── */
+/* ── Density preference ─────────────────────────────── */
 
 .density-compact .page,
-.density-compact .settings-page {
-  gap: 12px !important;
-}
-
+.density-compact .settings-page { gap: 12px !important; }
 .density-compact .row,
 .density-compact .nav-item {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
 }
 
-/* ── Chart animation preference ─────────────────────────── */
+/* ── Chart animation preference ─────────────────────── */
 
 html.no-chart-anim .bar-fill,
 html.no-chart-anim .arc,
@@ -445,4 +510,17 @@ html.no-chart-anim .donut-wrap circle,
 html.no-chart-anim .chart-wrap * {
   transition: none !important;
   animation: none !important;
+}
+
+/* ── Reduced motion (a11y) ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -98,9 +98,9 @@ function expenseByCategory(): ChatChartSpec | undefined {
   if (sorted.length === 0) return undefined
 
   const dark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
-  const text = dark ? '#ECECEC' : '#111111'
-  const grid = dark ? 'rgba(255,255,255,0.08)' : '#F0F0EE'
-  const accent = dark ? '#7CCB7E' : '#346538'
+  const text = dark ? '#FFFFFF' : '#000000'
+  const grid = dark ? '#38383A' : '#E5E5EA'
+  const accent = dark ? '#0A84FF' : '#007AFF'
 
   return {
     data: [{
@@ -114,7 +114,7 @@ function expenseByCategory(): ChatChartSpec | undefined {
       margin: { t: 10, r: 8, b: 56, l: 56 },
       paper_bgcolor: 'rgba(0,0,0,0)',
       plot_bgcolor: 'rgba(0,0,0,0)',
-      font: { family: 'Geist Sans, system-ui, sans-serif', size: 10, color: text },
+      font: { family: '-apple-system, BlinkMacSystemFont, "Inter Variable", system-ui, sans-serif', size: 10, color: text },
       xaxis: { fixedrange: true, tickangle: -35, color: text, gridcolor: 'rgba(0,0,0,0)' },
       yaxis: { fixedrange: true, color: text, gridcolor: grid, zeroline: false },
       showlegend: false,

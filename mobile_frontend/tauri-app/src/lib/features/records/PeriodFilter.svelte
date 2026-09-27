@@ -16,7 +16,7 @@
   .chips { display: flex; gap: 6px; padding: 4px 0; }
   .chip {
     padding: 6px 14px; border: 1px solid var(--deneb-border); border-radius: 9999px;
-    background: transparent; font-family: 'Geist Sans', sans-serif;
+    background: transparent; font-family: var(--deneb-sans);
     font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary);
     cursor: pointer; -webkit-tap-highlight-color: transparent;
     transition: all 0.15s;

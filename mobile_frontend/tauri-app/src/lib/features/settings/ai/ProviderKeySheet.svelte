@@ -130,7 +130,7 @@
 
   .head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .head-text { display: flex; flex-direction: column; gap: 2px; }
-  .head-name { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 17px; font-weight: 600; color: var(--f7-page-text-color); }
+  .head-name { font-family: var(--deneb-sans); font-size: 17px; font-weight: 600; color: var(--f7-page-text-color); }
   .head-status { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--deneb-text-secondary); }
   .head-status.ok { color: var(--deneb-positive); }
 
@@ -163,7 +163,7 @@
   .actions { display: flex; gap: 10px; margin-top: 18px; }
   .btn {
     flex: 1; height: 48px; border-radius: 10px; border: none;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
   .btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }

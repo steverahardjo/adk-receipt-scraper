@@ -26,6 +26,7 @@ export interface AppSettings {
   defaultCategory: string
   defaultType: 'expense' | 'income'
   defaultCurrency: string
+  dailyBudget: number
   notifications: NotificationPrefs
   dataCollection: boolean
   analytics: boolean
@@ -62,6 +63,7 @@ const defaults: AppSettings = {
   defaultCategory: 'Food',
   defaultType: 'expense',
   defaultCurrency: 'IDR',
+  dailyBudget: 350000,
   notifications: {
     receiptProcessed: true,
     largeTransaction: true,

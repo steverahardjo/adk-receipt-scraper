@@ -45,7 +45,7 @@
     background: var(--deneb-canvas);
     border-bottom: 1px solid var(--deneb-divider);
   }
-  .provider-name { flex: 1; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); }
+  .provider-name { flex: 1; font-family: var(--deneb-sans); font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); }
   .count { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--deneb-text-muted); }
 
   .model-row {
@@ -54,7 +54,7 @@
     border-bottom: 1px solid var(--deneb-divider);
   }
   .model-row:last-child { border-bottom: none; }
-  .model-name { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; color: var(--f7-page-text-color); }
+  .model-name { font-family: var(--deneb-sans); font-size: 14px; color: var(--f7-page-text-color); }
 
   .caps { display: flex; gap: 4px; flex-shrink: 0; }
   .cap {
@@ -63,5 +63,5 @@
     font-family: 'Geist Mono', monospace; font-size: 9px; color: var(--deneb-text-secondary);
   }
 
-  .empty { padding: 24px 16px; text-align: center; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; color: var(--deneb-text-secondary); }
+  .empty { padding: 24px 16px; text-align: center; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-text-secondary); }
 </style>

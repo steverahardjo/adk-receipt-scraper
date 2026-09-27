@@ -55,8 +55,8 @@
   button.row:active { background: var(--deneb-canvas); }
 
   .text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .label { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
-  .desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; color: var(--deneb-text-secondary); }
+  .label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .desc { font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
   .danger .label { color: var(--deneb-negative); }
 
   .right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }

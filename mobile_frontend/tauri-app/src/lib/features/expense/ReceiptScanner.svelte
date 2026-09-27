@@ -174,14 +174,14 @@
 
   .body { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 4px 24px 32px; }
   .title { margin: 4px 0 0; }
-  .hint { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; color: var(--deneb-text-secondary); margin: 0; text-align: center; }
+  .hint { font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-text-secondary); margin: 0; text-align: center; }
   .hidden { display: none; }
 
   .choose-actions, .review-actions { display: flex; gap: 10px; width: 100%; }
   .big-btn {
     flex: 1; height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px;
     border-radius: 10px; border: none;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;
+    font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer;
     -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
   .big-btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }
@@ -196,7 +196,7 @@
   .notice {
     width: 100%; margin: 0; padding: 10px 12px; border-radius: 8px;
     background: var(--deneb-warning-bg); color: var(--deneb-warning);
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px;
+    font-family: var(--deneb-sans); font-size: 12px;
   }
 
   .fields { display: flex; flex-direction: column; gap: 12px; width: 100%; }
@@ -207,7 +207,7 @@
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px;
+    font-family: var(--deneb-sans); font-size: 15px;
     color: var(--f7-page-text-color); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
@@ -216,5 +216,5 @@
 
   .spinner { width: 32px; height: 32px; border: 2.5px solid var(--deneb-divider); border-top-color: var(--f7-page-text-color); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .error { margin: 0; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; color: var(--deneb-negative); }
+  .error { margin: 0; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-negative); }
 </style>

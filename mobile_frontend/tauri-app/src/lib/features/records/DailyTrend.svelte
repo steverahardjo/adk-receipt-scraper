@@ -138,7 +138,7 @@
     border: none;
     border-radius: 4px;
     background: transparent;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 11px;
     font-weight: 500;
     color: var(--deneb-text-secondary);

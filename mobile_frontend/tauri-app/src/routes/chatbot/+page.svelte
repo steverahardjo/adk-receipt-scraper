@@ -62,6 +62,26 @@
     }
     scrollToEnd()
   })
+
+  // Keyboard avoidance: lift the composer above the on-screen keyboard.
+  onMount(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const root = document.documentElement
+    const sync = () => {
+      const gap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop)
+      root.style.setProperty('--kb', `${gap}px`)
+      if (gap > 0) scrollToEnd()
+    }
+    vv.addEventListener('resize', sync)
+    vv.addEventListener('scroll', sync)
+    sync()
+    return () => {
+      vv.removeEventListener('resize', sync)
+      vv.removeEventListener('scroll', sync)
+      root.style.removeProperty('--kb')
+    }
+  })
 </script>
 
 <BaseLayer title="Chat" noDrawer>
@@ -78,7 +98,7 @@
         <div class="suggestions"><ChatSuggestions onPick={(t) => send(t)} /></div>
       </div>
     {:else}
-      <div class="chat-area">
+      <div class="chat-area" role="log" aria-live="polite" aria-relevant="additions text">
         {#each messages as message (message.id)}
           <ChatMessage {message} />
         {/each}
@@ -97,7 +117,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding: 8px 16px 96px;
+    padding: 8px 16px calc(96px + var(--kb, 0px));
   }
 
   .empty {
@@ -110,27 +130,28 @@
     padding-bottom: 40px;
   }
   .empty-icon {
-    width: 56px; height: 56px; border-radius: 12px;
-    background: var(--deneb-canvas); border: 1px solid var(--deneb-border);
-    color: var(--f7-page-text-color);
+    width: 56px; height: 56px; border-radius: var(--deneb-radius-md);
+    background: var(--deneb-surface); border: 1px solid var(--deneb-border);
+    box-shadow: var(--deneb-shadow-sm);
+    color: var(--deneb-accent);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 4px;
   }
   .empty-title { margin: 0; }
-  .empty-desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; color: var(--deneb-text-secondary); margin: 0; }
+  .empty-desc { font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-text-secondary); margin: 0; }
   .suggestions { margin-top: 16px; }
 
   .chat-area { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
   .anchor { height: 1px; }
 
   .input-bar {
-    position: fixed; left: 0; right: 0; bottom: 0;
+    position: fixed; left: 0; right: 0; bottom: var(--kb, 0px);
     padding: 10px 16px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    background: rgba(251, 251, 250, 0.95);
+    background: var(--deneb-chrome-tab-bg);
     border-top: 1px solid var(--deneb-border);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
     z-index: 100;
   }
-  :global(.dark) .input-bar { background: rgba(24, 24, 26, 0.95); }
 </style>

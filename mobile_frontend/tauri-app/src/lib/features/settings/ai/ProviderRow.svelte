@@ -67,7 +67,7 @@
   .row:last-child { border-bottom: none; }
 
   .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .name { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .name { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
   .desc {
     font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--deneb-text-secondary);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

@@ -171,11 +171,11 @@
   .field { display: flex; flex-direction: column; gap: 6px; }
   .row-field { flex-direction: row; align-items: center; justify-content: space-between; }
   .field-label { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
-  .field-hint { margin: 2px 0 0; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; color: var(--deneb-text-secondary); }
+  .field-hint { margin: 2px 0 0; font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px;
+    font-family: var(--deneb-sans); font-size: 15px;
     color: var(--f7-page-text-color); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
@@ -191,7 +191,7 @@
   .actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn {
     flex: 1; height: 48px; border-radius: 10px; border: none;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
   .btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }

@@ -178,12 +178,12 @@
 
   .scan-placeholder { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0; }
   .scanner-icon { color: var(--deneb-text-muted); opacity: 0.6; }
-  .hint { font-family: 'Geist Sans', sans-serif; font-size: 14px; color: var(--deneb-text-secondary); margin: 0; text-align: center; }
+  .hint { font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-text-secondary); margin: 0; text-align: center; }
 
   .scan-btn {
     height: 48px; padding: 0 32px; border: none; border-radius: 8px;
     background: #111111; color: #FFFFFF;
-    font-family: 'Geist Sans', sans-serif; font-size: 15px; font-weight: 500;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 500;
     cursor: pointer; transition: opacity 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -192,11 +192,11 @@
   .scan-btn:active:not(:disabled) { opacity: 0.85; }
 
   .error-box { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px; }
-  .error-text { font-family: 'Geist Sans', sans-serif; font-size: 14px; color: var(--deneb-negative); margin: 0; text-align: center; }
-  .error-hint { font-family: 'Geist Sans', sans-serif; font-size: 12px; color: var(--deneb-text-secondary); margin: 0; }
+  .error-text { font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-negative); margin: 0; text-align: center; }
+  .error-hint { font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); margin: 0; }
   .retry-btn {
     padding: 8px 20px; border: 1px solid var(--deneb-border); border-radius: 8px;
-    background: transparent; font-family: 'Geist Sans', sans-serif;
+    background: transparent; font-family: var(--deneb-sans);
     font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); cursor: pointer;
   }
   .retry-btn:active { background: var(--deneb-divider); }
@@ -209,7 +209,7 @@
   .manual-input {
     flex: 1; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 8px;
-    font-family: 'Geist Sans', sans-serif; font-size: 14px;
+    font-family: var(--deneb-sans); font-size: 14px;
     color: var(--f7-page-text-color); background: var(--deneb-canvas);
     outline: none; box-sizing: border-box;
   }
@@ -218,7 +218,7 @@
   .manual-btn {
     height: 44px; padding: 0 16px; border: none; border-radius: 8px;
     background: #111111; color: #FFFFFF;
-    font-family: 'Geist Sans', sans-serif; font-size: 13px; font-weight: 500;
+    font-family: var(--deneb-sans); font-size: 13px; font-weight: 500;
     cursor: pointer;
   }
   :global(.dark) .manual-btn { background: #ECECEC; color: #18181A; }
@@ -246,7 +246,7 @@
   .result-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); }
 
   .result-actions { display: flex; gap: 10px; margin-top: 4px; }
-  .result-btn { flex: 1; height: 44px; border-radius: 8px; border: none; font-family: 'Geist Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .result-btn { flex: 1; height: 44px; border-radius: 8px; border: none; font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer; }
   .result-btn.primary { background: #111111; color: #FFFFFF; }
   :global(.dark) .result-btn.primary { background: #ECECEC; color: #18181A; }
   .result-btn.secondary { border: 1px solid var(--deneb-border); background: transparent; color: var(--f7-page-text-color); }

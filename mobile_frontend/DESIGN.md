@@ -1,6 +1,6 @@
 # Deneb — Design System & Architecture
 
-> Personal finance tracker. Tauri 2 shell. Svelte 5 reactivity. Premium utilitarian minimalism.
+> Personal finance tracker. Tauri 2 shell. Svelte 5 reactivity. A warm private ledger.
 
 ---
 
@@ -11,84 +11,84 @@
 | **Shell** | Tauri 2 (Rust backend, webview frontend) |
 | **Framework** | SvelteKit 2 (SPA mode, `adapter-static`) |
 | **Reactivity** | Svelte 5 runes (`$state`, `$derived`, `$effect`, `$props`) |
-| **UI Library** | Framework7 9 (iOS theme, overridden for editorial minimalism) |
-| **Charts** | Nivo (lazy-loaded, collapsible by default) |
+| **UI Library** | Framework7 9 (iOS theme, overridden for a ledger aesthetic) |
+| **Charts** | LayerChart (Svelte, in-app) · Plotly (AI-returned specs only) |
 | **Bundler** | Vite 6 |
-| **Fonts** | Geist Sans + Geist Mono + JetBrains Mono via Fontsource |
+| **Fonts** | System serif (display/numerals) + Geist Sans (UI) + Geist Mono (data) |
 
 ---
 
-## 1. Design Philosophy
+## 1. Design Philosophy — Ledger
 
 | Principle | Meaning |
 |---|---|
-| **Editorial Clarity** | Every view reads like a well-typeset document. No visual noise. |
-| **Breathing Room** | Generous macro-whitespace. Cards have 24px+ internal padding. |
-| **Warm Monochrome** | Off-black text on warm bone canvas. Color is scarce, only for meaning. |
-| **Zero-Input Capture** | QRIS/TNG scanner via camera + Rust TLV parser → auto-fills expense form. |
-| **Utilitarian Data** | Monospace for all numeric values. Tabular-nums everywhere. Clean alignment. |
-| **Flat Architecture** | 1px structural borders, minimal shadow, deliberate edge. |
+| **Warm Paper** | Off-black ink on warm paper. Color is scarce and earthy; it marks status, never decoration. |
+| **Ruled Order** | Hairline rules and clear alignment do the work that borders, shadows and chips would. |
+| **Serif Numerals** | Money is set in a serif with tabular figures — it reads like an account book, not a dashboard. |
+| **One Number to Start** | The first thing you see is the number you can act on: what's left to spend today. |
+| **Quiet Throughout** | Amounts are neutral ink. Red/green is reserved for status (over budget, net loss). |
+| **Thumb-First Navigation** | A bottom tab bar with a center Add. Every primary destination is one tap. |
 
 ---
 
 ## 2. Typography
 
-| Classification | Font | Weights | Usage |
-|---|---|---|---|
-| **Primary Sans** | Geist Sans | 400, 500, 600, 700 | Body text, UI, buttons, labels |
-| **Display/Mono** | Geist Mono | 400, 500, 600, 700 | Numeric values, keystrokes, metadata, code |
-| **Data Mono** | JetBrains Mono | 400, 700 | Financial data, tabular columns, amounts |
+| Classification | Font | Usage |
+|---|---|---|
+| **Display / Numerals** | System serif stack (`Iowan Old Style`, Palatino, Georgia, `ui-serif`) | Hero numbers, net worth, card totals, section headings |
+| **UI / Body** | Geist Sans | Labels, buttons, list titles, body copy |
+| **Data / Meta** | Geist Mono | Amounts, tabular figures, dates, eyebrow labels |
 
-### Typographic Scale
+The serif is referenced by `--deneb-serif`; mono by `--deneb-mono`. Only one
+mono family is used (JetBrains Mono is retired).
 
-| Token | Size | Weight | Line Height | Tracking |
-|-------|------|--------|-------------|----------|
-| `headline-xl` | 28px | 700 | 1.2 | -0.02em |
-| `headline-lg` | 20px | 600 | 1.3 | -0.01em |
-| `headline-md` | 17px | 600 | 1.3 | -0.01em |
-| `body-lg` | 15px | 400 | 1.6 | 0 |
-| `body` | 14px | 400 | 1.6 | 0 |
-| `label-md` | 12px | 500 | 1.4 | 0.02em |
-| `label-sm` | 11px | 500 | 1.3 | 0.03em |
+### Scale
+
+| Token | Size | Weight | Usage |
+|-------|------|--------|-------|
+| Hero | 34px | 600 | Safe-to-spend number |
+| `headline-lg` | 20px | 600 | Section titles |
+| `headline-md` | 17px | 600 | Card titles |
+| body | 14–15px | 400–500 | UI, lists |
+| label | 10–11px | 500–600 | Mono eyebrows, uppercase |
 
 ---
 
 ## 3. Color System
 
-### Light (Default — Warm Editorial)
+### Light — Warm Paper
 
 | Token | Value | Role |
 |-------|-------|------|
-| Canvas | `#FBFBFA` | Page background |
-| Surface | `#FFFFFF` | Card/block backgrounds |
-| Text Primary | `#111111` | Body text, headings |
-| Text Secondary | `#787774` | Secondary text, metadata |
-| Text Muted | `#B0B0AD` | Disabled, placeholders |
-| Border | `#EAEAEA` | Structural dividers, card edges |
-| Divider | `#F0F0EE` | Subtle row separators |
-| Accent Dark | `#111111` | Primary buttons, active states |
-| Accent On Dark | `#FFFFFF` | Text on dark accent |
+| Canvas | `#F6F2E9` | Page background |
+| Surface | `#FFFDF8` | Cards |
+| Surface 2 | `#FBF7EF` | Inset / icon wells |
+| Ink | `#1C1A16` | Text, buttons, active |
+| Text Secondary | `#5C564D` | Supporting text |
+| Text Muted | `#857E73` | Decorative labels only |
+| Border | `#E4DCCB` | Card edges |
+| Rule | `#E9E2D3` | Row separators |
+| Divider | `#EDE7DA` | Track backgrounds |
 
-### Semantic Pastels
+### Semantic (earthy, for status only)
 
-| Context | Background | Text |
-|---------|-----------|------|
-| Positive / Income | `#EDF3EC` | `#346538` |
-| Negative / Expense | `#FDEBEC` | `#9F2F2D` |
-| Informational | `#E1F3FE` | `#1F6C9F` |
-| Warning / Alert | `#FBF3DB` | `#956400` |
+| Context | Text | Background |
+|---------|------|-----------|
+| Positive / Under budget / Gain | `#2E6A4E` | `#E8F0E9` |
+| Negative / Over budget / Loss | `#9A3B33` | `#F7E8E5` |
+| Informational | `#345A73` | `#E8EEF2` |
+| Warning / Due soon | `#8A6410` | `#F6EFD9` |
 
-### Dark
+### Dark — Warm Charcoal
 
-| Token | Value | Role |
-|-------|-------|------|
-| Canvas | `#18181A` | Page background |
-| Surface | `#252528` | Card/block backgrounds |
-| Text Primary | `#ECECEC` | Body text |
-| Text Secondary | `#9D9D9F` | Secondary text |
-| Border | `rgba(255,255,255,0.08)` | Dividers |
-| Accent Dark | `#ECECEC` | Buttons, active |
-| Accent On Dark | `#18181A` | Text on accent |
+| Token | Value |
+|-------|------|
+| Canvas | `#1A1815` |
+| Surface | `#24221E` |
+| Ink | `#EFEAE1` |
+| Text Secondary | `#A9A296` |
+| Border | `rgba(255,255,255,0.08)` |
+| Rule | `rgba(255,255,255,0.07)` |
 
 ---
 
@@ -96,29 +96,22 @@
 
 ```
 ┌─ SvelteKit 2 (SPA) ──────────────────────────────────┐
-│                                                        │
-│  Routes (file-based)                                   │
-│  ──────────────────                                    │
-│  /                  Dashboard                          │
-│  /records           Transaction ledger                 │
-│  /expense_form      Expense entry                      │
-│  /chatbot           AI assistant (placeholder)         │
-│  /notifications     Notification feed                  │
-│  /lock              Biometric + passcode lock screen   │
-│  /verification      Auth flow (login / signup / OTP)   │
-│                                                        │
-│  UI:   Framework7 9 (editorial override)               │
-│  Nav:  Custom bottom-sheet Drawer + Float bar          │
-│  State: Svelte 5 runes (module-level singletons)       │
-│  Charts: Pure SVG / Nivo (lazy)                        │
-│  Auth: Custom login/signup/OTP flow                    │
-│  Scanner: jsQR + Rust qris.rs (EMVCo TLV parser)       │
-│                                                        │
+│  Routes (file-based)                                  │
+│  /  /records  /expense_form  /chatbot                 │
+│  /notifications  /lock  /verification  /settings/*    │
+│                                                       │
+│  UI:   Framework7 9 (ledger override)                 │
+│  Nav:  Bottom TabBar (Home · Records · Add · Chat ·   │
+│        More) + bottom-sheet Drawer from "More"        │
+│  State: Svelte 5 runes (module-level singletons)      │
+│  Charts: LayerChart; Plotly only for AI replies       │
+│  Auth: login/signup/OTP flow                          │
+│  Scanner: Rust qris.rs (EMVCo TLV parser) via Tauri   │
 ├─ Tauri 2 ────────────────────────────────────────────┤
-│  Plugins: biometric, clipboard-manager, deep-link,     │
-│           geolocation, http, opener, store,            │
-│           notification, fs, dialog                     │
-└────────────────────────────────────────────────────────┘
+│  Plugins: biometric, clipboard-manager, deep-link,    │
+│           geolocation, http, opener, store,           │
+│           notification, fs, dialog, barcode-scanner   │
+└───────────────────────────────────────────────────────┘
 ```
 
 ### Component Layers
@@ -128,27 +121,28 @@
     │
 DenebApp.svelte   ─►  f7 <App> shell
     │
-BaseLayer.svelte  ─►  f7 <Page> + Drawer + Navbar + FloatBar
+BaseLayer.svelte  ─►  f7 <Page> + Navbar + PageContent + TabBar + Drawer
     │
-├── Drawer        ─►  Editorial bottom-sheet nav
-├── Navbar        ─►  Title + actions
-├── PageContent   ─►  @render children() (route content)
-└── FloatBar      ─►  Scan + Menu
+├── TabBar        ─►  Home · Records · (+ Add) · Chat · More
+├── Drawer        ─►  bottom-sheet nav opened by "More"
+├── Navbar        ─►  title + avatar + theme + page actions
+└── PageContent   ─►  @render children() (route content)
 ```
 
 ---
 
 ## 5. Route Map
 
-| Path | Page | Shell | Components |
-|------|------|-------|-----------|
-| `/` | Dashboard | `BaseLayer` | WelcomeCard, CashFlowStrip, AccountPie, RecentTxList, UpcomingBills, CategoryBreakdown |
-| `/records` | Records | `BaseLayer` | SummaryBar, PeriodFilter, RecordList, RecordDetail, FlowOverview |
-| `/expense_form` | Expense Form | `BaseLayer` | ExpenseFormCard |
-| `/chatbot` | Chat | `BaseLayer` | Placeholder |
-| `/notifications` | Notifications | `BaseLayer` | NotificationFeed |
-| `/lock` | Lock Screen | `BaseLayer` | Fingerprint, Passcode |
-| `/verification` | Auth | standalone | LoginForm, SignupForm, OtpVerify |
+| Path | Page | Key components |
+|------|------|----------------|
+| `/` | Dashboard | SafeToSpend (hero), AccountList, UpcomingBills, RecentTxList |
+| `/records` | Records | SummaryBar, PeriodFilter, RecordList, RecordDetail, FlowOverview |
+| `/expense_form` | Add Entry | ExpenseFormCard, ReceiptScanner |
+| `/chatbot` | Chat | ChatChart (Plotly for AI specs) |
+| `/notifications` | Notifications | NotificationFeed |
+| `/lock` | Lock Screen | Fingerprint, Passcode |
+| `/verification` | Auth | LoginForm, SignupForm, OtpVerify |
+| `/settings/*` | Settings | SettingsScaffold / Group / Row |
 
 ---
 
@@ -156,40 +150,38 @@ BaseLayer.svelte  ─►  f7 <Page> + Drawer + Navbar + FloatBar
 
 | Rule | Spec |
 |------|------|
-| Card border | `1px solid #EAEAEA` always |
-| Card radius | `8px` ~ `12px` max |
-| Card padding | `20px` ~ `28px` minimum |
-| Card shadow | `0 1px 3px rgba(0,0,0,0.04)` maximum |
-| Button radius | `6px` ~ `8px` |
-| Button shadow | None. Hover: subtle color shift. Active: `scale(0.98)` |
-| Tag/ badge radius | `9999px` (pill shape) |
-| Tag background | Pastel semantic colors |
-| Macro whitespace | `24px` ~ `40px` between sections |
-| Text columns | `max-width: 620px` for body text |
+| Card background | Surface, `1px solid` border |
+| Card radius | `8px` (inputs/buttons `6–10px`) |
+| Card shadow | None — hairline rules instead |
+| Card padding | `18–20px` |
+| Row separators | `1px solid var(--deneb-rule)` |
+| Amounts | Neutral ink, mono, tabular figures, signed (`+` / `−`) |
+| Status color | Only net / over-budget / gain-loss, never every row |
+| Tap targets | ≥44px |
+| Label minimum | 10–11px mono, sentence or uppercase with tracking |
+| Section spacing | `16px` between blocks |
 
 ---
 
-## 7. State Management
+## 7. Dashboard hierarchy
 
-Svelte 5 runes throughout — no external state library.
-
-| Pattern | Usage |
-|---------|-------|
-| `$state()` | Local component state, reactive singletons |
-| `$derived()` | Computed values |
-| `$derived.by()` | Multi-step computations |
-| `$effect()` | Side effects (IntersectionObserver, localStorage) |
-| `$props()` / `$bindable()` | Component inputs |
-
-### Module-level singletons
-
-- **`theme.svelte.ts`** — `createTheme()` → `export const theme`. Persists to `localStorage`.
-- **`toast.svelte.ts`** — `showToast()`, `dismissToast()`, `getToastState()`.
-- **`useSignup.svelte.ts`** — Reactive signup state machine.
+1. **SafeToSpend (hero)** — budget ring + "left to spend today"; income / spent / net for the month; net worth demoted to a footer line.
+2. **AccountList** — ranked liquid accounts with proportional bars (no donut, no per-account rainbow).
+3. **UpcomingBills** — soonest dues; warning pill only when due within 3 days.
+4. **RecentTxList** — latest expenses, neutral amounts.
 
 ---
 
-## 8. Entry Schema
+## 8. State Management
+
+Svelte 5 runes — no external state library. Module-level singletons:
+`theme.svelte.ts`, `toast.svelte.ts`, `settings.svelte.ts`, `profile.svelte.ts`,
+`categories.svelte.ts`, `ai.svelte.ts`, `lock.svelte.ts`, and
+`records/store.svelte.ts` (the transaction store).
+
+---
+
+## 9. Entry Schema
 
 ```typescript
 interface Entry {
@@ -209,39 +201,34 @@ interface Entry {
 
 ---
 
-## 9. Key Files
+## 10. Key Files
 
 | Purpose | Path |
 |---------|------|
-| Design tokens & theme | `src/lib/app.css` |
-| Theme state | `src/lib/features/core/theme.svelte.ts` |
-| Toast state | `src/lib/features/core/toast.svelte.ts` |
-| Toast UI | `src/lib/features/core/Toast.svelte` |
-| F7 App wrapper | `src/lib/DenebApp.svelte` |
-| Page shell | `src/lib/BaseLayer.svelte` |
+| Design tokens | `src/lib/app.css` |
+| Page shell + nav | `src/lib/BaseLayer.svelte` |
+| Bottom navigation | `src/lib/features/core/TabBar.svelte` |
 | Drawer nav | `src/lib/features/core/Drawer.svelte` |
-| Root layout | `src/routes/+layout.svelte` |
-| Dashboard | `src/routes/+page.svelte` |
+| Dashboard hero | `src/lib/features/dashboard/SafeToSpend.svelte` |
 | Records | `src/routes/records/+page.svelte` |
-| Expense form | `src/routes/expense_form/+page.svelte` |
+| Entry form | `src/lib/features/expense/ExpenseFormCard.svelte` |
 
 ---
 
-## 10. Performance Targets
+## 11. Performance Targets
 
 | Metric | Target |
 |--------|--------|
 | First paint | < 1.5s |
 | Dashboard interactive | < 2s |
 | Chart load | < 300ms |
-| JS bundle (initial) | < 100KB gzipped |
 
 ---
 
-## 11. Future Roadmap
+## 12. Future Roadmap
 
 | Phase | Feature |
 |-------|---------|
-| P0 | AI Chat assistant, Real API integration |
-| P1 | Budget tracking, Export CSV/PDF, Push notifications, Multi-currency |
+| P0 | Real persistence + API integration, AI chat backend |
+| P1 | Budget editor, Export CSV/PDF, Push notifications, Multi-currency |
 | P2 | Desktop biometric unlock |

@@ -218,7 +218,7 @@
     padding: 8px 14px;
     border: 1px solid var(--deneb-border);
     border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 13px;
     font-weight: 600;
     color: var(--deneb-info);
@@ -236,7 +236,7 @@
     font-size: 14px; font-weight: 500; color: var(--deneb-text-secondary);
   }
   .detail-value {
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 14px; font-weight: 600; color: var(--f7-page-text-color);
   }
   .detail-value.income { color: var(--deneb-positive); }

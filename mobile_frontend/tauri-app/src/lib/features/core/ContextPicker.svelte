@@ -91,7 +91,7 @@
   .preview-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .preview-label { font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.04em; color: #B0B0AD; }
   :global(.dark) .preview-label { color: #6F6F72; }
-  .preview-title { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600; color: #111111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .preview-title { font-family: var(--deneb-sans); font-size: 15px; font-weight: 600; color: #111111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   :global(.dark) .preview-title { color: #ECECEC; }
 
   .action-btn {
@@ -113,7 +113,7 @@
   :global(.dark) .action-btn svg:last-child { color: #6F6F72; }
 
   .action-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-  .action-label { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 500; }
-  .action-desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; font-weight: 400; color: #787774; }
+  .action-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; }
+  .action-desc { font-family: var(--deneb-sans); font-size: 12px; font-weight: 400; color: #787774; }
   :global(.dark) .action-desc { color: #9D9D9F; }
 </style>

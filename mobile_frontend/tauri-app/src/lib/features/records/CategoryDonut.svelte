@@ -47,7 +47,7 @@
       {/if}
     {/each}
     <text x={cx} y={cy - 4} text-anchor="middle" dominant-baseline="middle"
-          font-family="Geist Sans, sans-serif" font-size="18" font-weight="700" fill="currentColor">
+          font-family="-apple-system, BlinkMacSystemFont, Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="currentColor">
       {data.length}
     </text>
     <text x={cx} y={cy + 14} text-anchor="middle" dominant-baseline="middle"

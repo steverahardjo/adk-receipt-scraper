@@ -54,7 +54,7 @@
   .chart { width: 100%; height: 220px; }
   .chart-fallback {
     margin: 0;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 12px;
     color: var(--deneb-text-secondary);
   }

@@ -78,12 +78,12 @@
   .title { margin: 0 0 16px; }
 
   .fields { display: flex; flex-direction: column; gap: 14px; }
-  .error { margin: 12px 0 0; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; color: var(--deneb-negative); }
+  .error { margin: 12px 0 0; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-negative); }
 
   .actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn {
     flex: 1; height: 48px; border-radius: 10px; border: none;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
   .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); }

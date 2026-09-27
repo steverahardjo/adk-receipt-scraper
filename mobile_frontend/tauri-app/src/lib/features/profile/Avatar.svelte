@@ -27,7 +27,7 @@
     background: var(--deneb-canvas);
     border: 1px solid var(--deneb-border);
     color: var(--f7-page-text-color);
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-weight: 600;
     padding: 0;
     flex-shrink: 0;

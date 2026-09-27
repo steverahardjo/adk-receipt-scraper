@@ -156,7 +156,7 @@
     border: none;
     border-radius: 6px;
     background: transparent;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 12px;
     font-weight: 500;
     color: var(--deneb-text-secondary);
@@ -190,7 +190,7 @@
   }
   .empty p {
     margin: 0;
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 13px;
     color: var(--deneb-text-secondary);
   }

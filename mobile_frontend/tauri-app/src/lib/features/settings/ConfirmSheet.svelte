@@ -64,12 +64,12 @@
   .sheet.show { transform: translateY(0); }
   .handle { width: 36px; height: 4px; border-radius: 2px; background: var(--deneb-border); margin: 10px auto 10px; }
   .title { margin: 0 0 6px; }
-  .message { margin: 0 0 18px; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: var(--deneb-text-secondary); }
+  .message { margin: 0 0 18px; font-family: var(--deneb-sans); font-size: 14px; line-height: 1.5; color: var(--deneb-text-secondary); }
 
   .actions { display: flex; gap: 10px; }
   .btn {
     flex: 1; height: 48px; border-radius: 10px; border: none;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
   .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); }

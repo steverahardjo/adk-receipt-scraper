@@ -65,7 +65,7 @@
   .body { flex: 1; min-width: 0; }
   .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .title {
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 14px; font-weight: 600;
     color: var(--f7-page-text-color); margin: 0;
   }
@@ -75,7 +75,7 @@
     color: var(--deneb-text-secondary); white-space: nowrap;
   }
   .desc {
-    font-family: 'Geist Sans', system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     font-size: 13px; font-weight: 400;
     color: var(--deneb-text-secondary); margin: 3px 0 0; line-height: 1.3;
   }

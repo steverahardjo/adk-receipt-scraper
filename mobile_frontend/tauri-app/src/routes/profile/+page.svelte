@@ -140,7 +140,7 @@
     border: 2px solid var(--f7-page-bg-color);
     display: flex; align-items: center; justify-content: center;
   }
-  .hero-name { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--f7-page-text-color); margin: 10px 0 0; }
+  .hero-name { font-family: var(--deneb-sans); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--f7-page-text-color); margin: 10px 0 0; }
   .hero-email { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--deneb-text-secondary); margin: 0; }
 
   .form { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
@@ -149,7 +149,7 @@
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px;
+    font-family: var(--deneb-sans); font-size: 15px;
     color: var(--f7-page-text-color); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
@@ -161,7 +161,7 @@
   .save-btn {
     height: 48px; border: none; border-radius: 10px;
     background: var(--f7-page-text-color); color: var(--f7-page-bg-color);
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; transition: opacity 0.15s; -webkit-tap-highlight-color: transparent;
   }
   .save-btn:disabled { opacity: 0.5; }

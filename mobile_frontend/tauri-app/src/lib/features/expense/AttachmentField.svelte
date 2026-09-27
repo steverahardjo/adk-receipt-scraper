@@ -78,7 +78,7 @@
     width: 100%; height: 44px;
     border: 1px dashed var(--deneb-border); border-radius: 10px;
     background: var(--deneb-canvas);
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; font-weight: 500;
+    font-family: var(--deneb-sans); font-size: 14px; font-weight: 500;
     color: var(--deneb-text-secondary); cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transition: border-color 0.15s, color 0.15s;
@@ -97,13 +97,13 @@
     border-radius: 8px; border: 1px solid var(--deneb-border); flex-shrink: 0;
   }
   .preview-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .preview-name { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
+  .preview-name { font-family: var(--deneb-sans); font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
   .preview-remove {
     align-self: flex-start; border: none; background: transparent; padding: 0;
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; font-weight: 500;
+    font-family: var(--deneb-sans); font-size: 12px; font-weight: 500;
     color: var(--deneb-negative); cursor: pointer;
   }
   .preview-remove:disabled { opacity: 0.4; cursor: default; }
 
-  .error { margin: 0; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; color: var(--deneb-negative); }
+  .error { margin: 0; font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-negative); }
 </style>

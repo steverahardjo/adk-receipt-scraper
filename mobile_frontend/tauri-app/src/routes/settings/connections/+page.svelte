@@ -75,5 +75,5 @@
   .status.ok { background: var(--deneb-positive); }
   .status.err { background: var(--deneb-negative); }
   .status.busy { background: var(--deneb-warning); }
-  .note { margin: 0; padding: 0 4px; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; line-height: 1.5; color: var(--deneb-text-secondary); }
+  .note { margin: 0; padding: 0 4px; font-family: var(--deneb-sans); font-size: 12px; line-height: 1.5; color: var(--deneb-text-secondary); }
 </style>

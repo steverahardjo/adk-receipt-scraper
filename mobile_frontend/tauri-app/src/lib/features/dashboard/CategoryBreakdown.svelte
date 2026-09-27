@@ -48,7 +48,7 @@
   .top { display: flex; align-items: center; justify-content: space-between; }
   .left { display: flex; align-items: center; gap: 8px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .label { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
+  .label { font-family: var(--deneb-sans); font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
   .value { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary); font-variant-numeric: tabular-nums; }
   .bar { height: 4px; background: var(--deneb-divider); border-radius: 2px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1); }

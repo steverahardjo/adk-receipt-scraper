@@ -62,7 +62,7 @@
   .field-label { font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
   .input-wrap { position: relative; display: flex; align-items: center; }
   .input-icon { position: absolute; left: 12px; color: var(--deneb-text-muted); pointer-events: none; }
-  .field-input { width: 100%; height: 44px; padding: 0 12px 0 38px; border: 1px solid var(--deneb-border); border-radius: 8px; font-size: 15px; font-family: 'Geist Sans', system-ui, sans-serif; color: var(--f7-page-text-color); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
+  .field-input { width: 100%; height: 44px; padding: 0 12px 0 38px; border: 1px solid var(--deneb-border); border-radius: 8px; font-size: 15px; font-family: var(--deneb-sans); color: var(--f7-page-text-color); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
   .field-input:focus { border-color: var(--deneb-text-secondary); }
   .field-input::placeholder { color: var(--deneb-text-muted); }
   .field-error { font-size: 12px; color: var(--deneb-negative); margin: 0; }

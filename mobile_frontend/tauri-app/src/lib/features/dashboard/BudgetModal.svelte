@@ -1,5 +1,7 @@
 <script lang="ts">
-  const DAILY_BUDGET = 150000
+  import { settings } from '$lib/features/settings/settings.svelte'
+
+  let DAILY_BUDGET = $derived(settings.value.dailyBudget || 350000)
   let transactions = $state([
     { date: new Date(), amount: 45000 }, { date: new Date(), amount: 35000 },
     { date: new Date(), amount: 25000 }, { date: new Date(Date.now() - 86400000), amount: 120000 },
@@ -42,7 +44,7 @@
             stroke-dasharray="{ctx.length} {ctx.circumference - ctx.length}"
             transform="rotate(-90 100 100)"
             style="transition: stroke-dasharray 0.6s cubic-bezier(0.16,1,0.3,1)" />
-          <text x="100" y="94" text-anchor="middle" font-family="Geist Sans, system-ui, sans-serif" font-size="22" font-weight="700" fill="currentColor">
+          <text x="100" y="94" text-anchor="middle" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="23" font-weight="600" fill="currentColor">
             Rp {(remaining > 0 ? remaining : 0).toLocaleString('id-ID')}
           </text>
           <text x="100" y="114" text-anchor="middle" font-family="Geist Mono, monospace" font-size="11" font-weight="500" fill="var(--deneb-text-secondary)">
@@ -61,27 +63,25 @@
 {/if}
 
 <style>
-  .backdrop { position: fixed; inset: 0; z-index: 14000; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.25s ease-out; }
-  :global(.dark) .backdrop { background: rgba(0,0,0,0.5); }
+  .backdrop { position: fixed; inset: 0; z-index: 14000; background: rgba(28, 22, 10, 0.38); opacity: 0; transition: opacity var(--deneb-dur) var(--deneb-ease-standard); }
+  :global(.dark) .backdrop { background: rgba(0, 0, 0, 0.6); }
   .backdrop.show { opacity: 1; }
   .sheet {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 14001;
-    background: #FFFFFF; border-radius: 16px 16px 0 0;
-    transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.06); padding: 0 24px 32px;
+    background: var(--deneb-surface); border-radius: var(--deneb-radius-sheet) var(--deneb-radius-sheet) 0 0;
+    transform: translateY(100%); transition: transform 0.35s var(--deneb-ease);
+    box-shadow: var(--deneb-shadow-lg); padding: 0 24px calc(32px + env(safe-area-inset-bottom, 0px));
   }
-  :global(.dark) .sheet { background: #252528; }
   .sheet.show { transform: translateY(0); }
-  .handle { width: 36px; height: 4px; border-radius: 2px; background: #E5E5E5; margin: 10px auto 6px; }
-  :global(.dark) .handle { background: #48484A; }
+  .handle { width: 36px; height: 4px; border-radius: 2px; background: var(--deneb-border-strong); margin: 10px auto 6px; }
   .body { display: flex; flex-direction: column; align-items: center; gap: 20px; }
   .title { margin: 8px 0 0; }
   .ring-wrap { display: flex; justify-content: center; }
-  .ring-wrap svg { color: var(--f7-page-text-color); }
+  .ring-wrap svg { color: var(--deneb-ink); }
   .rows { width: 100%; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--deneb-divider); padding-top: 16px; }
   .row { display: flex; justify-content: space-between; align-items: center; }
-  .row-label { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 14px; font-weight: 400; color: var(--deneb-text-secondary); }
-  .row-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); font-variant-numeric: tabular-nums; }
+  .row-label { font-family: var(--deneb-sans); font-size: 14px; font-weight: 400; color: var(--deneb-text-secondary); }
+  .row-value { font-family: var(--deneb-mono); font-size: 14px; font-weight: 600; color: var(--deneb-ink); font-variant-numeric: tabular-nums; }
   .row-value.spent { color: var(--deneb-negative); }
   .row-value.over { color: var(--deneb-negative); }
   .bar { width: 100%; height: 4px; background: var(--deneb-divider); border-radius: 2px; overflow: hidden; margin-top: 4px; }

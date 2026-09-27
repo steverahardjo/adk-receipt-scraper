@@ -18,16 +18,18 @@
 <style>
   .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
   .chip {
-    padding: 9px 14px;
+    display: inline-flex; align-items: center;
+    min-height: 44px;
+    padding: 10px 16px;
     border: 1px solid var(--deneb-border);
-    border-radius: 9999px;
+    border-radius: var(--deneb-radius-pill);
     background: var(--deneb-surface);
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    font-size: 13px; font-weight: 500;
-    color: var(--f7-page-text-color);
+    font-family: var(--deneb-sans);
+    font-size: 15px; font-weight: 500;
+    color: var(--deneb-ink);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: background 0.15s, transform 0.1s;
+    transition: background var(--deneb-dur-fast) var(--deneb-ease), color var(--deneb-dur-fast) var(--deneb-ease), transform var(--deneb-dur-fast) var(--deneb-ease);
   }
-  .chip:active { background: var(--deneb-canvas); transform: scale(0.97); }
+  .chip:active { background: var(--deneb-accent-bg); color: var(--deneb-accent); border-color: var(--deneb-accent); transform: scale(0.97); }
 </style>

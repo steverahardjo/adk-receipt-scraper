@@ -43,12 +43,14 @@
 
 <style>
   .toast {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 20000;
+    position: fixed; top: 0; left: 12px; right: 12px; z-index: 20000;
+    margin-top: calc(10px + env(safe-area-inset-top, 0px));
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px;
-    padding-top: calc(12px + env(safe-area-inset-top, 0px));
-    font-family: 'Geist Sans', system-ui, sans-serif;
-    animation: slideDown 0.25s ease-out;
+    border-radius: var(--deneb-radius-md);
+    box-shadow: var(--deneb-shadow-md);
+    font-family: var(--deneb-sans);
+    animation: slideDown 0.3s var(--deneb-ease);
     cursor: pointer;
   }
   @keyframes slideDown {

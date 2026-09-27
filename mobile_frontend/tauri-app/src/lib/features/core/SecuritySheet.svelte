@@ -139,8 +139,8 @@
   .rows { display: flex; flex-direction: column; }
   .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--deneb-divider); }
   .row-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .row-label { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
-  .row-desc { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 12px; color: var(--deneb-text-secondary); }
+  .row-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .row-desc { font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
 
   .switch {
     width: 46px; height: 28px; flex-shrink: 0;
@@ -158,7 +158,7 @@
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; padding: 14px 0; border: none; background: transparent;
     border-bottom: 1px solid var(--deneb-divider);
-    font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 500;
+    font-family: var(--deneb-sans); font-size: 15px; font-weight: 500;
     color: var(--f7-page-text-color); cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -173,7 +173,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   .back-btn:active { background: var(--deneb-divider); }
-  .step-title { font-family: 'Geist Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600; color: var(--f7-page-text-color); }
+  .step-title { font-family: var(--deneb-sans); font-size: 15px; font-weight: 600; color: var(--f7-page-text-color); }
   .step-spacer { width: 34px; }
-  .step-hint { text-align: center; font-family: 'Geist Sans', system-ui, sans-serif; font-size: 13px; color: var(--deneb-text-secondary); margin: 2px 0 0; }
+  .step-hint { text-align: center; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-text-secondary); margin: 2px 0 0; }
 </style>
