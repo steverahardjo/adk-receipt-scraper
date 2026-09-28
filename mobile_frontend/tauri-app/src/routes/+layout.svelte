@@ -21,6 +21,7 @@
   import { profile } from '$lib/features/profile/profile.svelte';
   import { settings } from '$lib/features/settings/settings.svelte';
   import { categories } from '$lib/features/settings/categories.svelte';
+  import { budgets } from '$lib/features/budgets/budgets.svelte';
   import { connections } from '$lib/features/settings/connections.svelte';
   import { sessions } from '$lib/features/settings/sessions.svelte';
   import { ai } from '$lib/features/settings/ai/ai.svelte';
@@ -33,6 +34,7 @@
     profile.init();
     settings.init();
     categories.init();
+    budgets.init();
     connections.init();
     sessions.init();
     ai.init();

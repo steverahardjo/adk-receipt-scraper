@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getEntries } from '$lib/features/records/store.svelte'
-  import { settings } from '$lib/features/settings/settings.svelte'
+  import { budgets } from '$lib/features/budgets/budgets.svelte'
 
   const r = 44
   const c = 2 * Math.PI * r
@@ -33,7 +33,15 @@
     return { income, expense, net: income - expense }
   })
 
-  let budget = $derived(settings.value.dailyBudget || 350000)
+  // Monthly budget (from the Budgets page) drives the daily allowance:
+  // what's left this month, spread across the days remaining.
+  let monthlyLimit = $derived(budgets.totalLimit || 1)
+  let daysLeft = $derived.by(() => {
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+    return Math.max(1, end - now.getDate() + 1)
+  })
+  let budget = $derived(Math.max(0, monthlyLimit - month.expense) / daysLeft)
+
   let left = $derived(budget - spentToday)
   let over = $derived(left < 0)
   let usedRatio = $derived(Math.min(1, budget > 0 ? spentToday / budget : 0))

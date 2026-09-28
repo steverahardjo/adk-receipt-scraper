@@ -14,15 +14,15 @@
   const right: Nav = { href: '/chatbot', label: 'Chat', icon: 'chat' }
 
   const extras: Extra[] = [
-    { href: '/notifications', label: 'Alerts', icon: 'bell' },
+    { href: '/budgets', label: 'Budget', icon: 'budget' },
     { href: '/profile', label: 'Profile', icon: 'user' },
     { href: '/settings', label: 'Settings', icon: 'gear' },
     { label: 'More', icon: 'more', more: true },
   ]
 
-  const R = 96
-  const START = 296
-  const END = 358
+  const R = 156
+  const START = 294
+  const END = 352
 
   function angle(i: number) {
     return START + (i * (END - START)) / Math.max(1, extras.length - 1)
@@ -88,9 +88,10 @@
       <line x1="12" y1="3" x2="12" y2="6.2" /><line x1="18.4" y1="6.8" x2="16.2" y2="9" /><line x1="18.4" y1="17.2" x2="16.2" y2="15" />
       <line x1="12" y1="21" x2="12" y2="17.8" /><line x1="5.6" y1="17.2" x2="7.8" y2="15" /><line x1="5.6" y1="6.8" x2="7.8" y2="9" />
     </svg>
-  {:else if name === 'bell'}
+  {:else if name === 'budget'}
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      <rect x="3" y="6" width="18" height="13" rx="3" /><path d="M3 10.5h18" />
+      <circle cx="16.5" cy="14.5" r="1.1" fill="currentColor" stroke="none" />
     </svg>
   {:else if name === 'user'}
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -264,8 +265,8 @@
   .fan-item {
     position: absolute;
     left: 50%; top: 50%;
-    width: 56px; height: 56px;
-    margin: -28px 0 0 -28px;
+    width: 52px; height: 52px;
+    margin: -26px 0 0 -26px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -283,7 +284,7 @@
     text-transform: uppercase;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transform: rotate(var(--a)) translateY(var(--r)) rotate(calc(-1 * var(--a)));
+    transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a)));
     transform-origin: center;
     opacity: 0;
     pointer-events: none;

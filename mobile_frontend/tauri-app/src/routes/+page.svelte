@@ -3,11 +3,8 @@
   import BaseLayer from '$lib/BaseLayer.svelte'
   import SafeToSpend from '$lib/features/dashboard/SafeToSpend.svelte'
   import AccountList from '$lib/features/dashboard/AccountList.svelte'
-  import BudgetModal from '$lib/features/dashboard/BudgetModal.svelte'
   import RecentTxList from '$lib/features/dashboard/RecentTxList.svelte'
   import UpcomingBills from '$lib/features/dashboard/UpcomingBills.svelte'
-
-  let budgetOpen = $state(false)
 </script>
 
 {#snippet navbarRight()}
@@ -29,16 +26,14 @@
 
     <RecentTxList />
 
-    <button class="budget-link" onclick={() => budgetOpen = true}>
-      <span>Daily budget</span>
+    <button class="budget-link" onclick={() => goto('/budgets')}>
+      <span>Monthly budgets</span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
   </div>
 </BaseLayer>
-
-<BudgetModal opened={budgetOpen} onClose={() => budgetOpen = false} />
 
 <style>
   .dash { display: flex; flex-direction: column; gap: 16px; padding: 10px 16px 28px 16px; }
