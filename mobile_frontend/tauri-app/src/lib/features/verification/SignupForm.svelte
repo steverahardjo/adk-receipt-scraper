@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Link } from 'framework7-svelte'
+  import { Button, Link, Preloader } from 'framework7-svelte'
   import PasswordField from '$lib/features/core/PasswordField.svelte'
   import OtpInput from './OtpInput.svelte'
   import { createSignupState } from './useSignup.svelte'
@@ -64,12 +64,10 @@
     <p class="form-error">{s.error}</p>
   {/if}
 
-  <Button fill large round class="submit-btn" onclick={s.signup} disabled={!s.canSubmit}>
+  <Button fill large round {...({ class: 'submit-btn' } as any)} onclick={s.signup} disabled={!s.canSubmit}>
     {#if s.submitting}
       <span class="btn-inner">
-        <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round" />
-        </svg>
+        <Preloader size={16} {...({ style: '--f7-preloader-color: currentColor' } as any)} />
         Creating account...
       </span>
     {:else}
@@ -96,7 +94,7 @@
 
   .form-subtitle {
     font-size: 14px;
-    color: #8e8e93;
+    color: var(--deneb-text-secondary);
     margin: -16px 0 0;
   }
 
@@ -115,55 +113,43 @@
   .field-label {
     font-size: 13px;
     font-weight: 600;
-    color: #555555;
+    color: var(--deneb-text-secondary);
   }
 
-  :global(.dark) .field-label {
-    color: #a0a0a5;
-  }
-
+  /* One token set covers both themes, so the :global(.dark) pairs are gone.
+     Border radius follows the shared radius scale. */
   .field-input {
     width: 100%;
     height: 44px;
     padding: 0 12px;
-    border: 1.5px solid #e5e5ea;
-    border-radius: 10px;
+    border: 1.5px solid var(--deneb-border);
+    border-radius: var(--deneb-radius-sm);
     font-size: 15px;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    color: #000000;
-    background: #ffffff;
+    font-family: var(--deneb-sans);
+    color: var(--deneb-ink);
+    background: var(--deneb-surface);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
   }
 
-  :global(.dark) .field-input {
-    border-color: #38383a;
-    color: #ffffff;
-    background: #1c1c1e;
-  }
-
   .field-input:focus {
-    border-color: #007aff;
-  }
-
-  :global(.dark) .field-input:focus {
-    border-color: #0a84ff;
+    border-color: var(--deneb-accent);
   }
 
   .field-input::placeholder {
-    color: #aeaeb2;
+    color: var(--deneb-text-muted);
   }
 
   .field-error {
     font-size: 12px;
-    color: #ff3b30;
+    color: var(--deneb-negative);
     margin: 0;
   }
 
   .form-error {
     font-size: 13px;
-    color: #ff3b30;
+    color: var(--deneb-negative);
     margin: -4px 0;
     text-align: center;
   }
@@ -183,18 +169,10 @@
     gap: 8px;
   }
 
-  .spinner {
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
   .footer-text {
     text-align: center;
     font-size: 14px;
-    color: #8e8e93;
+    color: var(--deneb-text-secondary);
     margin: 0;
   }
 </style>

@@ -40,7 +40,7 @@
               stroke={seg.color} stroke-width="1" opacity="0.5" />
         <text x={seg.labelX} y={seg.labelY} dominant-baseline="middle"
               text-anchor={seg.labelX > cx ? 'start' : 'end'}
-              font-family="Geist Mono, monospace" font-size="10" font-weight="500"
+              style="font-family: var(--deneb-mono)" font-size="10" font-weight="500"
               fill="currentColor" opacity="0.7">
           {seg.id}
         </text>
@@ -51,7 +51,7 @@
       {data.length}
     </text>
     <text x={cx} y={cy + 14} text-anchor="middle" dominant-baseline="middle"
-          font-family="Geist Mono, monospace" font-size="11" font-weight="500"
+          style="font-family: var(--deneb-mono)" font-size="11" font-weight="500"
           fill="currentColor" opacity="0.6">
       Categories
     </text>
@@ -66,6 +66,6 @@
   .donut-wrap :global(svg) {
     display: block;
     overflow: visible;
-    color: var(--f7-page-text-color);
+    color: var(--deneb-ink);
   }
 </style>

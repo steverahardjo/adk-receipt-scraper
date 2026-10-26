@@ -136,31 +136,31 @@
   .avatar-badge {
     position: absolute; right: -2px; bottom: -2px;
     width: 28px; height: 28px; border-radius: 50%;
-    background: var(--f7-page-text-color); color: var(--f7-page-bg-color);
+    background: var(--deneb-ink); color: var(--f7-page-bg-color);
     border: 2px solid var(--f7-page-bg-color);
     display: flex; align-items: center; justify-content: center;
   }
-  .hero-name { font-family: var(--deneb-sans); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--f7-page-text-color); margin: 10px 0 0; }
-  .hero-email { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--deneb-text-secondary); margin: 0; }
+  .hero-name { font-family: var(--deneb-sans); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--deneb-ink); margin: 10px 0 0; }
+  .hero-email { font-family: var(--deneb-mono); font-size: 12px; color: var(--deneb-text-secondary); margin: 0; }
 
   .form { display: flex; flex-direction: column; gap: 14px; padding: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
-  .field-label { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
+  .field-label { font-family: var(--deneb-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
     font-family: var(--deneb-sans); font-size: 15px;
-    color: var(--f7-page-text-color); background: var(--deneb-canvas);
+    color: var(--deneb-ink); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
-  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input:focus { border-color: var(--deneb-ink); }
   .select { display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; }
   .select .placeholder { color: var(--deneb-text-muted); }
   .select svg { color: var(--deneb-text-muted); }
 
   .save-btn {
     height: 48px; border: none; border-radius: 10px;
-    background: var(--f7-page-text-color); color: var(--f7-page-bg-color);
+    background: var(--deneb-ink); color: var(--f7-page-bg-color);
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; transition: opacity 0.15s; -webkit-tap-highlight-color: transparent;
   }

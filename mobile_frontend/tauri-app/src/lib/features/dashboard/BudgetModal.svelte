@@ -47,7 +47,7 @@
           <text x="100" y="94" text-anchor="middle" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="23" font-weight="600" fill="currentColor">
             Rp {(remaining > 0 ? remaining : 0).toLocaleString('id-ID')}
           </text>
-          <text x="100" y="114" text-anchor="middle" font-family="Geist Mono, monospace" font-size="11" font-weight="500" fill="var(--deneb-text-secondary)">
+          <text x="100" y="114" text-anchor="middle" style="font-family: var(--deneb-mono)" font-size="11" font-weight="500" fill="var(--deneb-text-secondary)">
             {remaining >= 0 ? 'Remaining' : 'Over budget'}
           </text>
         </svg>
@@ -78,7 +78,7 @@
   .title { margin: 8px 0 0; }
   .ring-wrap { display: flex; justify-content: center; }
   .ring-wrap svg { color: var(--deneb-ink); }
-  .rows { width: 100%; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--deneb-divider); padding-top: 16px; }
+  .rows { width: 100%; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--deneb-rule); padding-top: 16px; }
   .row { display: flex; justify-content: space-between; align-items: center; }
   .row-label { font-family: var(--deneb-sans); font-size: 14px; font-weight: 400; color: var(--deneb-text-secondary); }
   .row-value { font-family: var(--deneb-mono); font-size: 14px; font-weight: 600; color: var(--deneb-ink); font-variant-numeric: tabular-nums; }

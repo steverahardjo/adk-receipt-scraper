@@ -56,9 +56,9 @@
 
   .sheet {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 16001;
-    background: var(--deneb-surface); border-radius: 16px 16px 0 0;
-    transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+    background: var(--deneb-surface); border-radius: var(--deneb-radius-sheet) var(--deneb-radius-sheet) 0 0;
+    transform: translateY(100%); transition: transform 0.35s var(--deneb-ease);
+    box-shadow: var(--deneb-shadow-lg);
     padding: 0 20px calc(20px + env(safe-area-inset-bottom, 0px));
   }
   .sheet.show { transform: translateY(0); }
@@ -68,11 +68,11 @@
 
   .actions { display: flex; gap: 10px; }
   .btn {
-    flex: 1; height: 48px; border-radius: 10px; border: none;
+    flex: 1; height: 48px; border-radius: var(--deneb-radius-sm); border: none;
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
-  .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); }
-  .btn.danger { background: var(--deneb-negative); color: #FFFFFF; }
+  .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--deneb-ink); }
+  .btn.danger { background: var(--deneb-negative); color: var(--ds-neutral-0); }
   .btn:active { opacity: 0.85; }
 </style>

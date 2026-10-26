@@ -152,7 +152,7 @@
   .header { display: flex; align-items: center; gap: 10px; padding: 8px 20px 4px; }
   .header-icon { color: var(--deneb-ink); }
   .header-text { display: flex; flex-direction: column; gap: 0; }
-  .header-name { font-family: var(--deneb-serif); font-size: 16px; font-weight: 600; color: var(--deneb-ink); letter-spacing: -0.01em; }
+  .header-name { font-family: var(--deneb-sans); font-size: 16px; font-weight: 600; color: var(--deneb-ink); letter-spacing: -0.01em; }
   .header-version { font-family: var(--deneb-mono); font-size: 11px; color: var(--deneb-text-muted); letter-spacing: 0.03em; }
 
   .body { display: flex; flex-direction: column; padding: 8px 12px; gap: 2px; }

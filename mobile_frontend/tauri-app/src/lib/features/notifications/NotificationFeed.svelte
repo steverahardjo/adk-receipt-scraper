@@ -44,7 +44,7 @@
     display: flex;
     gap: 12px;
     padding: 14px 0;
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
   }
   .item:first-child { padding-top: 0; }
   .item:last-child { padding-bottom: 0; border-bottom: none; }
@@ -67,10 +67,10 @@
   .title {
     font-family: var(--deneb-sans);
     font-size: 14px; font-weight: 600;
-    color: var(--f7-page-text-color); margin: 0;
+    color: var(--deneb-ink); margin: 0;
   }
   .time {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 11px; font-weight: 500;
     color: var(--deneb-text-secondary); white-space: nowrap;
   }

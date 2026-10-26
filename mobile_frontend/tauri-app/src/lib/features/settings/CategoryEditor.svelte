@@ -170,23 +170,23 @@
   .fields { display: flex; flex-direction: column; gap: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .row-field { flex-direction: row; align-items: center; justify-content: space-between; }
-  .field-label { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
+  .field-label { font-family: var(--deneb-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
   .field-hint { margin: 2px 0 0; font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
     font-family: var(--deneb-sans); font-size: 15px;
-    color: var(--f7-page-text-color); background: var(--deneb-canvas);
+    color: var(--deneb-ink); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
-  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input:focus { border-color: var(--deneb-ink); }
   .select { display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; }
   .select .placeholder { color: var(--deneb-text-muted); }
   .select svg { color: var(--deneb-text-muted); }
 
   .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
   .swatch { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .swatch.active { border-color: var(--f7-page-text-color); transform: scale(1.05); }
+  .swatch.active { border-color: var(--deneb-ink); transform: scale(1.05); }
 
   .actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn {
@@ -194,7 +194,7 @@
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
-  .btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }
+  .btn.primary { background: var(--deneb-ink); color: var(--f7-page-bg-color); }
   .btn.primary:disabled { opacity: 0.4; }
   .btn.danger-text { flex: 0 0 auto; padding: 0 18px; background: transparent; border: 1px solid var(--deneb-border); color: var(--deneb-negative); }
   .btn:active:not(:disabled) { opacity: 0.85; }

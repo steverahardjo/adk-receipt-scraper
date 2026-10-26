@@ -21,6 +21,5 @@
     cursor: pointer; -webkit-tap-highlight-color: transparent;
     transition: all 0.15s;
   }
-  .chip.active { background: #111111; border-color: #111111; color: #FFFFFF; }
-  :global(.dark) .chip.active { background: #ECECEC; border-color: #ECECEC; color: #18181A; }
+  .chip.active { background: var(--deneb-ink); border-color: var(--deneb-ink); color: var(--deneb-canvas); }
 </style>

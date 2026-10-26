@@ -10,7 +10,7 @@
 <style>
   .group { display: flex; flex-direction: column; gap: 8px; }
   .group-title {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
     color: var(--deneb-text-secondary); text-transform: uppercase;
     padding-left: 4px;

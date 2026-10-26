@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Preloader } from 'framework7-svelte'
   import { getToastState, dismissToast } from './toast.svelte'
 
   let state = getToastState()
@@ -29,7 +30,7 @@
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       {:else}
-        <div class="spinner"></div>
+        <Preloader size={20} {...({ style: '--f7-preloader-color: var(--ds-neutral-0)' } as any)} />
       {/if}
     </div>
     <div class="toast-content">
@@ -57,14 +58,12 @@
     from { transform: translateY(-100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
-  .toast-success { background: var(--toast-bg-success, #346538); color: #FFFFFF; }
-  .toast-error { background: var(--toast-bg-error, #9F2F2D); color: #FFFFFF; }
-  .toast-loading { background: var(--toast-bg-loading, #787774); color: #FFFFFF; }
+  .toast-success { background: var(--toast-bg-success); color: var(--ds-neutral-0); }
+  .toast-error { background: var(--toast-bg-error); color: var(--ds-neutral-0); }
+  .toast-loading { background: var(--toast-bg-loading); color: var(--ds-neutral-0); }
 
   .toast-icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
   .toast-content { flex: 1; min-width: 0; }
   .toast-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
   .toast-message { font-size: 12px; opacity: 0.8; margin-top: 2px; line-height: 1.4; }
-  .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 </style>

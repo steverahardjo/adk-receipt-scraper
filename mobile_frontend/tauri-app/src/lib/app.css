@@ -1,17 +1,433 @@
 /* ============================================================
-   Deneb — iOS design system
-   iPhone system colors · SF Pro / Inter · frosted chrome
-   Single source of truth: every feature inherits from here.
+   Deneb — DeepSeek design system
+   ------------------------------------------------------------
+   Palette: DeepSeek platform static ramp (the same primitives the
+   DeepSeek Harness web UI is built on). Brand accent is the
+   deepseek blue family, not iOS system blue.
+
+   Layer order (this file is the single source of truth):
+     1. primitives  --ds-<family>-<step>   raw palette, theme-free
+     2. semantics   --ds-<role>            role tokens, light + dark
+     3. legacy      --deneb-*              aliases → semantics
+     4. bridge      --f7-*                 Framework7 variables
+
+   Legacy --deneb-* names are kept as live aliases to --ds-*, so every
+   existing feature reskins instantly; new work should read --ds-*.
    ============================================================ */
 
-/* ── Root / Base ──────────────────────────────────────── */
+/* ── 1. Primitives ────────────────────────────────────── */
+
+:root {
+  /* DeepSeek brand ramp */
+  --ds-deepseek-50: #edf3fe;
+  --ds-deepseek-100: #e4edfd;
+  --ds-deepseek-200: #d3e2ff;
+  --ds-deepseek-300: #b7c8fe;
+  --ds-deepseek-400: #7aaaff;
+  --ds-deepseek-450: #5686fe;
+  --ds-deepseek-500: #4176e6;
+  --ds-deepseek-600: #4868b2;
+  --ds-deepseek-800: #34415b;
+  --ds-deepseek-900: #283142;
+
+  /* Cool neutrals (the platform's neutral-bluish ramp) */
+  --ds-neutral-0: #ffffff;
+  --ds-neutral-50: #fafafa;
+  --ds-neutral-100: #f5f5f5;
+  --ds-neutral-150: #ededed;
+  --ds-neutral-200: #e5e5e5;
+  --ds-neutral-250: #dcdcdc;
+  --ds-neutral-300: #d4d4d4;
+  --ds-neutral-400: #a2a4a6;
+  --ds-neutral-500: #7f8287;
+  --ds-neutral-550: #65676b;
+  --ds-neutral-600: #545557;
+  --ds-neutral-700: #3c3c3d;
+  --ds-neutral-800: #292929;
+  --ds-neutral-850: #212123;
+  --ds-neutral-900: #0f0f0f;
+  --ds-bluish-100: #ebeef2;
+  --ds-bluish-150: #e9ecf2;
+  --ds-bluish-200: #e1e5ee;
+  --ds-bluish-300: #cfd3d6;
+  --ds-bluish-400: #adb2b8;
+  --ds-bluish-500: #979da6;
+  --ds-bluish-1000: #0f1115;
+
+  /* Status ramp (platform green / amber / blue; red is derived —
+     the platform ships no red static ramp, so the Tailwind red that
+     the rest of the ramp is built from is used for loss states) */
+  --ds-green-100: #e6faed;
+  --ds-green-400: #4ed17e;
+  --ds-green-500: #22c55e;
+  --ds-green-900: #233c2c;
+  --ds-amber-100: #fef5e7;
+  --ds-amber-400: #f7ad31;
+  --ds-amber-500: #f59e0b;
+  --ds-amber-900: #27241f;
+  --ds-blue-100: #dbeafe;
+  --ds-blue-400: #60a5fa;
+  --ds-blue-500: #3b82f6;
+  --ds-red-100: #fee2e2;
+  --ds-red-400: #f87171;
+  --ds-red-500: #ef4444;
+}
+
+/* ── 2. Semantic tokens — light ───────────────────────── */
+
+:root,
+.theme-ios {
+  /* Surfaces */
+  --ds-canvas: var(--ds-neutral-50);
+  --ds-surface: var(--ds-neutral-0);
+  --ds-surface-2: var(--ds-neutral-100);
+  --ds-surface-raised: var(--ds-neutral-0);
+
+  /* Text */
+  --ds-ink: var(--ds-bluish-1000);
+  --ds-text-secondary: var(--ds-neutral-600);
+  --ds-text-muted: var(--ds-neutral-500);
+
+  /* Lines */
+  --ds-border: var(--ds-neutral-200);
+  --ds-border-strong: var(--ds-neutral-300);
+  --ds-divider: var(--ds-neutral-150);
+  --ds-rule: rgba(15, 17, 21, 0.08);
+
+  /* Brand accent */
+  --ds-accent: var(--ds-deepseek-500);
+  --ds-accent-hover: var(--ds-deepseek-600);
+  --ds-accent-bg: var(--ds-deepseek-50);
+  --ds-accent-bg-strong: var(--ds-deepseek-100);
+  --ds-accent-text: var(--ds-neutral-0);
+  --ds-on-accent: var(--ds-neutral-0);
+
+  /* Status */
+  --ds-positive: var(--ds-green-500);
+  --ds-positive-bg: var(--ds-green-100);
+  --ds-negative: var(--ds-red-500);
+  --ds-negative-bg: var(--ds-red-100);
+  --ds-info: var(--ds-blue-500);
+  --ds-info-bg: var(--ds-blue-100);
+  --ds-warning: var(--ds-amber-500);
+  --ds-warning-bg: var(--ds-amber-100);
+
+  /* Categorical chart series (donut / bars) — ordered, theme-aware */
+  --ds-chart-1: var(--ds-deepseek-500);
+  --ds-chart-2: var(--ds-green-500);
+  --ds-chart-3: var(--ds-amber-500);
+  --ds-chart-4: var(--ds-blue-500);
+  --ds-chart-5: var(--ds-red-500);
+
+  /* Type */
+  --ds-font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --ds-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+
+  /* Radii — flatter than iOS, closer to the platform card scale */
+  --ds-radius-xs: 6px;
+  --ds-radius-sm: 8px;
+  --ds-radius-md: 12px;
+  --ds-radius-lg: 16px;
+  --ds-radius-sheet: 20px;
+  --ds-radius-pill: 9999px;
+
+  /* Space */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+
+  /* Elevation — restrained; hairlines carry the structure */
+  --ds-shadow-xs: 0 1px 1px rgba(15, 17, 21, 0.04);
+  --ds-shadow-sm: 0 1px 2px rgba(15, 17, 21, 0.04);
+  --ds-shadow-md: 0 6px 20px rgba(15, 17, 21, 0.08);
+  --ds-shadow-lg: 0 -2px 10px rgba(15, 17, 21, 0.06), 0 -18px 44px rgba(15, 17, 21, 0.10);
+
+  /* Motion */
+  --ds-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-dur-fast: 110ms;
+  --ds-dur: 200ms;
+
+  /* Frosted chrome */
+  --ds-chrome-bg: rgba(250, 250, 250, 0.82);
+  --ds-chrome-tab-bg: rgba(255, 255, 255, 0.86);
+
+  /* ── 3. Legacy aliases ────────────────────────────── */
+  --deneb-canvas: var(--ds-canvas);
+  --deneb-surface: var(--ds-surface);
+  --deneb-surface-2: var(--ds-surface-2);
+  --deneb-surface-raised: var(--ds-surface-raised);
+  --deneb-ink: var(--ds-ink);
+  --deneb-text-secondary: var(--ds-text-secondary);
+  --deneb-text-muted: var(--ds-text-muted);
+  --deneb-border: var(--ds-border);
+  --deneb-border-strong: var(--ds-border-strong);
+  --deneb-divider: var(--ds-divider);
+  --deneb-rule: var(--ds-rule);
+  --deneb-accent: var(--ds-accent);
+  --deneb-accent-bg: var(--ds-accent-bg);
+  --deneb-accent-text: var(--ds-accent-text);
+  --deneb-positive: var(--ds-positive);
+  --deneb-positive-bg: var(--ds-positive-bg);
+  --deneb-negative: var(--ds-negative);
+  --deneb-negative-bg: var(--ds-negative-bg);
+  --deneb-info: var(--ds-info);
+  --deneb-info-bg: var(--ds-info-bg);
+  --deneb-warning: var(--ds-warning);
+  --deneb-warning-bg: var(--ds-warning-bg);
+  --deneb-chart-1: var(--ds-chart-1);
+  --deneb-chart-2: var(--ds-chart-2);
+  --deneb-chart-3: var(--ds-chart-3);
+  --deneb-chart-4: var(--ds-chart-4);
+  --deneb-chart-5: var(--ds-chart-5);
+  --deneb-sans: var(--ds-font-sans);
+  --deneb-mono: var(--ds-font-mono);
+  --deneb-serif: var(--ds-font-sans);
+  --deneb-radius-xs: var(--ds-radius-xs);
+  --deneb-radius-sm: var(--ds-radius-sm);
+  --deneb-radius-md: var(--ds-radius-md);
+  --deneb-radius-lg: var(--ds-radius-lg);
+  --deneb-radius-sheet: var(--ds-radius-sheet);
+  --deneb-radius-pill: var(--ds-radius-pill);
+  --deneb-space-1: var(--ds-space-1);
+  --deneb-space-2: var(--ds-space-2);
+  --deneb-space-3: var(--ds-space-3);
+  --deneb-space-4: var(--ds-space-4);
+  --deneb-space-5: var(--ds-space-5);
+  --deneb-space-6: var(--ds-space-6);
+  --deneb-space-8: var(--ds-space-8);
+  --deneb-shadow-xs: var(--ds-shadow-xs);
+  --deneb-shadow-sm: var(--ds-shadow-sm);
+  --deneb-shadow-md: var(--ds-shadow-md);
+  --deneb-shadow-lg: var(--ds-shadow-lg);
+  --deneb-ease: var(--ds-ease);
+  --deneb-ease-standard: var(--ds-ease-standard);
+  --deneb-dur-fast: var(--ds-dur-fast);
+  --deneb-dur: var(--ds-dur);
+  --deneb-chrome-bg: var(--ds-chrome-bg);
+  --deneb-chrome-tab-bg: var(--ds-chrome-tab-bg);
+
+  /* ── 4. Framework7 bridge ─────────────────────────── */
+  --f7-theme-color: #4176e6;
+  --f7-theme-color-rgb: 65, 118, 230;
+  --f7-theme-color-shade: #4868b2;
+  --f7-theme-color-tint: #5686fe;
+  --f7-inverse-primary: #ffffff;
+
+  --f7-secondary-color: #545557;
+  --f7-secondary-color-rgb: 84, 85, 87;
+
+  --f7-page-bg-color: #fafafa;
+  --f7-page-text-color: #0f1115;
+  --f7-card-bg-color: #ffffff;
+  --f7-card-border-color: #e5e5e5;
+  --f7-card-border-radius: 12px;
+  --f7-list-bg-color: #ffffff;
+  --f7-list-border-color: #e5e5e5;
+  --f7-list-inset-bg-color: transparent;
+  --f7-block-strong-bg-color: #ffffff;
+  --f7-block-strong-border-color: #e5e5e5;
+
+  --f7-text-color: #0f1115;
+  --f7-border-color: #e5e5e5;
+
+  --f7-navbar-bg-color: #fafafa;
+  --f7-navbar-text-color: #0f1115;
+  --f7-navbar-link-color: #4176e6;
+  --f7-navbar-border-color: transparent;
+  --f7-navbar-height: 52px;
+
+  --f7-tabbar-bg-color: #ffffff;
+  --f7-tabbar-link-color: #7f8287;
+  --f7-tabbar-link-active-color: #4176e6;
+  --f7-toolbar-bg-color: rgba(255, 255, 255, 0.86);
+  --f7-toolbar-border-color: rgba(15, 17, 21, 0.08);
+
+  --f7-button-bg-color: #4176e6;
+  --f7-button-text-color: #ffffff;
+  --f7-button-border-color: #4176e6;
+  --f7-button-fill-text-color: #ffffff;
+  --f7-button-fill-bg-color: #4176e6;
+  --f7-button-outline-border-color: #d4d4d4;
+  --f7-button-border-radius: 10px;
+  --f7-button-height: 48px;
+  --f7-button-font-size: 15px;
+  --f7-button-font-weight: 600;
+  --f7-button-padding-horizontal: 20px;
+
+  --f7-input-bg-color: #ffffff;
+  --f7-input-border-color: #e5e5e5;
+  --f7-input-text-color: #0f1115;
+  --f7-input-border-radius: 10px;
+
+  --f7-label-text-color: #545557;
+  --f7-label-error-color: #ef4444;
+
+  --f7-searchbar-bg-color: transparent;
+  --f7-searchbar-input-bg-color: #f5f5f5;
+
+  --f7-actions-bg-color: #ffffff;
+  --f7-progressbar-bg-color: #ededed;
+  --f7-toggle-border-color: #e5e5e5;
+  --f7-toggle-active-color: #22c55e;
+  --f7-panel-bg-color: #ffffff;
+
+  --f7-font-family: var(--ds-font-sans);
+  --f7-label-font-family: var(--ds-font-mono);
+
+  --f7-safe-area-outer: 0px;
+
+  /* Type scale */
+  --f7-headline-xl-font-size: 28px;
+  --f7-headline-xl-font-weight: 700;
+  --f7-headline-xl-line-height: 1.15;
+  --f7-headline-xl-letter-spacing: -0.022em;
+
+  --f7-headline-lg-font-size: 20px;
+  --f7-headline-lg-font-weight: 600;
+  --f7-headline-lg-line-height: 1.25;
+  --f7-headline-lg-letter-spacing: -0.02em;
+
+  --f7-headline-md-font-size: 16px;
+  --f7-headline-md-font-weight: 600;
+  --f7-headline-md-line-height: 1.3;
+  --f7-headline-md-letter-spacing: -0.015em;
+}
+
+/* ── 2b. Semantic tokens — dark ───────────────────────── */
+
+.dark,
+.dark .theme-ios {
+  --ds-canvas: var(--ds-bluish-1000);
+  --ds-surface: var(--ds-neutral-850);
+  --ds-surface-2: var(--ds-neutral-800);
+  --ds-surface-raised: var(--ds-neutral-800);
+
+  --ds-ink: var(--ds-neutral-100);
+  --ds-text-secondary: var(--ds-neutral-400);
+  --ds-text-muted: var(--ds-neutral-500);
+
+  --ds-border: rgba(255, 255, 255, 0.10);
+  --ds-border-strong: rgba(255, 255, 255, 0.18);
+  --ds-divider: rgba(255, 255, 255, 0.08);
+  --ds-rule: rgba(255, 255, 255, 0.08);
+
+  --ds-accent: var(--ds-deepseek-400);
+  --ds-accent-hover: var(--ds-deepseek-300);
+  --ds-accent-bg: rgba(122, 170, 255, 0.14);
+  --ds-accent-bg-strong: rgba(122, 170, 255, 0.22);
+  --ds-accent-text: var(--ds-bluish-1000);
+  --ds-on-accent: var(--ds-bluish-1000);
+
+  --ds-positive: var(--ds-green-400);
+  --ds-positive-bg: rgba(78, 209, 126, 0.14);
+  --ds-negative: var(--ds-red-400);
+  --ds-negative-bg: rgba(248, 113, 113, 0.14);
+  --ds-info: var(--ds-blue-400);
+  --ds-info-bg: rgba(96, 165, 250, 0.14);
+  --ds-warning: var(--ds-amber-400);
+  --ds-warning-bg: rgba(247, 173, 49, 0.14);
+
+  --ds-chart-1: var(--ds-deepseek-400);
+  --ds-chart-2: var(--ds-green-400);
+  --ds-chart-3: var(--ds-amber-400);
+  --ds-chart-4: var(--ds-blue-400);
+  --ds-chart-5: var(--ds-red-400);
+
+  --ds-shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.32);
+  --ds-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --ds-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --ds-shadow-lg: 0 -2px 10px rgba(0, 0, 0, 0.35), 0 -18px 44px rgba(0, 0, 0, 0.50);
+
+  --ds-chrome-bg: rgba(15, 17, 21, 0.76);
+  --ds-chrome-tab-bg: rgba(33, 33, 35, 0.88);
+
+  --f7-theme-color: #7aaaff;
+  --f7-theme-color-rgb: 122, 170, 255;
+  --f7-theme-color-shade: #5686fe;
+  --f7-theme-color-tint: #b7c8fe;
+  --f7-inverse-primary: #0f1115;
+  --f7-secondary-color: #a2a4a6;
+  --f7-secondary-color-rgb: 162, 164, 166;
+  --f7-page-bg-color: #0f1115;
+  --f7-page-text-color: #f5f5f5;
+  --f7-card-bg-color: #212123;
+  --f7-card-border-color: rgba(255, 255, 255, 0.10);
+  --f7-list-bg-color: #212123;
+  --f7-list-border-color: rgba(255, 255, 255, 0.10);
+  --f7-list-inset-bg-color: transparent;
+  --f7-block-strong-bg-color: #212123;
+  --f7-block-strong-border-color: rgba(255, 255, 255, 0.10);
+  --f7-text-color: #f5f5f5;
+  --f7-border-color: rgba(255, 255, 255, 0.10);
+  --f7-navbar-bg-color: #0f1115;
+  --f7-navbar-text-color: #f5f5f5;
+  --f7-navbar-link-color: #7aaaff;
+  --f7-navbar-border-color: transparent;
+  --f7-tabbar-bg-color: #212123;
+  --f7-tabbar-link-color: #7f8287;
+  --f7-tabbar-link-active-color: #7aaaff;
+  --f7-toolbar-bg-color: rgba(33, 33, 35, 0.88);
+  --f7-toolbar-border-color: rgba(255, 255, 255, 0.10);
+  --f7-button-bg-color: #7aaaff;
+  --f7-button-text-color: #0f1115;
+  --f7-button-fill-text-color: #0f1115;
+  --f7-button-fill-bg-color: #7aaaff;
+  --f7-button-outline-border-color: rgba(255, 255, 255, 0.18);
+  --f7-input-bg-color: #212123;
+  --f7-input-border-color: rgba(255, 255, 255, 0.10);
+  --f7-input-text-color: #f5f5f5;
+  --f7-label-text-color: #a2a4a6;
+  --f7-label-error-color: #f87171;
+  --f7-searchbar-input-bg-color: #292929;
+  --f7-actions-bg-color: #212123;
+  --f7-progressbar-bg-color: rgba(255, 255, 255, 0.12);
+  --f7-toggle-border-color: rgba(255, 255, 255, 0.14);
+  --f7-toggle-active-color: #4ed17e;
+  --f7-panel-bg-color: #212123;
+}
+
+/* ── Light-only override class (kept for compatibility) ── */
+
+.theme-light,
+.theme-light .theme-ios {
+  --f7-page-bg-color: #fafafa;
+  --f7-page-text-color: #0f1115;
+  --f7-card-bg-color: #ffffff;
+  --f7-card-border-color: #e5e5e5;
+  --f7-list-bg-color: #ffffff;
+  --f7-text-color: #0f1115;
+  --f7-border-color: #e5e5e5;
+  --f7-navbar-bg-color: #fafafa;
+  --f7-navbar-text-color: #0f1115;
+  --f7-tabbar-bg-color: #ffffff;
+  --f7-tabbar-link-color: #7f8287;
+  --f7-tabbar-link-active-color: #4176e6;
+  --f7-button-bg-color: #4176e6;
+  --f7-button-text-color: #ffffff;
+  --f7-button-fill-bg-color: #4176e6;
+  --f7-button-fill-text-color: #ffffff;
+  --f7-input-bg-color: #ffffff;
+  --f7-input-text-color: #0f1115;
+  --f7-label-text-color: #545557;
+  --f7-toggle-active-color: #22c55e;
+  --f7-panel-bg-color: #ffffff;
+  --f7-toolbar-bg-color: #fafafa;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
 
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: var(--deneb-canvas);
+  background: var(--ds-canvas);
+  color: var(--ds-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -19,480 +435,217 @@ html, body {
   font-optical-sizing: auto;
 }
 
-/* ── Light — iOS (Default) ───────────────────────────── */
-
-:root,
-.theme-ios {
-  /* System backgrounds */
-  --deneb-canvas: #F2F2F7;          /* systemGroupedBackground */
-  --deneb-surface: #FFFFFF;          /* secondarySystemGroupedBackground */
-  --deneb-surface-2: #F2F2F7;        /* systemGray6 */
-  --deneb-surface-raised: #FFFFFF;
-
-  /* Labels */
-  --deneb-ink: #000000;              /* label */
-  --deneb-text-secondary: rgba(60, 60, 67, 0.60);  /* secondaryLabel */
-  --deneb-text-muted: rgba(60, 60, 67, 0.30);      /* tertiaryLabel */
-
-  /* Separators / fills */
-  --deneb-border: #E5E5EA;           /* systemGray5 */
-  --deneb-border-strong: #D1D1D6;    /* systemGray4 */
-  --deneb-divider: #E5E5EA;
-  --deneb-rule: rgba(60, 60, 67, 0.14);
-
-  /* Accent */
-  --deneb-accent: #007AFF;           /* systemBlue */
-  --deneb-accent-bg: rgba(0, 122, 255, 0.12);
-  --deneb-accent-text: #FFFFFF;
-
-  /* Semantic — iOS accessible variants (WCAG-safe as text) */
-  --deneb-positive: #248A3D;         /* systemGreen (accessible) */
-  --deneb-positive-bg: rgba(52, 199, 89, 0.15);
-  --deneb-negative: #D70015;         /* systemRed (accessible) */
-  --deneb-negative-bg: rgba(255, 59, 48, 0.15);
-  --deneb-info: #0040DD;             /* systemBlue (accessible) */
-  --deneb-info-bg: rgba(0, 122, 255, 0.15);
-  --deneb-warning: #C93400;          /* systemOrange (accessible) */
-  --deneb-warning-bg: rgba(255, 149, 0, 0.15);
-
-  /* Type — SF Pro on Apple, Inter elsewhere */
-  --deneb-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --deneb-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'Geist Mono', Menlo, monospace;
-  /* Deprecated: serif retired. Alias kept for legacy component refs. */
-  --deneb-serif: var(--deneb-sans);
-
-  /* Radii */
-  --deneb-radius-xs: 6px;
-  --deneb-radius-sm: 10px;
-  --deneb-radius-md: 12px;
-  --deneb-radius-lg: 18px;
-  --deneb-radius-sheet: 16px;
-  --deneb-radius-pill: 9999px;
-
-  /* Space (4pt base) */
-  --deneb-space-1: 4px;
-  --deneb-space-2: 8px;
-  --deneb-space-3: 12px;
-  --deneb-space-4: 16px;
-  --deneb-space-5: 20px;
-  --deneb-space-6: 24px;
-  --deneb-space-8: 32px;
-
-  /* Elevation — neutral, subtle (iOS) */
-  --deneb-shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.04);
-  --deneb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.05);
-  --deneb-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05), 0 12px 30px rgba(0, 0, 0, 0.08);
-  --deneb-shadow-lg: 0 -2px 8px rgba(0, 0, 0, 0.04), 0 -18px 48px rgba(0, 0, 0, 0.12);
-
-  /* Motion */
-  --deneb-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --deneb-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --deneb-dur-fast: 120ms;
-  --deneb-dur: 220ms;
-
-  /* Frosted chrome */
-  --deneb-chrome-bg: rgba(242, 242, 247, 0.82);
-  --deneb-chrome-tab-bg: rgba(255, 255, 255, 0.85);
-
-  /* ── Framework7 variable bridge ── */
-  --f7-theme-color: #007AFF;
-  --f7-theme-color-rgb: 0, 122, 255;
-  --f7-theme-color-shade: #0062CC;
-  --f7-theme-color-tint: #3395FF;
-  --f7-inverse-primary: #FFFFFF;
-
-  --f7-secondary-color: rgba(60, 60, 67, 0.60);
-  --f7-secondary-color-rgb: 60, 60, 67;
-
-  --f7-page-bg-color: #F2F2F7;
-  --f7-page-text-color: #000000;
-  --f7-card-bg-color: #FFFFFF;
-  --f7-card-border-color: #E5E5EA;
-  --f7-card-border-radius: 12px;
-  --f7-list-bg-color: #FFFFFF;
-  --f7-list-border-color: #E5E5EA;
-  --f7-list-inset-bg-color: transparent;
-  --f7-block-strong-bg-color: #FFFFFF;
-  --f7-block-strong-border-color: #E5E5EA;
-
-  --f7-text-color: #000000;
-  --f7-border-color: #E5E5EA;
-
-  --f7-navbar-bg-color: #F2F2F7;
-  --f7-navbar-text-color: #000000;
-  --f7-navbar-link-color: #007AFF;
-  --f7-navbar-border-color: transparent;
-  --f7-navbar-height: 52px;
-
-  --f7-tabbar-bg-color: #FFFFFF;
-  --f7-tabbar-link-color: #8E8E93;
-  --f7-tabbar-link-active-color: #007AFF;
-  --f7-toolbar-bg-color: rgba(255, 255, 255, 0.85);
-  --f7-toolbar-border-color: #C6C6C8;
-
-  --f7-button-bg-color: #007AFF;
-  --f7-button-text-color: #FFFFFF;
-  --f7-button-border-color: #007AFF;
-  --f7-button-fill-text-color: #FFFFFF;
-  --f7-button-fill-bg-color: #007AFF;
-  --f7-button-outline-border-color: #C6C6C8;
-  --f7-button-border-radius: 10px;
-  --f7-button-height: 48px;
-  --f7-button-font-size: 15px;
-  --f7-button-font-weight: 600;
-  --f7-button-padding-horizontal: 20px;
-
-  --f7-input-bg-color: #FFFFFF;
-  --f7-input-border-color: #E5E5EA;
-  --f7-input-text-color: #000000;
-  --f7-input-border-radius: 10px;
-
-  --f7-label-text-color: rgba(60, 60, 67, 0.60);
-  --f7-label-error-color: #FF3B30;
-
-  --f7-searchbar-bg-color: transparent;
-  --f7-searchbar-input-bg-color: #E5E5EA;
-
-  --f7-actions-bg-color: #FFFFFF;
-  --f7-progressbar-bg-color: #E5E5EA;
-  --f7-toggle-border-color: #E5E5EA;
-  --f7-toggle-active-color: #34C759;
-  --f7-panel-bg-color: #FFFFFF;
-
-  --f7-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --f7-label-font-family: ui-monospace, 'SF Mono', 'Geist Mono', monospace;
-
-  --f7-safe-area-outer: 0px;
-
-  /* Type scale (headline tokens used by F7) */
-  --f7-headline-xl-font-size: 28px;
-  --f7-headline-xl-font-weight: 700;
-  --f7-headline-xl-line-height: 1.15;
-  --f7-headline-xl-letter-spacing: -0.02em;
-
-  --f7-headline-lg-font-size: 21px;
-  --f7-headline-lg-font-weight: 600;
-  --f7-headline-lg-line-height: 1.25;
-  --f7-headline-lg-letter-spacing: -0.02em;
-
-  --f7-headline-md-font-size: 17px;
-  --f7-headline-md-font-weight: 600;
-  --f7-headline-md-line-height: 1.3;
-  --f7-headline-md-letter-spacing: -0.015em;
-}
-
-/* ── Dark — iOS ──────────────────────────────────────── */
-
-.dark,
-.dark .theme-ios {
-  --deneb-canvas: #000000;
-  --deneb-surface: #1C1C1E;
-  --deneb-surface-2: #2C2C2E;
-  --deneb-surface-raised: #2C2C2E;
-
-  --deneb-ink: #FFFFFF;
-  --deneb-text-secondary: rgba(235, 235, 245, 0.60);
-  --deneb-text-muted: rgba(235, 235, 245, 0.30);
-
-  --deneb-border: #38383A;
-  --deneb-border-strong: #48484A;
-  --deneb-divider: #38383A;
-  --deneb-rule: rgba(235, 235, 245, 0.14);
-
-  --deneb-accent: #0A84FF;
-  --deneb-accent-bg: rgba(10, 132, 255, 0.18);
-  --deneb-accent-text: #FFFFFF;
-
-  --deneb-positive: #30D158;
-  --deneb-positive-bg: rgba(48, 209, 88, 0.18);
-  --deneb-negative: #FF453A;
-  --deneb-negative-bg: rgba(255, 69, 58, 0.18);
-  --deneb-info: #0A84FF;
-  --deneb-info-bg: rgba(10, 132, 255, 0.18);
-  --deneb-warning: #FF9F0A;
-  --deneb-warning-bg: rgba(255, 159, 10, 0.18);
-
-  --deneb-shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.40);
-  --deneb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
-  --deneb-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.50), 0 14px 34px rgba(0, 0, 0, 0.55);
-  --deneb-shadow-lg: 0 -2px 8px rgba(0, 0, 0, 0.40), 0 -18px 48px rgba(0, 0, 0, 0.60);
-
-  --deneb-chrome-bg: rgba(0, 0, 0, 0.72);
-  --deneb-chrome-tab-bg: rgba(28, 28, 30, 0.85);
-
-  --f7-theme-color: #0A84FF;
-  --f7-theme-color-rgb: 10, 132, 255;
-  --f7-theme-color-shade: #0060DF;
-  --f7-theme-color-tint: #3395FF;
-  --f7-inverse-primary: #000000;
-  --f7-secondary-color: rgba(235, 235, 245, 0.60);
-  --f7-secondary-color-rgb: 235, 235, 245;
-  --f7-page-bg-color: #000000;
-  --f7-page-text-color: #FFFFFF;
-  --f7-card-bg-color: #1C1C1E;
-  --f7-card-border-color: #38383A;
-  --f7-list-bg-color: #1C1C1E;
-  --f7-list-border-color: #38383A;
-  --f7-list-inset-bg-color: transparent;
-  --f7-block-strong-bg-color: #1C1C1E;
-  --f7-block-strong-border-color: #38383A;
-  --f7-text-color: #FFFFFF;
-  --f7-border-color: #38383A;
-  --f7-navbar-bg-color: #000000;
-  --f7-navbar-text-color: #FFFFFF;
-  --f7-navbar-link-color: #0A84FF;
-  --f7-navbar-border-color: transparent;
-  --f7-tabbar-bg-color: #1C1C1E;
-  --f7-tabbar-link-color: #8E8E93;
-  --f7-tabbar-link-active-color: #0A84FF;
-  --f7-toolbar-bg-color: rgba(28, 28, 30, 0.85);
-  --f7-toolbar-border-color: #38383A;
-  --f7-button-bg-color: #0A84FF;
-  --f7-button-text-color: #FFFFFF;
-  --f7-button-fill-text-color: #FFFFFF;
-  --f7-button-fill-bg-color: #0A84FF;
-  --f7-button-outline-border-color: #48484A;
-  --f7-input-bg-color: #1C1C1E;
-  --f7-input-border-color: #38383A;
-  --f7-input-text-color: #FFFFFF;
-  --f7-label-text-color: rgba(235, 235, 245, 0.60);
-  --f7-label-error-color: #FF453A;
-  --f7-searchbar-input-bg-color: #2C2C2E;
-  --f7-actions-bg-color: #1C1C1E;
-  --f7-progressbar-bg-color: #38383A;
-  --f7-toggle-border-color: #38383A;
-  --f7-toggle-active-color: #30D158;
-  --f7-panel-bg-color: #1C1C1E;
-}
-
-/* ── Light-only override class ───────────────────────── */
-
-.theme-light,
-.theme-light .theme-ios {
-  --f7-page-bg-color: #F2F2F7;
-  --f7-page-text-color: #000000;
-  --f7-card-bg-color: #FFFFFF;
-  --f7-card-border-color: #E5E5EA;
-  --f7-list-bg-color: #FFFFFF;
-  --f7-text-color: #000000;
-  --f7-border-color: #E5E5EA;
-  --f7-navbar-bg-color: #F2F2F7;
-  --f7-navbar-text-color: #000000;
-  --f7-tabbar-bg-color: #FFFFFF;
-  --f7-tabbar-link-color: #8E8E93;
-  --f7-tabbar-link-active-color: #007AFF;
-  --f7-button-bg-color: #007AFF;
-  --f7-button-text-color: #FFFFFF;
-  --f7-button-fill-bg-color: #007AFF;
-  --f7-button-fill-text-color: #FFFFFF;
-  --f7-input-bg-color: #FFFFFF;
-  --f7-input-text-color: #000000;
-  --f7-label-text-color: rgba(60, 60, 67, 0.60);
-  --f7-toggle-active-color: #34C759;
-  --f7-panel-bg-color: #FFFFFF;
-  --f7-toolbar-bg-color: #F2F2F7;
-}
-
 /* ── Typography ──────────────────────────────────────── */
 
 .f7-page {
-  font-family: var(--deneb-sans);
-  color: var(--deneb-ink);
+  font-family: var(--ds-font-sans);
+  color: var(--ds-ink);
 }
 
 .headline-xl,
 .headline-lg,
-.headline-md {
-  font-family: var(--deneb-sans);
-  color: var(--deneb-ink);
+.headline-md,
+.headline-sm {
+  font-family: var(--ds-font-sans);
+  color: var(--ds-ink);
   margin: 0;
 }
-.headline-xl { font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
-.headline-lg { font-size: 21px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
-.headline-md { font-size: 17px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
-.headline-sm {
-  font-family: var(--deneb-sans);
-  font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
-  color: var(--deneb-ink); margin: 0;
-}
+.headline-xl { font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -0.022em; }
+.headline-lg { font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+.headline-md { font-size: 16px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
+.headline-sm { font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
 
 .f7-label,
 .item-title,
 .item-subtitle {
-  font-family: var(--deneb-mono);
+  font-family: var(--ds-font-mono);
 }
 
-/* ── iOS utility classes (adopt in features) ─────────── */
+/* ── Utility classes ─────────────────────────────────── */
 
-.d-eyebrow {
-  font-family: var(--deneb-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--deneb-text-secondary);
-}
-
+/* Section/eyebrow labels: sans and sentence-case by default — mono
+   uppercase is reserved for numeric and metadata accents, not for
+   every heading in the app. */
+.d-eyebrow,
 .d-section-label {
-  font-family: var(--deneb-mono);
-  font-size: 11px;
+  font-family: var(--ds-font-sans);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--deneb-text-secondary);
+  letter-spacing: -0.005em;
+  color: var(--ds-text-secondary);
 }
 
 .d-amount {
-  font-family: var(--deneb-mono);
+  font-family: var(--ds-font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
 
+/* Numerals that must never escape their container: opt in with
+   .d-fit plus a parent that can shrink (min-width: 0). */
+.d-fit {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
 .d-serif {
-  font-family: var(--deneb-sans);
+  font-family: var(--ds-font-sans);
   font-variant-numeric: lining-nums tabular-nums;
 }
 
 .d-card {
-  background: var(--deneb-surface);
-  border: 1px solid var(--deneb-border);
-  border-radius: var(--deneb-radius-md);
-  box-shadow: var(--deneb-shadow-sm);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-sm);
 }
 
-.d-divider { height: 1px; background: var(--deneb-rule); }
+.d-divider { height: 1px; background: var(--ds-rule); }
 
 .d-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border-radius: var(--deneb-radius-pill);
-  font-family: var(--deneb-mono);
+  border-radius: var(--ds-radius-pill);
+  font-family: var(--ds-font-mono);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
-.d-pill--positive { color: var(--deneb-positive); background: var(--deneb-positive-bg); }
-.d-pill--negative { color: var(--deneb-negative); background: var(--deneb-negative-bg); }
-.d-pill--warning { color: var(--deneb-warning); background: var(--deneb-warning-bg); }
-.d-pill--info { color: var(--deneb-info); background: var(--deneb-info-bg); }
+.d-pill--positive { color: var(--ds-positive); background: var(--ds-positive-bg); }
+.d-pill--negative { color: var(--ds-negative); background: var(--ds-negative-bg); }
+.d-pill--warning { color: var(--ds-warning); background: var(--ds-warning-bg); }
+.d-pill--info { color: var(--ds-info); background: var(--ds-info-bg); }
+.d-pill--brand { color: var(--ds-accent); background: var(--ds-accent-bg); }
 
 .d-press {
   -webkit-tap-highlight-color: transparent;
-  transition: transform var(--deneb-dur-fast) var(--deneb-ease), opacity var(--deneb-dur-fast) var(--deneb-ease);
+  transition: transform var(--ds-dur-fast) var(--ds-ease), opacity var(--ds-dur-fast) var(--ds-ease);
 }
 .d-press:active { transform: scale(0.98); opacity: 0.9; }
 
-/* Tap targets never below 44pt */
 .d-tappable { min-width: 44px; min-height: 44px; }
 
-/* ── Card Overrides (iOS grouped surfaces) ───────────── */
+/* ── Card / surface overrides ─────────────────────────── */
 
 .card,
 .block-strong {
-  box-shadow: var(--deneb-shadow-sm);
-  border-radius: var(--deneb-radius-md);
-  border: 1px solid var(--deneb-border);
-  background: var(--deneb-surface);
+  box-shadow: var(--ds-shadow-sm);
+  border-radius: var(--ds-radius-md);
+  border: 1px solid var(--ds-border);
+  background: var(--ds-surface);
 }
 
-/* ── Button Overrides ────────────────────────────────── */
+/* ── Buttons ─────────────────────────────────────────── */
 
 .button {
-  border-radius: var(--deneb-radius-sm);
+  border-radius: var(--ds-radius-sm);
   font-weight: 600;
-  font-family: var(--deneb-sans);
+  font-family: var(--ds-font-sans);
   letter-spacing: 0;
-  transition: transform var(--deneb-dur-fast) var(--deneb-ease), opacity var(--deneb-dur-fast) var(--deneb-ease);
+  transition: transform var(--ds-dur-fast) var(--ds-ease), opacity var(--ds-dur-fast) var(--ds-ease);
 }
 .button:active { transform: scale(0.98); }
 .button-fill { color: var(--f7-button-fill-text-color) !important; }
-.button-outline { border-width: 1px; border-radius: var(--deneb-radius-sm); }
+.button-outline { border-width: 1px; border-radius: var(--ds-radius-sm); }
 
-/* ── Navbar Overrides ────────────────────────────────── */
+/* Disabled / inert buttons. Framework7 ships no disabled rule for
+   .button (only calendar, checkbox, radio and swiper controls), so a
+   disabled filled button kept its full accent fill and read as tappable
+   while doing nothing. */
+.button[disabled],
+.button[disabled]:active,
+.button.disabled,
+.button[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}
+.button[disabled]:active { transform: none; }
+
+/* ── Navbar ──────────────────────────────────────────── */
 
 .navbar { border-radius: 0; border-bottom: 1px solid transparent; }
 
-/* ── Toolbar / Tabbar Overrides ─────────────────────── */
+/* ── Toolbar / tabbar ────────────────────────────────── */
 
 .toolbar { border-radius: 0; border-top: 1px solid var(--f7-toolbar-border-color); }
 .tab-link {
   font-size: 10px;
-  letter-spacing: 0.02em;
-  font-family: var(--deneb-sans);
+  letter-spacing: 0.01em;
+  font-family: var(--ds-font-sans);
 }
 
-/* ── Input Overrides ────────────────────────────────── */
+/* ── Inputs ──────────────────────────────────────────── */
 
 .item-input input,
 .item-input textarea,
 .input input {
-  font-family: var(--deneb-sans);
+  font-family: var(--ds-font-sans);
 }
 
-/* ── List Overrides ─────────────────────────────────── */
+/* ── Lists ───────────────────────────────────────────── */
 
 .list,
-.list-block { border-radius: var(--deneb-radius-md); }
-.list ul {
-  border-radius: var(--deneb-radius-md);
-}
+.list-block { border-radius: var(--ds-radius-md); }
+.list ul { border-radius: var(--ds-radius-md); }
 
-/* ── Segmented Control ──────────────────────────────── */
+/* ── Segmented control ───────────────────────────────── */
 
 .segmented,
 .segmented a,
 .segmented button,
-.segmented > * { border-radius: var(--deneb-radius-sm); }
+.segmented > * { border-radius: var(--ds-radius-sm); }
 
-/* ── Badge Overrides ────────────────────────────────── */
+/* ── Badge ───────────────────────────────────────────── */
 
 .badge {
-  border-radius: var(--deneb-radius-pill);
-  font-family: var(--deneb-mono);
+  border-radius: var(--ds-radius-pill);
+  font-family: var(--ds-font-mono);
   font-size: 10px;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
-/* ── Progress Bar ───────────────────────────────────── */
+/* ── Progress bar ────────────────────────────────────── */
 
 .progressbar,
 .progressbar span { border-radius: 3px; }
 
-/* ── Modal / Sheet / Popover ────────────────────────── */
+/* ── Modal / sheet / popover ─────────────────────────── */
 
 .popover,
 .sheet-modal,
-.modal { border-radius: var(--deneb-radius-sheet) var(--deneb-radius-sheet) 0 0; }
-.sheet-modal { background: var(--deneb-surface); }
+.modal { border-radius: var(--ds-radius-sheet) var(--ds-radius-sheet) 0 0; }
+.sheet-modal { background: var(--ds-surface); }
 
-/* ── Focus visibility (a11y) ────────────────────────── */
+/* ── Focus visibility (a11y) ─────────────────────────── */
 
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--deneb-accent);
+  outline: 2px solid var(--ds-accent);
   outline-offset: 2px;
-  border-radius: var(--deneb-radius-xs);
+  border-radius: var(--ds-radius-xs);
 }
 
-/* ── Toast Colors ───────────────────────────────────── */
+/* ── Toast colors ────────────────────────────────────── */
 
 :root {
-  --toast-bg-success: #248A3D;
-  --toast-bg-error: #D70015;
-  --toast-bg-loading: #5A5A5F;
+  --toast-bg-success: #22c55e;
+  --toast-bg-error: #ef4444;
+  --toast-bg-loading: #545557;
 }
 .dark {
-  --toast-bg-success: #30D158;
-  --toast-bg-error: #FF453A;
-  --toast-bg-loading: #8E8E93;
+  --toast-bg-success: #4ed17e;
+  --toast-bg-error: #f87171;
+  --toast-bg-loading: #7f8287;
 }
 
-/* ── Utility ────────────────────────────────────────── */
+/* ── Utility ─────────────────────────────────────────── */
 
 .f7-page-content { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
-/* ── Density preference ─────────────────────────────── */
+/* ── Density preference ──────────────────────────────── */
 
 .density-compact .page,
 .density-compact .settings-page { gap: 12px !important; }
@@ -502,7 +655,7 @@ html, body {
   padding-bottom: 10px !important;
 }
 
-/* ── Chart animation preference ─────────────────────── */
+/* ── Chart animation preference ──────────────────────── */
 
 html.no-chart-anim .bar-fill,
 html.no-chart-anim .arc,
@@ -512,7 +665,7 @@ html.no-chart-anim .chart-wrap * {
   animation: none !important;
 }
 
-/* ── Reduced motion (a11y) ──────────────────────────── */
+/* ── Reduced motion (a11y) ───────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   *,

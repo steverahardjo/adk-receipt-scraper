@@ -5,12 +5,14 @@
     <link rel="icon" href="%sveltekit.assets%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F2F7" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+    <!-- First-paint canvas: must match --ds-canvas in app.css, otherwise the
+         app flashes the previous palette before stylesheets load. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115" />
     <title>Deneb</title>
     <style>
-      html { background: #F2F2F7; }
-      @media (prefers-color-scheme: dark) { html { background: #000000; } }
+      html { background: #fafafa; }
+      @media (prefers-color-scheme: dark) { html { background: #0f1115; } }
     </style>
     %sveltekit.head%
   </head>

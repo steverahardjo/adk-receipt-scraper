@@ -32,7 +32,7 @@
     background: var(--deneb-surface); box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     transition: transform 0.15s;
   }
-  .switch.on { background: var(--f7-page-text-color); }
+  .switch.on { background: var(--deneb-ink); }
   .switch.on span { transform: translateX(18px); background: var(--f7-page-bg-color); }
   .switch:disabled { opacity: 0.35; cursor: default; }
 </style>

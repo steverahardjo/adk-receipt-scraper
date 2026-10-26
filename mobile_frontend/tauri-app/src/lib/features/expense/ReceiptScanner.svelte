@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Preloader } from 'framework7-svelte'
   import { recognizeReceipt } from './receiptOcr'
 
   let {
@@ -116,7 +117,7 @@
       {:else if step === 'processing'}
         <div class="processing">
           {#if image}<img src={image} alt="Receipt" />{/if}
-          <div class="spinner"></div>
+          <Preloader size={32} {...({ style: '--f7-preloader-color: var(--deneb-ink)' } as any)} />
           <p class="hint">Reading receipt...</p>
         </div>
       {:else}
@@ -184,8 +185,8 @@
     font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer;
     -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
-  .big-btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }
-  .big-btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); }
+  .big-btn.primary { background: var(--deneb-ink); color: var(--f7-page-bg-color); }
+  .big-btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--deneb-ink); }
   .big-btn:disabled { opacity: 0.4; cursor: default; }
   .big-btn:active:not(:disabled) { opacity: 0.85; }
 
@@ -203,18 +204,16 @@
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field-row { display: flex; gap: 12px; }
   .flex-1 { flex: 1; }
-  .field-label { font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary); }
+  .field-label { font-family: var(--deneb-mono); font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary); }
   .field-input {
     width: 100%; height: 44px; padding: 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
     font-family: var(--deneb-sans); font-size: 15px;
-    color: var(--f7-page-text-color); background: var(--deneb-canvas);
+    color: var(--deneb-ink); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
-  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input:focus { border-color: var(--deneb-ink); }
   .field-input::placeholder { color: var(--deneb-text-muted); }
 
-  .spinner { width: 32px; height: 32px; border: 2.5px solid var(--deneb-divider); border-top-color: var(--f7-page-text-color); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
   .error { margin: 0; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-negative); }
 </style>

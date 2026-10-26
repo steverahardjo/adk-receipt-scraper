@@ -47,48 +47,30 @@
     border: none;
     background: none;
     cursor: pointer;
-    color: #8e8e93;
+    color: var(--deneb-text-secondary);
     padding: 16px;
-    border-radius: 20px;
+    border-radius: var(--deneb-radius-lg);
     transition: color 0.2s, background 0.2s;
     -webkit-tap-highlight-color: transparent;
   }
 
-  :global(.dark) .fingerprint {
-    color: #636366;
-  }
-
+  /* Theme pairs collapse — the tokens carry both palettes. Scanning reads as
+     the brand accent (in progress), success/failure as status. */
   .fingerprint:active {
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  :global(.dark) .fingerprint:active {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--deneb-surface-2);
   }
 
   .fingerprint.success {
-    color: #34c759;
-  }
-
-  :global(.dark) .fingerprint.success {
-    color: #30d158;
+    color: var(--deneb-positive);
   }
 
   .fingerprint.failure {
-    color: #ff3b30;
-  }
-
-  :global(.dark) .fingerprint.failure {
-    color: #ff453a;
+    color: var(--deneb-negative);
   }
 
   .fingerprint.scanning {
-    color: #006c50;
+    color: var(--deneb-accent);
     animation: fpPulse 0.8s ease-in-out infinite;
-  }
-
-  :global(.dark) .fingerprint.scanning {
-    color: #24e0ab;
   }
 
   @keyframes fpPulse {
@@ -104,24 +86,17 @@
     animation: scanGlow 0.8s ease-in-out infinite;
   }
 
+  /* currentColor follows the scanning state's accent, so one keyframe replaces
+     the hard-coded light/dark teal glows. */
   @keyframes scanGlow {
-    0%, 100% { filter: drop-shadow(0 0 4px rgba(0, 108, 80, 0.3)); }
-    50% { filter: drop-shadow(0 0 16px rgba(0, 108, 80, 0.6)); }
-  }
-
-  :global(.dark) .fingerprint.scanning svg {
-    animation: scanGlowDark 0.8s ease-in-out infinite;
-  }
-
-  @keyframes scanGlowDark {
-    0%, 100% { filter: drop-shadow(0 0 4px rgba(36, 224, 171, 0.3)); }
-    50% { filter: drop-shadow(0 0 16px rgba(36, 224, 171, 0.6)); }
+    0%, 100% { filter: drop-shadow(0 0 4px currentColor); opacity: 0.7; }
+    50% { filter: drop-shadow(0 0 14px currentColor); opacity: 1; }
   }
 
   .label {
     font-size: 13px;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     letter-spacing: 0.02em;
   }
 </style>

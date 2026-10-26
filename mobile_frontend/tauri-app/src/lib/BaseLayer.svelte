@@ -45,13 +45,15 @@
             <Icon ios="f7:chevron_left" />
           </Link>
         {/if}
+        <!-- Profile entry sits on the left; on a sub-route the back chevron takes
+             the first slot and the avatar follows it. -->
+        <Avatar image={profile.value.avatar} initials={profile.initials} size={30} onclick={() => goto('/profile')} />
       </NavLeft>
       {#if title}
         <NavTitle>{title}</NavTitle>
       {/if}
       <NavRight>
         <div class="navbar-right-group">
-          <Avatar image={profile.value.avatar} initials={profile.initials} size={30} onclick={() => goto('/profile')} />
           {@render navbarRight?.()}
           <button class="theme-btn" onclick={() => theme.toggle()} aria-label="Toggle theme">
             {#if theme.current === 'dark'}
@@ -86,56 +88,63 @@
 <style>
   :global(.nav-custom) {
     --f7-navbar-height: 52px;
-    padding: 0 16px;
-    background: var(--deneb-chrome-bg);
+    padding: 0 14px;
+    background: var(--ds-chrome-bg);
     -webkit-backdrop-filter: blur(20px) saturate(1.6);
     backdrop-filter: blur(20px) saturate(1.6);
-    border-bottom: 1px solid var(--deneb-rule);
+    border-bottom: 1px solid var(--ds-rule);
   }
   :global(.nav-custom .title) {
-    font-family: var(--deneb-serif);
-    font-size: 18px;
+    font-family: var(--ds-font-sans);
+    font-size: 17px;
     font-weight: 600;
-    letter-spacing: -0.012em;
-    color: var(--deneb-ink);
+    letter-spacing: -0.02em;
+    color: var(--ds-ink);
+  }
+  :global(.nav-custom .left) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
   :global(.nav-back-link) {
-    margin-right: 8px;
+    margin-right: 6px;
     min-width: 44px;
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+    color: var(--ds-accent);
   }
 
   :global(.page-content) {
     padding-top: calc(var(--f7-navbar-height, 52px) + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
   :global(.page.has-tabbar .page-content) {
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
   .navbar-right-group {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
   }
 
   :global(.theme-btn),
   :global(.notif-btn) {
     position: relative;
-    width: 44px; height: 44px;
-    border: none; border-radius: var(--deneb-radius-sm);
+    width: 42px; height: 42px;
+    border: none; border-radius: var(--ds-radius-sm);
     background: transparent;
-    color: var(--deneb-text-secondary);
+    color: var(--ds-text-secondary);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
-    transition: background var(--deneb-dur-fast) var(--deneb-ease), transform var(--deneb-dur-fast) var(--deneb-ease);
+    transition: background var(--ds-dur-fast) var(--ds-ease), color var(--ds-dur-fast) var(--ds-ease), transform var(--ds-dur-fast) var(--ds-ease);
   }
   :global(.theme-btn:active),
   :global(.notif-btn:active) {
-    background: var(--deneb-surface-2);
+    background: var(--ds-surface-2);
+    color: var(--ds-ink);
     transform: scale(0.94);
   }
 </style>

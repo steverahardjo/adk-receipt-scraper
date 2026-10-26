@@ -98,9 +98,15 @@ function expenseByCategory(): ChatChartSpec | undefined {
   if (sorted.length === 0) return undefined
 
   const dark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
-  const text = dark ? '#FFFFFF' : '#000000'
-  const grid = dark ? '#38383A' : '#E5E5EA'
-  const accent = dark ? '#0A84FF' : '#007AFF'
+  // Read the live design tokens so AI charts follow the DeepSeek palette and
+  // switch with the theme instead of hard-coding hexes.
+  const token = (name: string, fallback: string) => {
+    if (typeof window === 'undefined') return fallback
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+  }
+  const text = token('--ds-ink', dark ? '#f5f5f5' : '#0f1115')
+  const grid = token('--ds-border', dark ? 'rgba(255,255,255,0.10)' : '#e5e5e5')
+  const accent = token('--ds-accent', dark ? '#7aaaff' : '#4176e6')
 
   return {
     data: [{
@@ -114,7 +120,7 @@ function expenseByCategory(): ChatChartSpec | undefined {
       margin: { t: 10, r: 8, b: 56, l: 56 },
       paper_bgcolor: 'rgba(0,0,0,0)',
       plot_bgcolor: 'rgba(0,0,0,0)',
-      font: { family: '-apple-system, BlinkMacSystemFont, "Inter Variable", system-ui, sans-serif', size: 10, color: text },
+      font: { family: token('--ds-font-sans', '-apple-system, BlinkMacSystemFont, "Inter Variable", system-ui, sans-serif'), size: 10, color: text },
       xaxis: { fixedrange: true, tickangle: -35, color: text, gridcolor: 'rgba(0,0,0,0)' },
       yaxis: { fixedrange: true, color: text, gridcolor: grid, zeroline: false },
       showlegend: false,

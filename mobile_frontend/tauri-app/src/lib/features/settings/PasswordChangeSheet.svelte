@@ -86,8 +86,8 @@
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
-  .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--f7-page-text-color); }
-  .btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }
+  .btn.secondary { background: transparent; border: 1px solid var(--deneb-border); color: var(--deneb-ink); }
+  .btn.primary { background: var(--deneb-ink); color: var(--f7-page-bg-color); }
   .btn.primary:disabled { opacity: 0.5; }
   .btn:active:not(:disabled) { opacity: 0.85; }
 </style>

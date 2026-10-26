@@ -50,10 +50,10 @@
 <style>
   .lock-screen { display: flex; flex-direction: column; align-items: center; padding-top: 48px; }
   .brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 32px; }
-  .logo { color: var(--f7-page-text-color); margin-bottom: 4px; }
-  .brand h1 { font-size: 28px; font-weight: 700; margin: 0; color: var(--f7-page-text-color); letter-spacing: -0.02em; }
+  .logo { color: var(--deneb-ink); margin-bottom: 4px; }
+  .brand h1 { font-size: 28px; font-weight: 700; margin: 0; color: var(--deneb-ink); letter-spacing: -0.02em; }
   .brand p { font-size: 15px; color: var(--deneb-text-secondary); margin: 0; }
   .divider { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 240px; margin: 24px 0; }
   .divider span:first-child, .divider span:last-child { flex: 1; height: 1px; background: var(--deneb-border); }
-  .divider-text { font-size: 11px; color: var(--deneb-text-muted); font-family: 'Geist Mono', monospace; letter-spacing: 0.04em; white-space: nowrap; }
+  .divider-text { font-size: 11px; color: var(--deneb-text-muted); font-family: var(--deneb-mono); letter-spacing: 0.04em; white-space: nowrap; }
 </style>

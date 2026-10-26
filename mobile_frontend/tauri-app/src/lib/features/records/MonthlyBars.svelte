@@ -52,7 +52,7 @@
     {#each gridLines as v}
       <line x1={margin.left} y1={yScale(v)} x2={w - margin.right} y2={yScale(v)} stroke="var(--deneb-divider)" stroke-width="1" stroke-dasharray="4 4" />
       <text x={margin.left - 6} y={yScale(v)} text-anchor="end" dominant-baseline="middle"
-            font-family="Geist Mono, monospace" font-size="10" fill="var(--deneb-text-secondary)">
+            style="font-family: var(--deneb-mono)" font-size="10" fill="var(--deneb-text-secondary)">
         {v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`}
       </text>
     {/each}
@@ -64,7 +64,7 @@
               fill={colors[seg.key] || 'var(--deneb-text-secondary)'} rx="2.5" />
       {/each}
       <text x={x + barW / 2} y={h - 8} text-anchor="middle"
-            font-family="Geist Mono, monospace" font-size="9" fill="var(--deneb-text-secondary)">
+            style="font-family: var(--deneb-mono)" font-size="9" fill="var(--deneb-text-secondary)">
         {month.month ?? mi}
       </text>
     {/each}

@@ -68,7 +68,7 @@
   .hidden { display: none; }
 
   .field-label {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 12px; font-weight: 500;
     color: var(--deneb-text-secondary); letter-spacing: 0.02em;
   }
@@ -83,7 +83,7 @@
     -webkit-tap-highlight-color: transparent;
     transition: border-color 0.15s, color 0.15s;
   }
-  .attach-btn:active { border-color: var(--f7-page-text-color); color: var(--f7-page-text-color); }
+  .attach-btn:active { border-color: var(--deneb-ink); color: var(--deneb-ink); }
   .attach-btn:disabled { opacity: 0.4; cursor: default; }
 
   .preview {
@@ -97,7 +97,7 @@
     border-radius: 8px; border: 1px solid var(--deneb-border); flex-shrink: 0;
   }
   .preview-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .preview-name { font-family: var(--deneb-sans); font-size: 13px; font-weight: 500; color: var(--f7-page-text-color); }
+  .preview-name { font-family: var(--deneb-sans); font-size: 13px; font-weight: 500; color: var(--deneb-ink); }
   .preview-remove {
     align-self: flex-start; border: none; background: transparent; padding: 0;
     font-family: var(--deneb-sans); font-size: 12px; font-weight: 500;

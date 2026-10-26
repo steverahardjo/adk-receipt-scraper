@@ -137,9 +137,9 @@
   .title { margin: 8px 0 4px; }
 
   .rows { display: flex; flex-direction: column; }
-  .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--deneb-divider); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--deneb-rule); }
   .row-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .row-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .row-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--deneb-ink); }
   .row-desc { font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
 
   .switch {
@@ -150,16 +150,16 @@
     -webkit-tap-highlight-color: transparent;
   }
   .switch span { width: 22px; height: 22px; border-radius: 50%; background: var(--deneb-surface); box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.15s; }
-  .switch.on { background: var(--f7-page-text-color); }
+  .switch.on { background: var(--deneb-ink); }
   .switch.on span { transform: translateX(18px); background: var(--f7-page-bg-color); }
   .switch:disabled { opacity: 0.35; cursor: default; }
 
   .action {
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; padding: 14px 0; border: none; background: transparent;
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 500;
-    color: var(--f7-page-text-color); cursor: pointer;
+    color: var(--deneb-ink); cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
   .action:active { opacity: 0.6; }
@@ -173,7 +173,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   .back-btn:active { background: var(--deneb-divider); }
-  .step-title { font-family: var(--deneb-sans); font-size: 15px; font-weight: 600; color: var(--f7-page-text-color); }
+  .step-title { font-family: var(--deneb-sans); font-size: 15px; font-weight: 600; color: var(--deneb-ink); }
   .step-spacer { width: 34px; }
   .step-hint { text-align: center; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-text-secondary); margin: 2px 0 0; }
 </style>

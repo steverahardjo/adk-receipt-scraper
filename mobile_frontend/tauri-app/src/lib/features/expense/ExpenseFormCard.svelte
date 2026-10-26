@@ -190,7 +190,7 @@
     <AttachmentField bind:value={documentLink} />
   </div>
 
-  <Button fill large round class="save-btn" onclick={handleSave} disabled={submitting}>
+  <Button fill large round {...({ class: 'save-btn' } as any)} onclick={handleSave} disabled={submitting}>
     {submitting ? 'Saving...' : 'Save Entry'}
   </Button>
 </div>
@@ -235,7 +235,7 @@
   .flex-1 { flex: 1; }
 
   .field-label {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 12px; font-weight: 500;
     color: var(--deneb-text-secondary); letter-spacing: 0.02em;
   }
@@ -248,13 +248,13 @@
     border-radius: 10px;
     font-family: var(--deneb-sans);
     font-size: 15px;
-    color: var(--f7-page-text-color);
+    color: var(--deneb-ink);
     background: var(--deneb-canvas);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
   }
-  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input:focus { border-color: var(--deneb-ink); }
   .field-input::placeholder { color: var(--deneb-text-muted); }
 
   .field-select {
@@ -291,7 +291,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   .flow-btn.active {
-    background: var(--f7-page-text-color);
+    background: var(--deneb-ink);
     color: var(--f7-page-bg-color);
   }
 

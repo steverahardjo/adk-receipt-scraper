@@ -27,7 +27,14 @@
   }
 
   async function checkCode(code: string) {
-    const ok = (await onSubmit?.(code)) ?? false
+    // A rejecting onSubmit (e.g. Web Crypto unavailable while setting a
+    // passcode) used to leave the keypad filled and inert with no feedback.
+    let ok = false
+    try {
+      ok = (await onSubmit?.(code)) ?? false
+    } catch {
+      ok = false
+    }
     if (ok) {
       result = 'success'
       await tick()
@@ -116,39 +123,24 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #e5e5ea;
+    background: var(--deneb-border-strong);
     transition: background 0.15s, transform 0.15s;
   }
 
-  :global(.dark) .dot {
-    background: #38383a;
-  }
-
+  /* Progress reads as the brand accent; success/failure as status. */
   .dot.filled {
-    background: #006c50;
+    background: var(--deneb-accent);
     transform: scale(1.15);
   }
 
-  :global(.dark) .dot.filled {
-    background: #24e0ab;
-  }
-
   .dot.success {
-    background: #34c759 !important;
+    background: var(--deneb-positive) !important;
     transform: scale(1.2) !important;
-  }
-
-  :global(.dark) .dot.success {
-    background: #30d158 !important;
   }
 
   .dot.failure {
-    background: #ff3b30 !important;
+    background: var(--deneb-negative) !important;
     transform: scale(1.2) !important;
-  }
-
-  :global(.dark) .dot.failure {
-    background: #ff453a !important;
   }
 
   .dot.current {
@@ -163,15 +155,11 @@
   .error-label {
     margin: -40px 0 0;
     font-size: 14px;
-    color: #ff3b30;
+    color: var(--deneb-negative);
     font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     text-align: center;
     animation: fadeIn 0.15s ease-out;
-  }
-
-  :global(.dark) .error-label {
-    color: #ff453a;
   }
 
   @keyframes fadeIn {
@@ -191,11 +179,11 @@
     aspect-ratio: 1;
     border: none;
     border-radius: 50%;
-    background: #e5e5ea;
-    color: #000000;
+    background: var(--deneb-surface-2);
+    color: var(--deneb-ink);
     font-size: 26px;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: var(--deneb-sans);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -204,17 +192,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  :global(.dark) .key {
-    background: #38383a;
-    color: #ffffff;
-  }
-
   .key:active {
-    background: #d1d1d6;
-  }
-
-  :global(.dark) .key:active {
-    background: #48484a;
+    background: var(--deneb-border-strong);
   }
 
   .key:disabled {

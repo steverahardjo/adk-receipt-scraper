@@ -20,9 +20,12 @@
   <div class="dash">
     <SafeToSpend />
 
-    <AccountList />
-
-    <UpcomingBills />
+    <!-- Money block: accounts and bills share one rhythm and one gap, so the
+         page reads as three groups instead of five stacked cards. -->
+    <div class="group">
+      <AccountList />
+      <UpcomingBills />
+    </div>
 
     <RecentTxList />
 
@@ -36,30 +39,38 @@
 </BaseLayer>
 
 <style>
-  .dash { display: flex; flex-direction: column; gap: 16px; padding: 10px 16px 28px 16px; }
+  .dash {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 8px 16px 26px;
+  }
+  /* Tighter inside a group, wider between groups: the page gains hierarchy
+     without gaining more cards. */
+  .group { display: flex; flex-direction: column; gap: 12px; }
 
   .budget-link {
     display: flex; align-items: center; justify-content: space-between;
-    min-height: 52px;
-    padding: 0 18px;
-    border: 1px solid var(--deneb-border);
-    border-radius: var(--deneb-radius-md);
-    background: var(--deneb-surface);
-    box-shadow: var(--deneb-shadow-sm);
-    font-family: var(--deneb-sans);
-    font-size: 15px; font-weight: 500;
-    color: var(--deneb-ink);
+    min-height: 48px;
+    padding: 0 16px;
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-md);
+    background: var(--ds-surface);
+    font-family: var(--ds-font-sans);
+    font-size: 14px; font-weight: 500;
+    color: var(--ds-text-secondary);
     cursor: pointer; width: 100%;
     -webkit-tap-highlight-color: transparent;
-    transition: transform var(--deneb-dur-fast) var(--deneb-ease), opacity var(--deneb-dur-fast) var(--deneb-ease);
+    transition: transform var(--ds-dur-fast) var(--ds-ease), opacity var(--ds-dur-fast) var(--ds-ease);
   }
   .budget-link:active { transform: scale(0.99); opacity: 0.85; }
-  .budget-link svg { color: var(--deneb-text-muted); flex-shrink: 0; }
+  .budget-link svg { color: var(--ds-text-muted); flex-shrink: 0; }
 
   :global(.notif-dot-nav) {
-    position: absolute; top: 8px; right: 8px;
+    position: absolute; top: 7px; right: 7px;
     width: 8px; height: 8px; border-radius: 50%;
-    background: var(--deneb-negative); border: 2px solid var(--f7-navbar-bg-color, #F2F2F7);
+    background: var(--ds-negative);
+    border: 2px solid var(--f7-navbar-bg-color, #fafafa);
   }
-  :global(.dark .notif-dot-nav) { border-color: var(--f7-navbar-bg-color, #000000); }
+  :global(.dark .notif-dot-nav) { border-color: var(--f7-navbar-bg-color, #0f1115); }
 </style>

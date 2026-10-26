@@ -26,7 +26,7 @@
     display: flex; align-items: center; justify-content: center;
     background: var(--deneb-canvas);
     border: 1px solid var(--deneb-border);
-    color: var(--f7-page-text-color);
+    color: var(--deneb-ink);
     font-family: var(--deneb-sans);
     font-weight: 600;
     padding: 0;

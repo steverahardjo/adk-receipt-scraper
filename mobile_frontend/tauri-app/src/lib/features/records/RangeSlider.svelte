@@ -51,7 +51,7 @@
   }
 
   .slider-label {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 12px;
     font-weight: 500;
     color: var(--deneb-text-secondary);
@@ -63,7 +63,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     font-weight: 600;
-    color: var(--f7-page-text-color);
+    color: var(--deneb-ink);
     font-variant-numeric: tabular-nums;
     width: 70px;
     flex-shrink: 0;
@@ -87,7 +87,7 @@
     height: 20px;
     border-radius: 50%;
     background: var(--deneb-surface);
-    border: 2px solid var(--f7-page-text-color);
+    border: 2px solid var(--deneb-ink);
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
@@ -97,7 +97,7 @@
     height: 20px;
     border-radius: 50%;
     background: var(--deneb-surface);
-    border: 2px solid var(--f7-page-text-color);
+    border: 2px solid var(--deneb-ink);
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }

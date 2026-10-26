@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button } from 'framework7-svelte'
+  import { Button, Preloader } from 'framework7-svelte'
 
   let {
     email,
@@ -91,15 +91,13 @@
     fill
     large
     round
-    class="otp-send-btn"
+    {...({ class: 'otp-send-btn' } as any)}
     onclick={handleSend}
     disabled={disabled || sending || isCounting || !email}
   >
     {#if sending}
       <span class="btn-inner">
-        <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round" />
-        </svg>
+        <Preloader size={16} {...({ style: '--f7-preloader-color: currentColor' } as any)} />
         Sending...
       </span>
     {:else if isCounting}
@@ -152,59 +150,41 @@
     gap: 8px;
   }
 
-  .spinner {
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
   .otp-row {
     display: flex;
     justify-content: center;
     gap: 8px;
+    min-width: 0;
   }
 
+  /* Six boxes must fit a 320px screen: they share the row and cap at 46px
+     instead of forcing 6x44px + gaps of fixed width. Tokens replace the old
+     light/dark hex pairs, so the :global(.dark) overrides are gone. */
   .otp-box {
-    width: 44px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 46px;
     height: 52px;
-    border: 1.5px solid #e5e5ea;
-    border-radius: 10px;
+    border: 1.5px solid var(--deneb-border);
+    border-radius: var(--deneb-radius-sm);
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    color: #000000;
-    background: #ffffff;
+    font-family: var(--deneb-mono);
+    color: var(--deneb-ink);
+    background: var(--deneb-surface);
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
-    caret-color: #007aff;
-  }
-
-  :global(.dark) .otp-box {
-    border-color: #38383a;
-    color: #ffffff;
-    background: #1c1c1e;
+    caret-color: var(--deneb-accent);
   }
 
   .otp-box:focus {
-    border-color: #2ee5af;
-    box-shadow: 0 0 0 3px rgba(46, 229, 175, 0.12);
-  }
-
-  :global(.dark) .otp-box:focus {
-    border-color: #24e0ab;
-    box-shadow: 0 0 0 3px rgba(36, 224, 171, 0.15);
+    border-color: var(--deneb-accent);
+    box-shadow: 0 0 0 3px var(--deneb-accent-bg);
   }
 
   .otp-box.filled {
-    border-color: #006c50;
-    background: #f0f9f8;
-  }
-
-  :global(.dark) .otp-box.filled {
-    border-color: #24e0ab;
-    background: #1a2e28;
+    border-color: var(--deneb-positive);
+    background: var(--deneb-positive-bg);
   }
 </style>

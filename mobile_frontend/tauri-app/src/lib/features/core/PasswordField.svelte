@@ -57,44 +57,32 @@
   .field-label {
     font-size: 13px;
     font-weight: 600;
-    color: #555555;
+    color: var(--deneb-text-secondary);
   }
 
-  :global(.dark) .field-label {
-    color: #a0a0a5;
-  }
-
+  /* One token set covers both themes, so the :global(.dark) pairs are gone.
+     Border radius follows the shared radius scale. */
   .field-input {
     width: 100%;
     height: 44px;
     padding: 0 12px;
-    border: 1.5px solid #e5e5ea;
-    border-radius: 10px;
+    border: 1.5px solid var(--deneb-border);
+    border-radius: var(--deneb-radius-sm);
     font-size: 15px;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    color: #000000;
-    background: #ffffff;
+    font-family: var(--deneb-sans);
+    color: var(--deneb-ink);
+    background: var(--deneb-surface);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
   }
 
-  :global(.dark) .field-input {
-    border-color: #38383a;
-    color: #ffffff;
-    background: #1c1c1e;
-  }
-
   .field-input:focus {
-    border-color: #007aff;
-  }
-
-  :global(.dark) .field-input:focus {
-    border-color: #0a84ff;
+    border-color: var(--deneb-accent);
   }
 
   .field-input::placeholder {
-    color: #aeaeb2;
+    color: var(--deneb-text-muted);
   }
 
   .rules {
@@ -107,18 +95,14 @@
   .rule {
     margin: 0;
     font-size: 13px;
-    color: #8e8e93;
+    color: var(--deneb-text-secondary);
     display: flex;
     align-items: center;
     gap: 4px;
   }
 
   .rule.met {
-    color: #34c759;
-  }
-
-  :global(.dark) .rule.met {
-    color: #30d158;
+    color: var(--deneb-positive);
   }
 
   .bullet {

@@ -30,7 +30,7 @@
   }
   .row { display: flex; align-items: center; gap: 16px; }
   .item { flex: 1; }
-  .label { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; color: var(--deneb-text-secondary); letter-spacing: 0.02em; }
+  .label { font-family: var(--deneb-mono); font-size: 11px; font-weight: 500; color: var(--deneb-text-secondary); letter-spacing: 0.02em; }
   .value { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
   .plus { color: var(--deneb-positive); }
   .minus { color: var(--deneb-negative); }

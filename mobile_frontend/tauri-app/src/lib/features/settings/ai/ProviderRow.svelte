@@ -61,15 +61,15 @@
   .row {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 16px;
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
     -webkit-tap-highlight-color: transparent;
   }
   .row:last-child { border-bottom: none; }
 
   .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .name { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .name { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--deneb-ink); }
   .desc {
-    font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--deneb-text-secondary);
+    font-family: var(--deneb-mono); font-size: 11px; color: var(--deneb-text-secondary);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
@@ -86,17 +86,17 @@
   .key-input {
     width: 116px; height: 36px; padding: 0 10px;
     border: 1px solid var(--deneb-border); border-radius: 8px;
-    font-family: 'Geist Mono', monospace; font-size: 12px;
-    color: var(--f7-page-text-color); background: var(--deneb-canvas);
+    font-family: var(--deneb-mono); font-size: 12px;
+    color: var(--deneb-ink); background: var(--deneb-canvas);
     outline: none; box-sizing: border-box;
   }
-  .key-input:focus { border-color: var(--f7-page-text-color); }
+  .key-input:focus { border-color: var(--deneb-ink); }
   .key-input::placeholder { color: var(--deneb-text-muted); }
 
   .save {
     width: 36px; height: 36px; flex-shrink: 0;
     border: none; border-radius: 8px;
-    background: var(--f7-page-text-color); color: var(--f7-page-bg-color);
+    background: var(--deneb-ink); color: var(--f7-page-bg-color);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;

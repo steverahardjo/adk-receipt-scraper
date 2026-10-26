@@ -50,52 +50,54 @@
 </div>
 
 <style>
-  .section { padding: 4px 0 0; }
-  .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .section { padding: 2px 0 0; }
+  .section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; margin-bottom: 4px; }
   .section-label {
-    font-family: var(--deneb-mono);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--deneb-text-secondary);
+    font-family: var(--ds-font-sans);
+    font-size: 13px; font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--ds-text-secondary);
   }
   .see-all {
     display: inline-flex; align-items: center; gap: 1px;
     min-height: 32px; padding: 0 4px 0 8px;
     border: none; background: transparent;
-    font-family: var(--deneb-sans);
+    font-family: var(--ds-font-sans);
     font-size: 14px; font-weight: 500;
-    color: var(--deneb-accent);
+    color: var(--ds-accent);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: opacity var(--deneb-dur-fast) var(--deneb-ease);
+    transition: opacity var(--ds-dur-fast) var(--ds-ease);
   }
   .see-all:active { opacity: 0.55; }
   .see-all svg { margin-top: 1px; }
 
   .list { display: flex; flex-direction: column; }
-  .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 0; }
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; min-width: 0; padding: 11px 0;
+  }
   .row-left { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .merchant {
-    font-family: var(--deneb-sans);
+    font-family: var(--ds-font-sans);
     font-size: 15px; font-weight: 500;
-    color: var(--deneb-ink); letter-spacing: -0.01em;
+    color: var(--ds-ink); letter-spacing: -0.01em;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .meta {
-    font-family: var(--deneb-mono);
-    font-size: 11px; font-weight: 400;
-    color: var(--deneb-text-secondary);
-    letter-spacing: 0.01em;
+    font-family: var(--ds-font-sans);
+    font-size: 12px; font-weight: 400;
+    color: var(--ds-text-secondary);
   }
   .amount {
-    font-family: var(--deneb-mono);
+    font-family: var(--ds-font-mono);
     font-size: 14px; font-weight: 500;
-    color: var(--deneb-ink);
+    color: var(--ds-ink);
     font-variant-numeric: tabular-nums;
     flex-shrink: 0; white-space: nowrap;
   }
-  .sep { height: 1px; background: var(--deneb-rule); }
-  .empty { padding: 20px 0 8px; }
-  .empty p { margin: 0; font-size: 15px; font-weight: 500; color: var(--deneb-ink); }
-  .empty span { font-size: 13px; color: var(--deneb-text-secondary); }
+  .sep { height: 1px; background: var(--ds-rule); }
+  .empty { padding: 18px 0 8px; }
+  .empty p { margin: 0; font-size: 15px; font-weight: 500; color: var(--ds-ink); }
+  .empty span { font-size: 13px; color: var(--ds-text-secondary); }
 </style>

@@ -79,14 +79,30 @@
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   {:else if name === 'plus'}
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   {:else if name === 'wheel'}
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Six spokes on an exact 60 degrees step. Every spoke runs from r=8.2
+         (just inside the r=9 rim, so it meets the rim line instead of leaving
+         a gap) to r=2.6 (into the r=2.4 hub). The previous geometry started the
+         four diagonal spokes at r=8.25 while the two uprights started at r=9,
+         so the asset rendered visibly lopsided. -->
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" />
-      <line x1="12" y1="3" x2="12" y2="6.2" /><line x1="18.4" y1="6.8" x2="16.2" y2="9" /><line x1="18.4" y1="17.2" x2="16.2" y2="15" />
-      <line x1="12" y1="21" x2="12" y2="17.8" /><line x1="5.6" y1="17.2" x2="7.8" y2="15" /><line x1="5.6" y1="6.8" x2="7.8" y2="9" />
+      <line x1="12" y1="3.8" x2="12" y2="9.4" />
+      <line x1="19.1" y1="7.9" x2="14.25" y2="10.7" />
+      <line x1="19.1" y1="16.1" x2="14.25" y2="13.3" />
+      <line x1="12" y1="20.2" x2="12" y2="14.6" />
+      <line x1="4.9" y1="16.1" x2="9.75" y2="13.3" />
+      <line x1="4.9" y1="7.9" x2="9.75" y2="10.7" />
+    </svg>
+  {:else if name === 'close'}
+    <!-- The trigger swaps to this while the dial is open. The wheel is 6-fold
+         symmetric, so rotating it on open (the old 135 degrees) could only ever
+         land the spokes off-axis; a glyph swap is the honest affordance. -->
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
     </svg>
   {:else if name === 'budget'}
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -98,13 +114,26 @@
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
     </svg>
   {:else if name === 'gear'}
+    <!-- Radial cog: hub plus 8 teeth on a 45 degrees step, drawn from the same
+         geometry as the wheel. Replaces Feather's ~1.3 KB settings path, which
+         turned to mush at the 20px the fan renders it at. -->
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      <circle cx="12" cy="12" r="3.2" />
+      <line x1="12" y1="3.4" x2="12" y2="6.6" />
+      <line x1="18.08" y1="5.92" x2="15.82" y2="8.18" />
+      <line x1="20.6" y1="12" x2="17.4" y2="12" />
+      <line x1="18.08" y1="18.08" x2="15.82" y2="15.82" />
+      <line x1="12" y1="20.6" x2="12" y2="17.4" />
+      <line x1="5.92" y1="18.08" x2="8.18" y2="15.82" />
+      <line x1="3.4" y1="12" x2="6.6" y2="12" />
+      <line x1="5.92" y1="5.92" x2="8.18" y2="8.18" />
     </svg>
   {:else if name === 'more'}
+    <!-- Dots widened to x=5.5/12/18.5 at r=1.7: the old 5/12/19 at r=1.4 spanned
+         only 14 units against the 18-unit bounding box every other glyph uses,
+         so it read optically smaller than its neighbours in the fan. -->
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" /><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="5.5" cy="12" r="1.7" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none" /><circle cx="18.5" cy="12" r="1.7" fill="currentColor" stroke="none" />
     </svg>
   {/if}
 {/snippet}
@@ -158,7 +187,7 @@
         aria-expanded={open}
         aria-haspopup="true"
       >
-        {@render icon('wheel', 24)}
+        {@render icon(open ? 'close' : 'wheel', 24)}
       </button>
     </div>
   </div>
@@ -167,8 +196,8 @@
 <style>
   .scrim {
     position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0, 0, 0, 0.18);
-    opacity: 0; transition: opacity var(--deneb-dur) var(--deneb-ease-standard);
+    background: rgba(15, 17, 21, 0.20);
+    opacity: 0; transition: opacity var(--ds-dur) var(--ds-ease-standard);
   }
   .scrim.show { opacity: 1; }
 
@@ -187,11 +216,11 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     align-items: center;
-    height: 64px;
-    border-radius: var(--deneb-radius-pill);
-    background: var(--deneb-chrome-tab-bg);
-    border: 1px solid var(--deneb-border);
-    box-shadow: var(--deneb-shadow-md);
+    height: 60px;
+    border-radius: var(--ds-radius-pill);
+    background: var(--ds-chrome-tab-bg);
+    border: 1px solid var(--ds-border);
+    box-shadow: var(--ds-shadow-md);
     -webkit-backdrop-filter: blur(24px) saturate(1.8);
     backdrop-filter: blur(24px) saturate(1.8);
     pointer-events: auto;
@@ -202,23 +231,23 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    height: 64px;
+    gap: 2px;
+    height: 60px;
     min-width: 44px;
     border: none;
     background: transparent;
-    color: var(--deneb-text-muted);
-    font-family: var(--deneb-sans);
-    font-size: 10.5px;
+    color: var(--ds-text-muted);
+    font-family: var(--ds-font-sans);
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: color var(--deneb-dur-fast) var(--deneb-ease);
+    transition: color var(--ds-dur-fast) var(--ds-ease);
   }
-  .slot svg { transition: transform var(--deneb-dur-fast) var(--deneb-ease); }
+  .slot svg { transition: transform var(--ds-dur-fast) var(--ds-ease); }
   .slot:active svg { transform: scale(0.9); }
-  .slot.active { color: var(--deneb-accent); }
+  .slot.active { color: var(--ds-accent); }
   .slot.active span { font-weight: 600; }
 
   .add { justify-content: center; }
@@ -226,12 +255,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px; height: 48px;
+    width: 46px; height: 46px;
     border-radius: 50%;
-    background: var(--deneb-accent);
-    color: var(--deneb-accent-text);
-    box-shadow: 0 6px 16px var(--deneb-accent-bg);
-    transition: transform var(--deneb-dur-fast) var(--deneb-ease);
+    background: var(--ds-accent);
+    color: var(--ds-on-accent);
+    box-shadow: 0 4px 14px rgba(65, 118, 230, 0.28);
+    transition: transform var(--ds-dur-fast) var(--ds-ease);
   }
   .add:active .add-circle { transform: scale(0.94); }
 
@@ -240,7 +269,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 64px;
+    height: 60px;
   }
 
   .wheel {
@@ -251,34 +280,33 @@
     border: none;
     border-radius: 50%;
     background: transparent;
-    color: var(--deneb-text-muted);
+    color: var(--ds-text-muted);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: color var(--deneb-dur-fast) var(--deneb-ease);
+    transition: color var(--ds-dur-fast) var(--ds-ease);
   }
-  .wheel svg { transition: transform 0.4s var(--deneb-ease); }
+  .wheel svg { transition: transform 0.4s var(--ds-ease); }
   .wheel:active svg { transform: scale(0.9); }
-  .wheel.open { color: var(--deneb-accent); }
-  .wheel.open svg { transform: rotate(135deg); }
-  .wheel.active { color: var(--deneb-accent); }
+  .wheel.open { color: var(--ds-accent); }
+  .wheel.active { color: var(--ds-accent); }
 
   .fan-item {
     position: absolute;
     left: 50%; top: 50%;
-    width: 52px; height: 52px;
-    margin: -26px 0 0 -26px;
+    width: 54px; height: 54px;
+    margin: -27px 0 0 -27px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1px;
-    border: 1px solid var(--deneb-border);
-    border-radius: 18px;
-    background: var(--deneb-surface);
-    color: var(--deneb-ink);
-    box-shadow: var(--deneb-shadow-md);
-    font-family: var(--deneb-mono);
-    font-size: 8px;
+    gap: 2px;
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg);
+    background: var(--ds-surface);
+    color: var(--ds-ink);
+    box-shadow: var(--ds-shadow-md);
+    font-family: var(--ds-font-sans);
+    font-size: 9px;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -289,10 +317,10 @@
     opacity: 0;
     pointer-events: none;
     transition:
-      transform 0.4s var(--deneb-ease),
-      opacity 0.24s var(--deneb-ease);
+      transform 0.4s var(--ds-ease),
+      opacity 0.24s var(--ds-ease);
     transition-delay: var(--d);
   }
   .dock-inner.open .fan-item { opacity: 1; pointer-events: auto; }
-  .fan-item:active { background: var(--deneb-accent-bg); color: var(--deneb-accent); }
+  .fan-item:active { background: var(--ds-accent-bg); color: var(--ds-accent); border-color: transparent; }
 </style>

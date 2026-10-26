@@ -43,24 +43,24 @@
     display: flex; align-items: center; gap: 10px;
     padding: 12px 16px;
     background: var(--deneb-canvas);
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
   }
-  .provider-name { flex: 1; font-family: var(--deneb-sans); font-size: 14px; font-weight: 600; color: var(--f7-page-text-color); }
-  .count { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--deneb-text-muted); }
+  .provider-name { flex: 1; font-family: var(--deneb-sans); font-size: 14px; font-weight: 600; color: var(--deneb-ink); }
+  .count { font-family: var(--deneb-mono); font-size: 10px; color: var(--deneb-text-muted); }
 
   .model-row {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     padding: 12px 16px 12px 28px;
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
   }
   .model-row:last-child { border-bottom: none; }
-  .model-name { font-family: var(--deneb-sans); font-size: 14px; color: var(--f7-page-text-color); }
+  .model-name { font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-ink); }
 
   .caps { display: flex; gap: 4px; flex-shrink: 0; }
   .cap {
     padding: 2px 7px; border-radius: 9999px;
     background: var(--deneb-canvas); border: 1px solid var(--deneb-border);
-    font-family: 'Geist Mono', monospace; font-size: 9px; color: var(--deneb-text-secondary);
+    font-family: var(--deneb-mono); font-size: 9px; color: var(--deneb-text-secondary);
   }
 
   .empty { padding: 24px 16px; text-align: center; font-family: var(--deneb-sans); font-size: 13px; color: var(--deneb-text-secondary); }

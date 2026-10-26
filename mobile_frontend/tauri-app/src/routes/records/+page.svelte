@@ -128,7 +128,7 @@
     width: 100%; height: 44px; padding: 0 36px 0 40px;
     border: 1px solid var(--deneb-border); border-radius: 8px;
     font-family: var(--deneb-sans); font-size: 14px;
-    color: var(--f7-page-text-color); background: var(--deneb-surface); outline: none;
+    color: var(--deneb-ink); background: var(--deneb-surface); outline: none;
     transition: border-color 0.15s; box-sizing: border-box;
   }
   .search-input:focus { border-color: var(--deneb-text-secondary); }
@@ -141,9 +141,9 @@
   .toolbar-chips { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .toolbar-chips::-webkit-scrollbar { display: none; }
   .toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .page-sub { font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary); margin: 0; letter-spacing: 0.02em; }
+  .page-sub { font-family: var(--deneb-mono); font-size: 12px; font-weight: 500; color: var(--deneb-text-secondary); margin: 0; letter-spacing: 0.02em; }
   .filter-toggle { width: 32px; height: 32px; border: 1px solid var(--deneb-border); border-radius: 8px; background: var(--deneb-surface); color: var(--deneb-text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; -webkit-tap-highlight-color: transparent; flex-shrink: 0; }
-  .filter-toggle.open { background: var(--deneb-canvas); color: var(--f7-page-text-color); }
+  .filter-toggle.open { background: var(--deneb-canvas); color: var(--deneb-ink); }
 
   :global(.nav-clear-btn) {
     width: 34px; height: 34px;
@@ -165,13 +165,13 @@
 
   .filter-card { background: var(--deneb-surface); border: 1px solid var(--deneb-border); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 16px; }
   .filter-group { display: flex; flex-direction: column; gap: 8px; }
-  .filter-group-title { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--f7-page-text-color); }
+  .filter-group-title { font-family: var(--deneb-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--deneb-ink); }
   .filter-row { display: flex; gap: 12px; }
   .filter-field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-  .filter-label { font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 400; color: var(--deneb-text-secondary); }
-  .filter-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--deneb-border); border-radius: 8px; font-family: var(--deneb-sans); font-size: 14px; color: var(--f7-page-text-color); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
+  .filter-label { font-family: var(--deneb-mono); font-size: 10px; font-weight: 400; color: var(--deneb-text-secondary); }
+  .filter-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--deneb-border); border-radius: 8px; font-family: var(--deneb-sans); font-size: 14px; color: var(--deneb-ink); background: var(--deneb-canvas); outline: none; transition: border-color 0.15s; box-sizing: border-box; }
   .filter-input:focus { border-color: var(--deneb-text-secondary); }
-  .flow-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 1px solid var(--deneb-border); border-radius: 10px; background: var(--deneb-surface); color: var(--f7-page-text-color); font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: transform 0.1s; -webkit-tap-highlight-color: transparent; }
+  .flow-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 1px solid var(--deneb-border); border-radius: 10px; background: var(--deneb-surface); color: var(--deneb-ink); font-family: var(--deneb-sans); font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: transform 0.1s; -webkit-tap-highlight-color: transparent; }
   .flow-toggle:active { transform: scale(0.98); }
   .flow-toggle svg { transition: transform 0.2s; }
   .flow-toggle.open svg { transform: rotate(90deg); }

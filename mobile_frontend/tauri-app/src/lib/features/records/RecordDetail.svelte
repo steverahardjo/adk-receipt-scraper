@@ -184,7 +184,7 @@
   }
 
   .category-label {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 13px; font-weight: 500; color: var(--deneb-text-secondary);
   }
 
@@ -207,7 +207,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid var(--deneb-divider);
+    border-bottom: 1px solid var(--deneb-rule);
   }
   .detail-row:last-child { border-bottom: none; }
 
@@ -232,12 +232,12 @@
   .doc-preview img { display: block; width: 100%; max-height: 220px; object-fit: cover; }
 
   .detail-label {
-    font-family: 'Geist Mono', monospace;
+    font-family: var(--deneb-mono);
     font-size: 14px; font-weight: 500; color: var(--deneb-text-secondary);
   }
   .detail-value {
     font-family: var(--deneb-sans);
-    font-size: 14px; font-weight: 600; color: var(--f7-page-text-color);
+    font-size: 14px; font-weight: 600; color: var(--deneb-ink);
   }
   .detail-value.income { color: var(--deneb-positive); }
   .detail-value.expense { color: var(--deneb-negative); }

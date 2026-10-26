@@ -95,11 +95,11 @@
       {/each}
 
       {#each yTicks as t}
-        <text x={margin.left - 6} y={t.y} text-anchor="end" dominant-baseline="middle" font-family="Geist Mono, monospace" font-size="10" fill="var(--deneb-text-muted)">{t.label}</text>
+        <text x={margin.left - 6} y={t.y} text-anchor="end" dominant-baseline="middle" style="font-family: var(--deneb-mono)" font-size="10" fill="var(--deneb-text-muted)">{t.label}</text>
       {/each}
 
       {#each xTicks as t}
-        <text x={t.x} y={h - 4} text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="var(--deneb-text-muted)">{t.label}</text>
+        <text x={t.x} y={h - 4} text-anchor="middle" style="font-family: var(--deneb-mono)" font-size="9" fill="var(--deneb-text-muted)">{t.label}</text>
       {/each}
 
       {#each visibleSeries as series}
@@ -148,11 +148,7 @@
   }
 
   .toggle-btn.active {
-    background: #111111;
-    color: #FFFFFF;
-  }
-  :global(.dark) .toggle-btn.active {
-    background: #ECECEC;
-    color: #18181A;
+    background: var(--deneb-ink);
+    color: var(--deneb-canvas);
   }
 </style>

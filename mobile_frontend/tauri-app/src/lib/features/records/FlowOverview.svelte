@@ -65,7 +65,7 @@
         byCat[e.type] = (byCat[e.type] || 0) + e.amount
       }
     }
-    const colors = ['var(--deneb-positive)', 'var(--deneb-info)', 'var(--deneb-warning)', '#FFB800', '#CC79A7']
+    const colors = ['var(--deneb-chart-1)', 'var(--deneb-chart-2)', 'var(--deneb-chart-3)', 'var(--deneb-chart-4)', 'var(--deneb-chart-5)']
     return Object.entries(byCat)
       .sort((a, b) => b[1] - a[1])
       .map(([id, value], i) => ({ id, value, color: colors[i % colors.length] }))
@@ -98,7 +98,7 @@
   let barKeys = $derived([...new Set(entries.filter(e => e.flow === 'expense' && e.type).map(e => e.type!))])
   let barColors = $derived(
     Object.fromEntries(
-      barKeys.map((k, i) => [k, ['var(--deneb-positive)', 'var(--deneb-info)', 'var(--deneb-warning)', '#FFB800', '#CC79A7'][i % 5]])
+      barKeys.map((k, i) => [k, ['var(--deneb-chart-1)', 'var(--deneb-chart-2)', 'var(--deneb-chart-3)', 'var(--deneb-chart-4)', 'var(--deneb-chart-5)'][i % 5]])
     )
   )
 
@@ -165,14 +165,12 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Ink/canvas inversion replaces the light+dark pair: both tokens swap
+     with the theme, so one rule covers both. */
   .tab.active {
-    background: #111111;
-    color: #FFFFFF;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  :global(.dark) .tab.active {
-    background: #ECECEC;
-    color: #18181A;
+    background: var(--deneb-ink);
+    color: var(--deneb-canvas);
+    box-shadow: var(--deneb-shadow-sm);
   }
 
   .tab:not(.active):active {

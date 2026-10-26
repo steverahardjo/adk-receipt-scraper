@@ -12,6 +12,15 @@
     return 'Rp ' + Math.round(Math.abs(n)).toLocaleString('id-ID')
   }
 
+  /** Compact id-ID money for tight rows, so a value can never outgrow its cell. */
+  function fmtCompact(n: number) {
+    const v = Math.abs(n)
+    if (v >= 1_000_000_000) return 'Rp ' + (v / 1_000_000_000).toFixed(1).replace('.', ',') + ' M'
+    if (v >= 1_000_000) return 'Rp ' + (v / 1_000_000).toFixed(1).replace('.', ',') + ' jt'
+    if (v >= 10_000) return 'Rp ' + Math.round(v / 1000) + ' rb'
+    return fmt(v)
+  }
+
   let entries = $derived(getEntries())
   let now = new Date()
   let todayStart = $derived(startOfDay(now))
@@ -46,19 +55,19 @@
   let over = $derived(left < 0)
   let usedRatio = $derived(Math.min(1, budget > 0 ? spentToday / budget : 0))
   let ringDash = $derived(`${usedRatio * c} ${c}`)
-  let ringColor = $derived(over ? 'var(--deneb-negative)' : 'var(--deneb-accent)')
+  let ringColor = $derived(over ? 'var(--ds-negative)' : 'var(--ds-accent)')
 </script>
 
 <div class="hero" class:over>
   <div class="hero-head">
-    <span class="eyebrow">Today</span>
+    <span class="hero-eyebrow">Left to spend today</span>
     <span class="status" class:over>{over ? 'Over budget' : 'On track'}</span>
   </div>
 
   <div class="hero-main">
     <div class="ring">
-      <svg width="100" height="100" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r={r} fill="none" stroke="var(--deneb-divider)" stroke-width="9" />
+      <svg width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r={r} fill="none" stroke="var(--ds-divider)" stroke-width="9" />
         <circle
           cx="50" cy="50" r={r} fill="none"
           stroke={ringColor}
@@ -72,10 +81,8 @@
     </div>
 
     <div class="hero-text">
-      <span class="hero-label">{over ? 'Over by' : 'Left to spend'}</span>
-      <h1 class="hero-num" class:over>{fmt(Math.abs(left))}</h1>
-      <p class="hero-sub">{over ? 'Over your daily budget' : `of ${fmt(budget)} today`}</p>
-      <p class="hero-meta">Spent {fmt(spentToday)} so far</p>
+      <h1 class="hero-num" class:over aria-label={fmt(left)}>{fmt(Math.abs(left))}</h1>
+      <p class="hero-sub">{over ? 'over your daily budget' : `of ${fmt(budget)} today`}</p>
     </div>
   </div>
 
@@ -84,139 +91,110 @@
   <div class="stats">
     <div class="stat">
       <span class="stat-label">Income</span>
-      <span class="stat-value">{fmt(month.income)}</span>
+      <span class="stat-value" aria-label={fmt(month.income)}>{fmtCompact(month.income)}</span>
     </div>
     <div class="stat">
       <span class="stat-label">Spent</span>
-      <span class="stat-value">{fmt(month.expense)}</span>
+      <span class="stat-value" aria-label={fmt(month.expense)}>{fmtCompact(month.expense)}</span>
     </div>
     <div class="stat">
       <span class="stat-label">Net</span>
-      <span class="stat-value" class:pos={month.net >= 0} class:neg={month.net < 0}>
-        {month.net >= 0 ? '+' : '−'}{fmt(month.net)}
+      <span class="stat-value" class:pos={month.net >= 0} class:neg={month.net < 0} aria-label={fmt(month.net)}>
+        {month.net >= 0 ? '+' : '−'}{fmtCompact(month.net)}
       </span>
     </div>
-  </div>
-
-  <div class="networth">
-    <span class="nw-label">Net worth</span>
-    <span class="nw-value">Rp 187.500.000</span>
-    <span class="nw-delta">+12%</span>
   </div>
 </div>
 
 <style>
   .hero {
-    position: relative;
-    background: linear-gradient(180deg, var(--deneb-surface-raised), var(--deneb-surface));
-    border: 1px solid var(--deneb-border);
-    border-radius: var(--deneb-radius-lg);
-    box-shadow: var(--deneb-shadow-md);
-    padding: 20px;
+    background: var(--ds-surface);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg);
+    box-shadow: var(--ds-shadow-sm);
+    padding: 18px 18px 16px;
   }
 
-  .hero-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .eyebrow {
-    font-family: var(--deneb-mono);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--deneb-text-secondary);
+  .hero-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .hero-eyebrow {
+    font-family: var(--ds-font-sans);
+    font-size: 13px; font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--ds-text-secondary);
   }
   .status {
-    font-family: var(--deneb-mono);
+    font-family: var(--ds-font-mono);
     font-size: 10px; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--deneb-positive);
-    background: var(--deneb-positive-bg);
+    white-space: nowrap; flex-shrink: 0;
+    color: var(--ds-positive);
+    background: var(--ds-positive-bg);
     padding: 3px 9px;
-    border-radius: var(--deneb-radius-pill);
+    border-radius: var(--ds-radius-pill);
   }
-  .status.over { color: var(--deneb-negative); background: var(--deneb-negative-bg); }
+  .status.over { color: var(--ds-negative); background: var(--ds-negative-bg); }
 
-  .hero-main { display: flex; align-items: center; gap: 18px; }
-  .ring { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
-  .arc { transition: stroke-dasharray 0.6s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease; }
+  .hero-main { display: flex; align-items: center; gap: 16px; }
+  .ring { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
+  .arc { transition: stroke-dasharray 0.6s var(--ds-ease), stroke 0.3s ease; }
   .ring-pct {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--deneb-mono);
-    font-size: 16px; font-weight: 600;
-    color: var(--deneb-accent);
+    font-family: var(--ds-font-mono);
+    font-size: 15px; font-weight: 600;
+    color: var(--ds-accent);
     font-variant-numeric: tabular-nums;
   }
-  .ring-pct.over { color: var(--deneb-negative); }
+  .ring-pct.over { color: var(--ds-negative); }
 
-  .hero-text { min-width: 0; }
-  .hero-label {
-    font-family: var(--deneb-mono);
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.02em;
-    color: var(--deneb-text-secondary);
-  }
+  /* min-width:0 lets this column shrink; the numeral itself stays one line
+     and scales down instead of escaping the card. */
+  .hero-text { flex: 1; min-width: 0; }
   .hero-num {
-    font-family: var(--deneb-sans);
-    font-size: clamp(30px, 9vw, 38px); font-weight: 700;
-    line-height: 1.06; letter-spacing: -0.03em;
-    color: var(--deneb-ink);
-    margin: 3px 0 0;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .hero-num.over { color: var(--deneb-negative); }
-  .hero-sub {
-    font-size: 14px;
-    color: var(--deneb-text-secondary);
-    margin: 4px 0 0;
-  }
-  .hero-meta {
-    font-family: var(--deneb-mono);
-    font-size: 11px;
-    color: var(--deneb-text-muted);
-    margin: 3px 0 0;
-  }
-
-  .rule { height: 1px; background: var(--deneb-rule); margin: 20px 0 16px; }
-
-  .stats { display: flex; align-items: flex-start; gap: 0; }
-  .stat { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-  .stat + .stat { padding-left: 16px; border-left: 1px solid var(--deneb-rule); }
-  .stat-label {
-    font-family: var(--deneb-mono);
-    font-size: 10px; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--deneb-text-muted);
-  }
-  .stat-value {
-    font-family: var(--deneb-mono);
-    font-size: 14px; font-weight: 600;
-    color: var(--deneb-ink);
+    font-family: var(--ds-font-sans);
+    font-size: clamp(24px, 7.4vw, 34px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ds-ink);
+    margin: 0;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
-  .stat-value.pos { color: var(--deneb-positive); }
-  .stat-value.neg { color: var(--deneb-negative); }
+  .hero-num.over { color: var(--ds-negative); }
+  .hero-sub {
+    font-size: 13px;
+    color: var(--ds-text-secondary);
+    margin: 4px 0 0;
+  }
 
-  .networth {
-    display: flex; align-items: baseline; gap: 8px;
-    margin-top: 16px; padding-top: 12px;
-    border-top: 1px solid var(--deneb-rule);
+  .rule { height: 1px; background: var(--ds-rule); margin: 16px 0 12px; }
+
+  /* minmax(0,1fr) + min-width:0 is the actual fix for the old overflow:
+     each cell may shrink below its content's min-content width, so three
+     currency values can never push past the card border. Long values wrap
+     inside the cell instead. */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
-  .nw-label {
-    font-family: var(--deneb-mono);
-    font-size: 10px; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--deneb-text-muted);
+  .stat { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .stat-label {
+    font-family: var(--ds-font-sans);
+    font-size: 11px; font-weight: 500;
+    color: var(--ds-text-muted);
   }
-  .nw-value {
-    font-family: var(--deneb-sans);
-    font-size: 15px; font-weight: 600;
-    color: var(--deneb-ink);
+  .stat-value {
+    font-family: var(--ds-font-mono);
+    font-size: 13px; font-weight: 600;
+    color: var(--ds-ink);
     font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
   }
-  .nw-delta {
-    font-family: var(--deneb-mono);
-    font-size: 11px; font-weight: 600;
-    color: var(--deneb-positive);
-    margin-left: auto;
-  }
+  .stat-value.pos { color: var(--ds-positive); }
+  .stat-value.neg { color: var(--ds-negative); }
 </style>

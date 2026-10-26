@@ -87,7 +87,7 @@
   .option:active { background: var(--deneb-canvas); }
   .option.active { background: var(--deneb-canvas); }
   .option-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .option-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--f7-page-text-color); }
+  .option-label { font-family: var(--deneb-sans); font-size: 15px; font-weight: 500; color: var(--deneb-ink); }
   .option-desc { font-family: var(--deneb-sans); font-size: 12px; color: var(--deneb-text-secondary); }
   .option svg { color: var(--deneb-positive); flex-shrink: 0; }
 </style>

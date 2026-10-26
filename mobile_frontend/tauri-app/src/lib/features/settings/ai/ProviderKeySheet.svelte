@@ -130,8 +130,8 @@
 
   .head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .head-text { display: flex; flex-direction: column; gap: 2px; }
-  .head-name { font-family: var(--deneb-sans); font-size: 17px; font-weight: 600; color: var(--f7-page-text-color); }
-  .head-status { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--deneb-text-secondary); }
+  .head-name { font-family: var(--deneb-sans); font-size: 17px; font-weight: 600; color: var(--deneb-ink); }
+  .head-status { font-family: var(--deneb-mono); font-size: 11px; color: var(--deneb-text-secondary); }
   .head-status.ok { color: var(--deneb-positive); }
 
   .saved {
@@ -139,19 +139,19 @@
     padding: 12px 14px; margin-bottom: 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px; background: var(--deneb-canvas);
   }
-  .saved-label { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--deneb-text-secondary); }
-  .saved-value { font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--f7-page-text-color); }
+  .saved-label { font-family: var(--deneb-mono); font-size: 11px; color: var(--deneb-text-secondary); }
+  .saved-value { font-family: var(--deneb-mono); font-size: 13px; color: var(--deneb-ink); }
 
   .field { display: flex; flex-direction: column; gap: 6px; }
-  .field-label { font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
+  .field-label { font-family: var(--deneb-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--deneb-text-secondary); }
   .field-input {
     width: 100%; height: 44px; padding: 0 44px 0 14px;
     border: 1px solid var(--deneb-border); border-radius: 10px;
-    font-family: 'Geist Mono', monospace; font-size: 14px;
-    color: var(--f7-page-text-color); background: var(--deneb-canvas);
+    font-family: var(--deneb-mono); font-size: 14px;
+    color: var(--deneb-ink); background: var(--deneb-canvas);
     outline: none; transition: border-color 0.15s; box-sizing: border-box;
   }
-  .field-input:focus { border-color: var(--f7-page-text-color); }
+  .field-input:focus { border-color: var(--deneb-ink); }
   .key-row { position: relative; display: flex; align-items: center; }
   .reveal {
     position: absolute; right: 6px;
@@ -166,7 +166,7 @@
     font-family: var(--deneb-sans); font-size: 15px; font-weight: 600;
     cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
   }
-  .btn.primary { background: var(--f7-page-text-color); color: var(--f7-page-bg-color); }
+  .btn.primary { background: var(--deneb-ink); color: var(--f7-page-bg-color); }
   .btn.primary:disabled { opacity: 0.4; }
   .btn.danger-text { flex: 0 0 auto; padding: 0 18px; background: transparent; border: 1px solid var(--deneb-border); color: var(--deneb-negative); }
   .btn:active:not(:disabled) { opacity: 0.85; }
